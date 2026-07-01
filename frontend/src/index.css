@@ -1,2 +1,38 @@
-@tailwind base;@tailwind components;@tailwind utilities;
-body{margin:0;background:#f8fafc}.rtl{direction:rtl}.card{background:white;border:1px solid #e2e8f0;border-radius:14px}.btn{border-radius:10px;padding:.55rem .9rem;font-weight:600;font-size:.875rem}.input{width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:.55rem .75rem;font-size:.875rem}.input:focus{outline:none;border-color:#f59e0b;box-shadow:0 0 0 3px #fef3c7}.table th{font-size:.72rem;text-transform:uppercase;color:#64748b;font-weight:600;background:#f8fafc}.table td,.table th{padding:.75rem;border-bottom:1px solid #f1f5f9;text-align:left}.table tr:hover td{background:#f8fafc}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.input {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+}
+.table th {
+  text-align: left;
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  color: #64748b;
+  background: #f8fafc;
+}
+.table td {
+  padding: 0.75rem;
+  border-top: 1px solid #f1f5f9;
+  font-size: 0.875rem;
+}

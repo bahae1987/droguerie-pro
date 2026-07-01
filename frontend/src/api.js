@@ -12,7 +12,7 @@ export const supabase = createClient(
   SUPABASE_ANON_KEY || 'missing-key'
 )
 
-export function can(perms, code) { return perms?.includes(code) }
+export function can(perms, code) { return Array.isArray(perms) && perms.includes(code) }
 export function getSession(){ try{return JSON.parse(localStorage.getItem('droguerie_session')||'null')}catch{return null} }
 export function setSession(s){ localStorage.setItem('droguerie_session', JSON.stringify(s)) }
 export function clearSession(){ localStorage.removeItem('droguerie_session') }
