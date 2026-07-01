@@ -1,3 +1,4 @@
+console.log("DROGUERIEPRO V6 TEST OK");
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
