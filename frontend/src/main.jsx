@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-console.log('DROGUERIEPRO V7 CLEAN OK');
+console.log('DROGUERIEPRO V8 STOCK MOVEMENTS OK');
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -21,7 +21,7 @@ const TXT = {
   fr: {
     login: 'Connexion', username: 'Utilisateur', password: 'Mot de passe', connect: 'Se connecter',
     dashboard: 'Tableau de bord', products: 'Produits / Stock', sales: 'Ventes', purchases: 'Achats',
-    payments: 'Paiements', clients: 'Clients', suppliers: 'Fournisseurs', users: 'Utilisateurs',
+    payments: 'Paiements', stockMoves: 'Mouvements stock', clients: 'Clients', suppliers: 'Fournisseurs', users: 'Utilisateurs',
     logout: 'Déconnexion', lang: 'العربية', new: 'Nouveau', save: 'Enregistrer', edit: 'Modifier',
     del: 'Supprimer', actions: 'Actions', stock: 'Stock', price: 'Prix', create: 'Créer',
     direct: 'Direct', advance: 'Avancer', pay: 'Régler', partialDelivery: 'Livraison partielle',
@@ -34,7 +34,7 @@ const TXT = {
   ar: {
     login: 'تسجيل الدخول', username: 'المستخدم', password: 'كلمة المرور', connect: 'دخول',
     dashboard: 'لوحة القيادة', products: 'المنتجات / المخزون', sales: 'المبيعات', purchases: 'المشتريات',
-    payments: 'الأداءات', clients: 'الزبناء', suppliers: 'الموردون', users: 'المستخدمون',
+    payments: 'الأداءات', stockMoves: 'حركات المخزون', clients: 'الزبناء', suppliers: 'الموردون', users: 'المستخدمون',
     logout: 'خروج', lang: 'Français', new: 'جديد', save: 'حفظ', edit: 'تعديل',
     del: 'حذف', actions: 'الإجراءات', stock: 'المخزون', price: 'الثمن', create: 'إنشاء',
     direct: 'مباشر', advance: 'المرحلة التالية', pay: 'تسوية', partialDelivery: 'تسليم جزئي',
@@ -216,6 +216,26 @@ function ConfigMissing() {
   );
 }
 
+
+async function loadStockMovements() {
+  const { data, error } = await supabase
+    .from('stock_movements')
+    .select('id, product_id, quantity, reason, created_at, products(ref, name)')
+    .order('created_at', { ascending: false });
+
+  if (error) throw new Error(error.message);
+
+  return (data || []).map(m => ({
+    id: m.id,
+    productId: m.product_id,
+    ref: m.products?.ref || '',
+    productName: m.products?.name || '',
+    quantity: Number(m.quantity || 0),
+    reason: m.reason || '',
+    date: m.created_at
+  }));
+}
+
 function LoginPage({ L, lang, onLogin }) {
   const [username, setUsername] = useState('admin');
   const [password, setPassword] = useState('admin123');
@@ -266,6 +286,7 @@ function Layout({ L, lang, toggleLang, session, setSession }) {
     ['sales', L('sales')],
     ['purchases', L('purchases')],
     ['payments', L('payments')],
+    ['stockMoves', L('stockMoves')],
     ['clients', L('clients')],
     ['suppliers', L('suppliers')],
     ['users', L('users')]
@@ -304,6 +325,7 @@ function Layout({ L, lang, toggleLang, session, setSession }) {
           {page === 'sales' ? <Docs L={L} type="sales" /> : null}
           {page === 'purchases' ? <Docs L={L} type="purchases" /> : null}
           {page === 'payments' ? <Payments L={L} /> : null}
+          {page === 'stockMoves' ? <StockMovements L={L} /> : null}
           {page === 'clients' ? <Parties L={L} type="clients" /> : null}
           {page === 'suppliers' ? <Parties L={L} type="suppliers" /> : null}
           {page === 'users' ? <Users L={L} /> : null}
@@ -780,6 +802,92 @@ function Payments({ L }) {
               <td>{p.tiers}</td>
               <td>{p.mode}</td>
               <td className="font-bold">{dh(p.montant)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </>
+  );
+}
+
+
+function StockMovements({ L }) {
+  const [rows, setRows] = useState([]);
+  const [tab, setTab] = useState('all');
+  const [err, setErr] = useState('');
+
+  async function load() {
+    try {
+      setErr('');
+      const data = await loadStockMovements();
+      setRows(data);
+    } catch (e) {
+      setErr(e.message);
+    }
+  }
+
+  useEffect(() => { load(); }, []);
+
+  if (err) return <ErrorBox msg={err} />;
+
+  const filtered = tab === 'in'
+    ? rows.filter(x => x.quantity > 0)
+    : tab === 'out'
+      ? rows.filter(x => x.quantity < 0)
+      : rows;
+
+  const totalIn = rows.filter(x => x.quantity > 0).reduce((s, x) => s + x.quantity, 0);
+  const totalOut = rows.filter(x => x.quantity < 0).reduce((s, x) => s + Math.abs(x.quantity), 0);
+
+  return (
+    <>
+      <Header title={L('stockMoves')}>
+        <button onClick={load} className="btn bg-white border">↻</button>
+      </Header>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div className="card p-4">
+          <p className="text-xs text-slate-400">{L('stockIn')}</p>
+          <p className="text-2xl font-black text-emerald-600">{fmt(totalIn)}</p>
+        </div>
+        <div className="card p-4">
+          <p className="text-xs text-slate-400">{L('stockOut')}</p>
+          <p className="text-2xl font-black text-red-600">{fmt(totalOut)}</p>
+        </div>
+        <div className="card p-4">
+          <p className="text-xs text-slate-400">{L('movement')}</p>
+          <p className="text-2xl font-black">{rows.length}</p>
+        </div>
+      </div>
+
+      <div className="flex gap-2 mb-4">
+        <button onClick={() => setTab('all')} className={'btn ' + (tab === 'all' ? 'bg-slate-800 text-white' : 'bg-white border')}>{L('all')}</button>
+        <button onClick={() => setTab('in')} className={'btn ' + (tab === 'in' ? 'bg-emerald-600 text-white' : 'bg-white border')}>{L('stockIn')}</button>
+        <button onClick={() => setTab('out')} className={'btn ' + (tab === 'out' ? 'bg-red-600 text-white' : 'bg-white border')}>{L('stockOut')}</button>
+      </div>
+
+      <Table>
+        <thead>
+          <tr>
+            <th>{L('date')}</th>
+            <th>{L('ref')}</th>
+            <th>{L('product')}</th>
+            <th>{L('quantity')}</th>
+            <th>{L('reason')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filtered.map(m => (
+            <tr key={m.id}>
+              <td>{m.date ? new Date(m.date).toLocaleString('fr-FR') : '-'}</td>
+              <td className="font-mono text-xs">{m.ref || '-'}</td>
+              <td className="font-semibold">{m.productName || '-'}</td>
+              <td>
+                <Badge tone={m.quantity >= 0 ? 'green' : 'red'}>
+                  {m.quantity >= 0 ? '+' : ''}{fmt(m.quantity)}
+                </Badge>
+              </td>
+              <td>{m.reason || '-'}</td>
             </tr>
           ))}
         </tbody>
