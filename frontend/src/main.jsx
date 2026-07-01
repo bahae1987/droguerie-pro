@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-console.log('DROGUERIEPRO V14 PERMISSIONS FIX OK');
+console.log('DROGUERIEPRO V15 BRANCH SCOPE OK');
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -21,7 +21,7 @@ const TXT = {
   fr: {
     login: 'Connexion', username: 'Utilisateur', password: 'Mot de passe', connect: 'Se connecter',
     dashboard: 'Tableau de bord', products: 'Produits / Stock', sales: 'Ventes', purchases: 'Achats',
-    payments: 'Paiements', settings: 'Paramètres', permissions: 'Autorisations', clients: 'Clients', suppliers: 'Fournisseurs', users: 'Utilisateurs',
+    payments: 'Paiements', settings: 'Paramètres', permissions: 'Autorisations', clients: 'Clients', suppliers: 'Fournisseurs', users: 'Utilisateurs', branch: 'Droguerie',
     logout: 'Déconnexion', lang: 'العربية', new: 'Nouveau', save: 'Enregistrer', edit: 'Modifier',
     del: 'Supprimer', actions: 'Actions', stock: 'Stock', price: 'Prix', create: 'Créer',
     direct: 'Direct', advance: 'Avancer', pay: 'Régler', partialDelivery: 'Livraison partielle',
@@ -34,7 +34,7 @@ const TXT = {
   ar: {
     login: 'تسجيل الدخول', username: 'المستخدم', password: 'كلمة المرور', connect: 'دخول',
     dashboard: 'لوحة القيادة', products: 'المنتجات / المخزون', sales: 'المبيعات', purchases: 'المشتريات',
-    payments: 'الأداءات', settings: 'الإعدادات', permissions: 'الصلاحيات', clients: 'الزبناء', suppliers: 'الموردون', users: 'المستخدمون',
+    payments: 'الأداءات', settings: 'الإعدادات', permissions: 'الصلاحيات', clients: 'الزبناء', suppliers: 'الموردون', users: 'المستخدمون', branch: 'الدروكري',
     logout: 'خروج', lang: 'Français', new: 'جديد', save: 'حفظ', edit: 'تعديل',
     del: 'حذف', actions: 'الإجراءات', stock: 'المخزون', price: 'الثمن', create: 'إنشاء',
     direct: 'مباشر', advance: 'المرحلة التالية', pay: 'تسوية', partialDelivery: 'تسليم جزئي',
@@ -194,7 +194,7 @@ async function updateStock(lines, sign, reason) {
 async function login(username, password) {
   const { data, error } = await supabase
     .from('users')
-    .select('id, username, full_name, password_hash, active, roles(name)')
+    .select('id, username, full_name, password_hash, active, branch_id, branches(name), roles(name)')
     .eq('username', username)
     .eq('active', true)
     .single();
@@ -246,6 +246,58 @@ async function refreshCurrentSession(setSession) {
   setStoredSession(updated);
   setSession(updated);
 }
+
+
+function isAdmin(session) {
+  return session?.user?.role === 'Administrateur';
+}
+
+function isManager(session) {
+  return session?.user?.role === 'Gérant';
+}
+
+function isSeller(session) {
+  return session?.user?.role === 'Vendeur';
+}
+
+function isStoreKeeper(session) {
+  return session?.user?.role === 'Magasinier';
+}
+
+function branchId(session) {
+  return session?.user?.branch_id || null;
+}
+
+function applyDocScope(query, type, session) {
+  if (isAdmin(session)) return query;
+
+  if (isManager(session)) {
+    return branchId(session) ? query.eq('branch_id', branchId(session)) : query.eq('branch_id', -1);
+  }
+
+  if (type === 'sales' && isSeller(session)) {
+    return query.eq('created_by', session.user.id);
+  }
+
+  if (type === 'purchases' && isStoreKeeper(session)) {
+    return query.eq('created_by', session.user.id);
+  }
+
+  return query.eq('created_by', session.user.id);
+}
+
+function applyProductScope(query, session) {
+  if (isAdmin(session)) return query;
+  if (branchId(session)) return query.eq('branch_id', branchId(session));
+  return query.eq('branch_id', -1);
+}
+
+async function loadBranches() {
+  const { data, error } = await supabase.from('branches').select('*').order('name');
+  if (error) throw new Error(error.message);
+  return data || [];
+}
+
 
 function ConfigMissing() {
   return (
@@ -324,11 +376,14 @@ async function createDoc(type, body) {
   const payload = isSales ? {
     date: body.date || today(), client_id: body.clientId || null, client_name: body.clientNom || await partyName(type, body.clientId),
     stage: start, numbers_json: numbers, lines_json: lines, payments_json: [], vat_rate: vat, total_ht: t.totalHT, vat: t.vat, total_ttc: t.totalTTC,
-    delivered: start === 'livraison' || start === 'facture', created_by: session?.user?.id || null, base_doc_id: body.baseDocId || null
+    delivered: start === 'livraison' || start === 'facture', created_by: session?.user?.id || null, base_doc_id: body.baseDocId || null,
+    branch_id: isAdmin(session) ? (body.branchId || branchId(session)) : branchId(session)
   } : {
-    date: body.date || today(), supplier_id: body.fournisseurId || null, supplier_name: body.fournisseurNom || await partyName(type, body.fournisseurId),
+    date: body.date || today(), supplier_id: body.fournisseurId || null,
+      branch_id: isAdmin(getStoredSession()) ? (body.branch_id || branchId(getStoredSession())) : branchId(getStoredSession()), supplier_name: body.fournisseurNom || await partyName(type, body.fournisseurId),
     stage: start, numbers_json: numbers, lines_json: lines, payments_json: [], vat_rate: vat, total_ht: t.totalHT, vat: t.vat, total_ttc: t.totalTTC,
-    received: start === 'reception' || start === 'facture', created_by: session?.user?.id || null, base_doc_id: body.baseDocId || null
+    received: start === 'reception' || start === 'facture', created_by: session?.user?.id || null, base_doc_id: body.baseDocId || null,
+    branch_id: isAdmin(session) ? (body.branchId || branchId(session)) : branchId(session)
   };
   const { error } = await supabase.from(type).insert(payload);
   if (error) throw new Error(error.message);
@@ -405,9 +460,11 @@ async function partialDoc(type, id, body) {
   else await updateStock(lines, 1, 'Réception partielle achat');
   const session = getStoredSession();
   const payload = isSales ? {
-    date: body.date || today(), client_id: doc.client_id, client_name: doc.client_name, stage, numbers_json: numbers, lines_json: lines, payments_json: [], vat_rate: vat, total_ht: t.totalHT, vat: t.vat, total_ttc: t.totalTTC, delivered: true, created_by: session?.user?.id || null, base_doc_id: doc.id
+    date: body.date || today(), client_id: doc.client_id, client_name: doc.client_name, stage, numbers_json: numbers, lines_json: lines, payments_json: [], vat_rate: vat, total_ht: t.totalHT, vat: t.vat, total_ttc: t.totalTTC, delivered: true, created_by: session?.user?.id || null, base_doc_id: doc.id,
+    branch_id: doc.branch_id || branchId(session)
   } : {
-    date: body.date || today(), supplier_id: doc.supplier_id, supplier_name: doc.supplier_name, stage, numbers_json: numbers, lines_json: lines, payments_json: [], vat_rate: vat, total_ht: t.totalHT, vat: t.vat, total_ttc: t.totalTTC, received: true, created_by: session?.user?.id || null, base_doc_id: doc.id
+    date: body.date || today(), supplier_id: doc.supplier_id, supplier_name: doc.supplier_name, stage, numbers_json: numbers, lines_json: lines, payments_json: [], vat_rate: vat, total_ht: t.totalHT, vat: t.vat, total_ttc: t.totalTTC, received: true, created_by: session?.user?.id || null, base_doc_id: doc.id,
+    branch_id: doc.branch_id || branchId(session)
   };
   const { error: e2 } = await supabase.from(type).insert(payload);
   if (e2) throw new Error(e2.message);
@@ -415,8 +472,8 @@ async function partialDoc(type, id, body) {
 
 async function loadPayments() {
   const [{ data: sales, error: e1 }, { data: purchases, error: e2 }] = await Promise.all([
-    supabase.from('sales').select('*').order('id', { ascending: false }),
-    supabase.from('purchases').select('*').order('id', { ascending: false })
+    applyDocScope(supabase.from('sales').select('*'), 'sales', getStoredSession()).order('id', { ascending: false }),
+    applyDocScope(supabase.from('purchases').select('*'), 'purchases', getStoredSession()).order('id', { ascending: false })
   ]);
   if (e1) throw new Error(e1.message);
   if (e2) throw new Error(e2.message);
@@ -443,9 +500,9 @@ async function deleteParty(type, id) {
   if (error) throw new Error(error.message);
 }
 async function loadUsers() {
-  const { data, error } = await supabase.from('users').select('id, username, full_name, active, roles(name)').order('id');
+  const { data, error } = await supabase.from('users').select('id, username, full_name, active, branch_id, branches(name), roles(name)').order('id');
   if (error) throw new Error(error.message);
-  return (data || []).map(u => ({ id: u.id, username: u.username, full_name: u.full_name, active: u.active, role: u.roles?.name }));
+  return (data || []).map(u => ({ id: u.id, username: u.username, full_name: u.full_name, active: u.active, role: u.roles?.name, branch_id: u.branch_id, branch_name: u.branches?.name || '' }));
 }
 async function loadRoles() {
   const { data, error } = await supabase.from('roles').select('*').order('id');
@@ -453,7 +510,7 @@ async function loadRoles() {
   return data || [];
 }
 async function createUser(body) {
-  const { error } = await supabase.from('users').insert({ username: body.username, password_hash: body.password || 'changeme', full_name: body.full_name || '', role_id: body.role_id || 3, active: true });
+  const { error } = await supabase.from('users').insert({ username: body.username, password_hash: body.password || 'changeme', full_name: body.full_name || '', role_id: body.role_id || 3, branch_id: body.branch_id || null, active: true });
   if (error) throw new Error(error.message);
 }
 
@@ -609,9 +666,9 @@ function Dashboard({ L }) {
     try {
       setErr('');
       const [{ data: products }, { data: sales }, { data: purchases }] = await Promise.all([
-        supabase.from('products').select('*'),
-        supabase.from('sales').select('*'),
-        supabase.from('purchases').select('*')
+        applyProductScope(supabase.from('products').select('*'), getStoredSession()),
+        applyDocScope(supabase.from('sales').select('*'), 'sales', getStoredSession()),
+        applyDocScope(supabase.from('purchases').select('*'), 'purchases', getStoredSession())
       ]);
 
       const factures = (sales || []).filter(x => x.stage === 'facture');
@@ -658,7 +715,7 @@ function Products({ L }) {
 
   async function load() {
     try {
-      const { data, error } = await supabase.from('products').select('*').order('name');
+      const { data, error } = await applyProductScope(applyProductScope(supabase.from('products').select('*'), getStoredSession()), getStoredSession()).order('name');
       if (error) throw error;
       setRows((data || []).map(mapProduct));
     } catch (e) { setErr(e.message); }
@@ -677,7 +734,8 @@ function Products({ L }) {
         sale_price: Number(form.prixVente || 0),
         quantity: Number(form.quantite || 0),
         min_stock: Number(form.stockMin || 0),
-        supplier_id: form.fournisseurId || null
+        supplier_id: form.fournisseurId || null,
+        branch_id: isAdmin(getStoredSession()) ? (form.branch_id || branchId(getStoredSession())) : branchId(getStoredSession())
       };
 
       const q = form.id ? supabase.from('products').update(payload).eq('id', form.id) : supabase.from('products').insert(payload);
@@ -786,8 +844,8 @@ function Docs({ L, type }) {
   async function load() {
     try {
       const [{ data: docs, error: dErr }, { data: prod, error: pErr }, { data: party, error: tErr }] = await Promise.all([
-        supabase.from(type).select('*').order('id', { ascending: false }),
-        supabase.from('products').select('*').order('name'),
+        applyDocScope(supabase.from(type).select('*'), type, getStoredSession()).order('id', { ascending: false }),
+        applyProductScope(applyProductScope(supabase.from('products').select('*'), getStoredSession()), getStoredSession()).order('name'),
         supabase.from(isSales ? 'clients' : 'suppliers').select('*').order('name')
       ]);
       if (dErr) throw dErr;
@@ -1107,14 +1165,16 @@ function Parties({ L, type }) {
 function Users({ L }) {
   const [rows, setRows] = useState([]);
   const [roles, setRoles] = useState([]);
+  const [branches, setBranches] = useState([]);
   const [form, setForm] = useState(null);
   const [err, setErr] = useState('');
 
   async function load() {
     try {
-      const [users, roles] = await Promise.all([loadUsers(), loadRoles()]);
+      const [users, roles, branches] = await Promise.all([loadUsers(), loadRoles(), loadBranches()]);
       setRows(users);
       setRoles(roles);
+      setBranches(branches);
     } catch (e) { setErr(e.message); }
   }
 
@@ -1133,12 +1193,12 @@ function Users({ L }) {
   return (
     <>
       <Header title={L('users')}>
-        <button onClick={() => setForm({ username: '', password: 'changeme', full_name: '', role_id: roles[0]?.id })} className="btn bg-amber-500">{L('new')}</button>
+        <button onClick={() => setForm({ username: '', password: 'changeme', full_name: '', role_id: roles[0]?.id, branch_id: branches[0]?.id || '' })} className="btn bg-amber-500">{L('new')}</button>
       </Header>
 
       <Table>
-        <thead><tr><th>{L('username')}</th><th>{L('name')}</th><th>Rôle</th><th>Actif</th></tr></thead>
-        <tbody>{rows.map(u => <tr key={u.id}><td>{u.username}</td><td>{u.full_name}</td><td>{u.role}</td><td>{u.active ? 'Oui' : 'Non'}</td></tr>)}</tbody>
+        <thead><tr><th>{L('username')}</th><th>{L('name')}</th><th>Rôle</th><th>{L('branch')}</th><th>Actif</th></tr></thead>
+        <tbody>{rows.map(u => <tr key={u.id}><td>{u.username}</td><td>{u.full_name}</td><td>{u.role}</td><td>{u.branch_name || '-'}</td><td>{u.active ? 'Oui' : 'Non'}</td></tr>)}</tbody>
       </Table>
 
       {form ? (
@@ -1148,6 +1208,10 @@ function Users({ L }) {
           ))}
           <select className="input mb-3" value={form.role_id} onChange={e => setForm({ ...form, role_id: Number(e.target.value) })}>
             {roles.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
+          </select>
+          <select className="input mb-3" value={form.branch_id || ''} onChange={e => setForm({ ...form, branch_id: e.target.value ? Number(e.target.value) : null })}>
+            <option value="">Toutes / Aucune</option>
+            {branches.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
           </select>
           <button onClick={save} className="btn bg-amber-500">{L('save')}</button>
         </Modal>
