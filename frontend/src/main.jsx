@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-console.log('DROGUERIEPRO V8 STOCK MOVEMENTS OK');
+console.log('DROGUERIEPRO V11 PAYMENTS PRO OK');
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -21,10 +21,10 @@ const TXT = {
   fr: {
     login: 'Connexion', username: 'Utilisateur', password: 'Mot de passe', connect: 'Se connecter',
     dashboard: 'Tableau de bord', products: 'Produits / Stock', sales: 'Ventes', purchases: 'Achats',
-    payments: 'Paiements', stockMoves: 'Mouvements stock', clients: 'Clients', suppliers: 'Fournisseurs', users: 'Utilisateurs',
+    payments: 'Paiements', stockMoves: 'Mouvements stock', audit: 'Journal / Traçabilité', clients: 'Clients', suppliers: 'Fournisseurs', users: 'Utilisateurs', permissions: 'Autorisations',
     logout: 'Déconnexion', lang: 'العربية', new: 'Nouveau', save: 'Enregistrer', edit: 'Modifier',
     del: 'Supprimer', actions: 'Actions', stock: 'Stock', price: 'Prix', create: 'Créer',
-    direct: 'Direct', advance: 'Avancer', pay: 'Régler', partialDelivery: 'Livraison partielle',
+    direct: 'Direct', advance: 'Avancer', pay: 'Régler', cashRegister: 'Caisse', receiptNo: 'N° reçu', chequeNo: 'N° chèque', bank: 'Banque', dueDate: 'Échéance', paymentStatus: 'Statut', transferRef: 'Réf. virement', valueDate: 'Date valeur', terminal: 'TPE', transactionNo: 'N° transaction', billNo: 'N° effet', note: 'Observation', partialDelivery: 'Livraison partielle',
     partialReceipt: 'Réception partielle', all: 'Tous', quotes: 'Devis', orders: 'Commandes',
     deliveries: 'Livraisons', receipts: 'Réceptions', invoices: 'Factures', remaining: 'Reste',
     paid: 'Réglée', unpaid: 'Non réglée', partial: 'Partielle', cashIn: 'Encaissements',
@@ -34,10 +34,10 @@ const TXT = {
   ar: {
     login: 'تسجيل الدخول', username: 'المستخدم', password: 'كلمة المرور', connect: 'دخول',
     dashboard: 'لوحة القيادة', products: 'المنتجات / المخزون', sales: 'المبيعات', purchases: 'المشتريات',
-    payments: 'الأداءات', stockMoves: 'حركات المخزون', clients: 'الزبناء', suppliers: 'الموردون', users: 'المستخدمون',
+    payments: 'الأداءات', stockMoves: 'حركات المخزون', audit: 'سجل التتبع', clients: 'الزبناء', suppliers: 'الموردون', users: 'المستخدمون', permissions: 'الصلاحيات',
     logout: 'خروج', lang: 'Français', new: 'جديد', save: 'حفظ', edit: 'تعديل',
     del: 'حذف', actions: 'الإجراءات', stock: 'المخزون', price: 'الثمن', create: 'إنشاء',
-    direct: 'مباشر', advance: 'المرحلة التالية', pay: 'تسوية', partialDelivery: 'تسليم جزئي',
+    direct: 'مباشر', advance: 'المرحلة التالية', pay: 'تسوية', cashRegister: 'الصندوق', receiptNo: 'رقم الوصل', chequeNo: 'رقم الشيك', bank: 'البنك', dueDate: 'تاريخ الاستحقاق', paymentStatus: 'الحالة', transferRef: 'مرجع التحويل', valueDate: 'تاريخ القيمة', terminal: 'جهاز الأداء', transactionNo: 'رقم العملية', billNo: 'رقم الكمبيالة', note: 'ملاحظة', partialDelivery: 'تسليم جزئي',
     partialReceipt: 'استلام جزئي', all: 'الكل', quotes: 'العروض', orders: 'الطلبيات',
     deliveries: 'التسليمات', receipts: 'الاستلامات', invoices: 'الفواتير', remaining: 'الباقي',
     paid: 'مؤداة', unpaid: 'غير مؤداة', partial: 'جزئية', cashIn: 'المداخيل',
@@ -54,6 +54,68 @@ const PERMS = [
   'purchases.read', 'purchases.write', 'purchases.delete',
   'users.read', 'users.write'
 ];
+
+
+function normalizePerms(perms) {
+  return Array.isArray(perms) ? perms : [];
+}
+
+function hasPerm(session, code) {
+  return normalizePerms(session?.perms).includes(code);
+}
+
+async function getUserPermissions(userId) {
+  const { data: user, error: uErr } = await supabase
+    .from('users')
+    .select('id, role_id')
+    .eq('id', userId)
+    .single();
+
+  if (uErr) throw new Error(uErr.message);
+
+  const { data: rolePerms, error: rpErr } = await supabase
+    .from('role_permissions')
+    .select('permissions(code)')
+    .eq('role_id', user.role_id);
+
+  if (rpErr) throw new Error(rpErr.message);
+
+  const perms = (rolePerms || []).map(x => x.permissions?.code).filter(Boolean);
+  return perms.length ? perms : PERMS;
+}
+
+async function loadPermissionsMatrix() {
+  const [{ data: roles, error: rErr }, { data: permissions, error: pErr }, { data: rolePerms, error: rpErr }] = await Promise.all([
+    supabase.from('roles').select('*').order('id'),
+    supabase.from('permissions').select('*').order('module').order('code'),
+    supabase.from('role_permissions').select('*')
+  ]);
+
+  if (rErr) throw new Error(rErr.message);
+  if (pErr) throw new Error(pErr.message);
+  if (rpErr) throw new Error(rpErr.message);
+
+  return { roles: roles || [], permissions: permissions || [], rolePerms: rolePerms || [] };
+}
+
+async function setRolePermission(roleId, permissionId, enabled) {
+  if (enabled) {
+    const { error } = await supabase
+      .from('role_permissions')
+      .upsert({ role_id: roleId, permission_id: permissionId }, { onConflict: 'role_id,permission_id' });
+    if (error) throw new Error(error.message);
+    await auditLog('Autorisations', 'GRANT', 'role #' + roleId, 'Ajout permission #' + permissionId);
+  } else {
+    const { error } = await supabase
+      .from('role_permissions')
+      .delete()
+      .eq('role_id', roleId)
+      .eq('permission_id', permissionId);
+    if (error) throw new Error(error.message);
+    await auditLog('Autorisations', 'REVOKE', 'role #' + roleId, 'Retrait permission #' + permissionId);
+  }
+}
+
 
 function getStoredSession() {
   try {
@@ -172,6 +234,8 @@ async function login(username, password) {
   if (error || !data) throw new Error('Identifiant incorrect');
   if (password !== data.password_hash) throw new Error('Mot de passe incorrect');
 
+  const dbPerms = await getUserPermissions(data.id);
+
   return {
     user: {
       id: data.id,
@@ -179,7 +243,7 @@ async function login(username, password) {
       full_name: data.full_name,
       role: data.roles?.name || 'Administrateur'
     },
-    perms: PERMS
+    perms: dbPerms
   };
 }
 
@@ -216,6 +280,40 @@ function ConfigMissing() {
   );
 }
 
+
+
+function currentUserLabel() {
+  const s = getStoredSession();
+  return s?.user?.full_name || s?.user?.username || 'system';
+}
+
+async function auditLog(moduleName, action, objectLabel, detail) {
+  try {
+    const s = getStoredSession();
+    await supabase.from('audit_logs').insert({
+      module: moduleName,
+      action,
+      object_label: objectLabel || '',
+      detail: detail || '',
+      user_id: s?.user?.id || null,
+      user_label: currentUserLabel(),
+      created_at: new Date().toISOString()
+    });
+  } catch (e) {
+    console.warn('Audit log error:', e.message);
+  }
+}
+
+async function loadAuditLogs() {
+  const { data, error } = await supabase
+    .from('audit_logs')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(500);
+
+  if (error) throw new Error(error.message);
+  return data || [];
+}
 
 async function loadStockMovements() {
   const { data, error } = await supabase
@@ -281,16 +379,18 @@ function Layout({ L, lang, toggleLang, session, setSession }) {
   const [page, setPage] = useState('dashboard');
 
   const menu = [
-    ['dashboard', L('dashboard')],
-    ['products', L('products')],
-    ['sales', L('sales')],
-    ['purchases', L('purchases')],
-    ['payments', L('payments')],
-    ['stockMoves', L('stockMoves')],
-    ['clients', L('clients')],
-    ['suppliers', L('suppliers')],
-    ['users', L('users')]
-  ];
+    ['dashboard', L('dashboard'), 'dashboard.read'],
+    ['products', L('products'), 'products.read'],
+    ['sales', L('sales'), 'sales.read'],
+    ['purchases', L('purchases'), 'purchases.read'],
+    ['payments', L('payments'), 'payments.read'],
+    ['stockMoves', L('stockMoves'), 'stock.read'],
+    ['audit', L('audit'), 'audit.read'],
+    ['clients', L('clients'), 'clients.read'],
+    ['suppliers', L('suppliers'), 'suppliers.read'],
+    ['users', L('users'), 'users.read'],
+    ['permissions', L('permissions'), 'permissions.manage']
+  ].filter(item => hasPerm(session, item[2]));
 
   return (
     <div className={lang === 'ar' ? 'rtl' : ''}>
@@ -321,14 +421,16 @@ function Layout({ L, lang, toggleLang, session, setSession }) {
 
         <main className="flex-1 p-6 max-w-[1500px] mx-auto w-full">
           {page === 'dashboard' ? <Dashboard L={L} /> : null}
-          {page === 'products' ? <Products L={L} /> : null}
-          {page === 'sales' ? <Docs L={L} type="sales" /> : null}
-          {page === 'purchases' ? <Docs L={L} type="purchases" /> : null}
-          {page === 'payments' ? <Payments L={L} /> : null}
+          {page === 'products' ? <Products L={L} session={session} /> : null}
+          {page === 'sales' ? <Docs L={L} type="sales" session={session} /> : null}
+          {page === 'purchases' ? <Docs L={L} type="purchases" session={session} /> : null}
+          {page === 'payments' ? <Payments L={L} session={session} /> : null}
           {page === 'stockMoves' ? <StockMovements L={L} /> : null}
-          {page === 'clients' ? <Parties L={L} type="clients" /> : null}
-          {page === 'suppliers' ? <Parties L={L} type="suppliers" /> : null}
-          {page === 'users' ? <Users L={L} /> : null}
+          {page === 'audit' ? <AuditLog L={L} /> : null}
+          {page === 'clients' ? <Parties L={L} type="clients" session={session} /> : null}
+          {page === 'suppliers' ? <Parties L={L} type="suppliers" session={session} /> : null}
+          {page === 'users' ? <Users L={L} session={session} /> : null}
+          {page === 'permissions' ? <Permissions L={L} /> : null}
         </main>
       </div>
     </div>
@@ -426,7 +528,7 @@ function Dashboard({ L }) {
   );
 }
 
-function Products({ L }) {
+function Products({ L, session }) {
   const [rows, setRows] = useState([]);
   const [form, setForm] = useState(null);
   const [stock, setStock] = useState(null);
@@ -459,6 +561,7 @@ function Products({ L }) {
       const q = form.id ? supabase.from('products').update(payload).eq('id', form.id) : supabase.from('products').insert(payload);
       const { error } = await q;
       if (error) throw error;
+      await auditLog('Produits', form.id ? 'UPDATE' : 'CREATE', form.nom || form.ref, form.id ? 'Modification produit' : 'Création produit');
       setForm(null);
       load();
     } catch (e) { alert(e.message); }
@@ -468,12 +571,14 @@ function Products({ L }) {
     if (!confirm('Supprimer ?')) return;
     const { error } = await supabase.from('products').delete().eq('id', id);
     if (error) alert(error.message);
+    else await auditLog('Produits', 'DELETE', String(id), 'Suppression produit');
     load();
   }
 
   async function adjustStock() {
     try {
       await updateStock([{ produitId: stock.id, qte: Number(stock.qte) }], 1, stock.reason || L('stock'));
+      await auditLog('Stock', 'STOCK', stock.nom, 'Ajustement stock : ' + stock.qte + ' - ' + (stock.reason || ''));
       setStock(null);
       load();
     } catch (e) { alert(e.message); }
@@ -484,7 +589,7 @@ function Products({ L }) {
   return (
     <>
       <Header title={L('products')}>
-        <button onClick={() => setForm({ ref: '', nom: '', categorie: 'Divers', unite: 'Pièce', prixAchat: 0, prixVente: 0, quantite: 0, stockMin: 0 })} className="btn bg-amber-500">{L('new')}</button>
+        {hasPerm(session, 'products.write') ? <button onClick={() => setForm({ ref: '', nom: '', categorie: 'Divers', unite: 'Pièce', prixAchat: 0, prixVente: 0, quantite: 0, stockMin: 0 })} className="btn bg-amber-500">{L('new')}</button> : null}
       </Header>
 
       <Table>
@@ -498,9 +603,9 @@ function Products({ L }) {
               <td className={p.quantite <= p.stockMin ? 'text-red-600 font-bold' : ''}>{p.quantite} {p.unite}</td>
               <td>{dh(p.prixVente)}</td>
               <td className="flex gap-1">
-                <button onClick={() => setForm(p)} className="btn bg-white border">{L('edit')}</button>
-                <button onClick={() => setStock({ ...p, qte: 1, reason: L('stock') })} className="btn bg-white border">{L('stock')}</button>
-                <button onClick={() => remove(p.id)} className="btn bg-red-600 text-white">{L('del')}</button>
+                {hasPerm(session, 'products.write') ? <button onClick={() => setForm(p)} className="btn bg-white border">{L('edit')}</button> : null}
+                {hasPerm(session, 'stock.adjust') ? <button onClick={() => setStock({ ...p, qte: 1, reason: L('stock') })} className="btn bg-white border">{L('stock')}</button> : null}
+                {hasPerm(session, 'products.delete') ? <button onClick={() => remove(p.id)} className="btn bg-red-600 text-white">{L('del')}</button> : null}
               </td>
             </tr>
           ))}
@@ -548,7 +653,7 @@ function StockModal({ L, stock, setStock, save, close }) {
   );
 }
 
-function Docs({ L, type }) {
+function Docs({ L, type, session }) {
   const isSales = type === 'sales';
   const [rows, setRows] = useState([]);
   const [products, setProducts] = useState([]);
@@ -635,7 +740,23 @@ function Docs({ L, type }) {
 
   async function settle() {
     try {
-      await payDoc(type, pay.id, { date: pay.date, mode: pay.mode, montant: Number(pay.montant) });
+      await payDoc(type, pay.id, {
+        date: pay.date,
+        mode: pay.mode,
+        montant: Number(pay.montant),
+        cashRegister: pay.cashRegister,
+        receiptNo: pay.receiptNo,
+        chequeNo: pay.chequeNo,
+        bank: pay.bank,
+        dueDate: pay.dueDate,
+        paymentStatus: pay.paymentStatus,
+        transferRef: pay.transferRef,
+        valueDate: pay.valueDate,
+        terminal: pay.terminal,
+        transactionNo: pay.transactionNo,
+        billNo: pay.billNo,
+        note: pay.note
+      });
       setPay(null);
       load();
     } catch (e) { alert(e.message); }
@@ -654,8 +775,8 @@ function Docs({ L, type }) {
   return (
     <>
       <Header title={isSales ? L('sales') : L('purchases')}>
-        <button onClick={() => create(isSales ? 'devis' : 'commande')} className="btn bg-white border">{L('create')}</button>
-        <button onClick={() => create(isSales ? 'facture' : 'reception')} className="btn bg-amber-500">{L('direct')}</button>
+        {hasPerm(session, isSales ? 'sales.write' : 'purchases.write') ? <button onClick={() => create(isSales ? 'devis' : 'commande')} className="btn bg-white border">{L('create')}</button> : null}
+        {hasPerm(session, isSales ? 'sales.write' : 'purchases.write') ? <button onClick={() => create(isSales ? 'facture' : 'reception')} className="btn bg-amber-500">{L('direct')}</button> : null}
       </Header>
 
       <div className="flex gap-1 mb-4 flex-wrap">
@@ -680,11 +801,11 @@ function Docs({ L, type }) {
                 <td>{dh(d.totalTTC)}</td>
                 <td><Badge tone={tone}>{status}{d.reste > 0 ? ' · ' + L('remaining') + ' ' + dh(d.reste) : ''}</Badge></td>
                 <td className="flex gap-1 flex-wrap">
-                  <button onClick={() => advance(d.id)} className="btn bg-slate-800 text-white">{L('advance')}</button>
-                  <button onClick={() => setPay({ ...d, date: today(), mode: 'Espèces', montant: d.reste || d.totalTTC })} className="btn bg-emerald-600 text-white">{L('pay')}</button>
-                  {d.stage !== 'facture' ? <button onClick={() => setPartial({ doc: d, qte: d.lignes?.[0]?.qte || 1 })} className="btn bg-white border">{isSales ? L('partialDelivery') : L('partialReceipt')}</button> : null}
-                  <button onClick={() => setForm({ id: d.id, start: d.stage, date: d.date, partyId: isSales ? d.client_id : d.supplier_id, lignes: (d.lignes || []).map(l => ({ produitId: l.produitId, qte: l.qte })) })} className="btn bg-white border">{L('edit')}</button>
-                  <button onClick={() => remove(d.id)} className="btn bg-red-600 text-white">{L('del')}</button>
+                  {hasPerm(session, isSales ? 'sales.write' : 'purchases.write') ? <button onClick={() => advance(d.id)} className="btn bg-slate-800 text-white">{L('advance')}</button> : null}
+                  {hasPerm(session, isSales ? 'sales.pay' : 'purchases.pay') ? <button onClick={() => setPay({ ...d, date: today(), mode: 'Espèces', montant: d.reste || d.totalTTC, cashRegister: '', receiptNo: '', chequeNo: '', bank: '', dueDate: '', paymentStatus: 'En portefeuille', transferRef: '', valueDate: '', terminal: '', transactionNo: '', billNo: '', note: '' })} className="btn bg-emerald-600 text-white">{L('pay')}</button> : null}
+                  {d.stage !== 'facture' && hasPerm(session, isSales ? 'sales.write' : 'purchases.write') ? <button onClick={() => setPartial({ doc: d, qte: d.lignes?.[0]?.qte || 1 })} className="btn bg-white border">{isSales ? L('partialDelivery') : L('partialReceipt')}</button> : null}
+                  {hasPerm(session, isSales ? 'sales.write' : 'purchases.write') ? <button onClick={() => setForm({ id: d.id, start: d.stage, date: d.date, partyId: isSales ? d.client_id : d.supplier_id, lignes: (d.lignes || []).map(l => ({ produitId: l.produitId, qte: l.qte })) })} className="btn bg-white border">{L('edit')}</button> : null}
+                  {hasPerm(session, isSales ? 'sales.delete' : 'purchases.delete') ? <button onClick={() => remove(d.id)} className="btn bg-red-600 text-white">{L('del')}</button> : null}
                 </td>
               </tr>
             );
@@ -733,20 +854,106 @@ function DocModal({ L, isSales, form, setForm, products, parties, save, close })
 }
 
 function PaymentModal({ L, isSales, pay, setPay, save, close }) {
+  const mode = pay.mode || 'Espèces';
+
+  function Field({ label, name, type = 'text' }) {
+    return (
+      <label className="text-xs text-slate-500">
+        {label}
+        <input
+          type={type}
+          className="input mt-1 mb-2"
+          value={pay[name] || ''}
+          onChange={e => setPay({ ...pay, [name]: e.target.value })}
+        />
+      </label>
+    );
+  }
+
+  function SelectField({ label, name, options }) {
+    return (
+      <label className="text-xs text-slate-500">
+        {label}
+        <select className="input mt-1 mb-2" value={pay[name] || ''} onChange={e => setPay({ ...pay, [name]: e.target.value })}>
+          {options.map(x => <option key={x} value={x}>{x}</option>)}
+        </select>
+      </label>
+    );
+  }
+
   return (
     <Modal title={isSales ? L('cashIn') : L('cashOut')} onClose={close}>
       <p className="text-sm mb-2">{L('remaining')} : <b>{dh(pay.reste || 0)}</b></p>
-      <label className="text-xs text-slate-500">{L('date')}
-        <input type="date" className="input mt-1 mb-2" value={pay.date} onChange={e => setPay({ ...pay, date: e.target.value })} />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <Field label={L('date')} name="date" type="date" />
+
+        <label className="text-xs text-slate-500">
+          Mode
+          <select className="input mt-1 mb-2" value={mode} onChange={e => setPay({ ...pay, mode: e.target.value })}>
+            {['Espèces', 'Chèque', 'Virement', 'Carte', 'Effet', 'Crédit'].map(x => <option key={x}>{x}</option>)}
+          </select>
+        </label>
+
+        <Field label="Montant" name="montant" type="number" />
+
+        {mode === 'Espèces' && (
+          <>
+            <Field label={L('cashRegister')} name="cashRegister" />
+            <Field label={L('receiptNo')} name="receiptNo" />
+          </>
+        )}
+
+        {mode === 'Chèque' && (
+          <>
+            <Field label={L('chequeNo')} name="chequeNo" />
+            <Field label={L('bank')} name="bank" />
+            <Field label={L('dueDate')} name="dueDate" type="date" />
+            <SelectField label={L('paymentStatus')} name="paymentStatus" options={['En portefeuille', 'Déposé', 'Encaissé', 'Rejeté']} />
+          </>
+        )}
+
+        {mode === 'Virement' && (
+          <>
+            <Field label={L('bank')} name="bank" />
+            <Field label={L('transferRef')} name="transferRef" />
+            <Field label={L('valueDate')} name="valueDate" type="date" />
+          </>
+        )}
+
+        {mode === 'Carte' && (
+          <>
+            <Field label={L('terminal')} name="terminal" />
+            <Field label={L('transactionNo')} name="transactionNo" />
+          </>
+        )}
+
+        {mode === 'Effet' && (
+          <>
+            <Field label={L('billNo')} name="billNo" />
+            <Field label={L('bank')} name="bank" />
+            <Field label={L('dueDate')} name="dueDate" type="date" />
+            <SelectField label={L('paymentStatus')} name="paymentStatus" options={['En portefeuille', 'Déposé', 'Encaissé', 'Rejeté']} />
+          </>
+        )}
+
+        {mode === 'Crédit' && (
+          <>
+            <Field label={L('dueDate')} name="dueDate" type="date" />
+            <Field label={L('note')} name="note" />
+          </>
+        )}
+      </div>
+
+      <label className="text-xs text-slate-500">
+        {L('note')}
+        <textarea
+          className="input mt-1"
+          value={pay.note || ''}
+          onChange={e => setPay({ ...pay, note: e.target.value })}
+        />
       </label>
-      <label className="text-xs text-slate-500">Mode
-        <select className="input mt-1 mb-2" value={pay.mode} onChange={e => setPay({ ...pay, mode: e.target.value })}>
-          {['Espèces', 'Chèque', 'Virement', 'Carte', 'Effet', 'Crédit'].map(x => <option key={x}>{x}</option>)}
-        </select>
-      </label>
-      <label className="text-xs text-slate-500">Montant
-        <input type="number" className="input mt-1" value={pay.montant} onChange={e => setPay({ ...pay, montant: e.target.value })} />
-      </label>
+
       <button onClick={save} className="btn bg-emerald-600 text-white mt-4">{L('save')}</button>
     </Modal>
   );
@@ -764,7 +971,7 @@ function PartialModal({ L, isSales, partial, setPartial, save, close }) {
   );
 }
 
-function Payments({ L }) {
+function Payments({ L, session }) {
   const [rows, setRows] = useState([]);
   const [tab, setTab] = useState('all');
   const [err, setErr] = useState('');
@@ -792,7 +999,7 @@ function Payments({ L }) {
       </div>
 
       <Table>
-        <thead><tr><th>{L('date')}</th><th>Type</th><th>Document</th><th>Tiers</th><th>Mode</th><th>Montant</th></tr></thead>
+        <thead><tr><th>{L('date')}</th><th>Type</th><th>Document</th><th>Tiers</th><th>Mode</th><th>Détails</th><th>Montant</th></tr></thead>
         <tbody>
           {filtered.map((p, i) => (
             <tr key={i}>
@@ -801,6 +1008,14 @@ function Payments({ L }) {
               <td>{p.docNumber || '#' + p.docId}</td>
               <td>{p.tiers}</td>
               <td>{p.mode}</td>
+              <td className="text-xs text-slate-500">
+                {p.chequeNo ? 'Chèque: ' + p.chequeNo + ' · ' : ''}
+                {p.billNo ? 'Effet: ' + p.billNo + ' · ' : ''}
+                {p.bank ? p.bank + ' · ' : ''}
+                {p.transferRef ? 'Vir: ' + p.transferRef + ' · ' : ''}
+                {p.transactionNo ? 'Tx: ' + p.transactionNo + ' · ' : ''}
+                {p.paymentStatus || p.receiptNo || p.cashRegister || p.note || '-'}
+              </td>
               <td className="font-bold">{dh(p.montant)}</td>
             </tr>
           ))}
@@ -810,6 +1025,104 @@ function Payments({ L }) {
   );
 }
 
+
+
+function AuditLog({ L }) {
+  const [rows, setRows] = useState([]);
+  const [moduleFilter, setModuleFilter] = useState('all');
+  const [actionFilter, setActionFilter] = useState('all');
+  const [err, setErr] = useState('');
+
+  async function load() {
+    try {
+      setErr('');
+      const data = await loadAuditLogs();
+      setRows(data);
+    } catch (e) {
+      setErr(e.message);
+    }
+  }
+
+  useEffect(() => { load(); }, []);
+
+  if (err) return <ErrorBox msg={err} />;
+
+  const modules = ['all', ...Array.from(new Set(rows.map(x => x.module).filter(Boolean)))];
+  const actions = ['all', ...Array.from(new Set(rows.map(x => x.action).filter(Boolean)))];
+
+  const filtered = rows.filter(x =>
+    (moduleFilter === 'all' || x.module === moduleFilter) &&
+    (actionFilter === 'all' || x.action === actionFilter)
+  );
+
+  function tone(action) {
+    if (['CREATE', 'ADVANCE', 'PAYMENT', 'STOCK', 'PARTIAL_RECEIPT'].includes(action)) return 'green';
+    if (['DELETE'].includes(action)) return 'red';
+    if (['UPDATE', 'PARTIAL_DELIVERY'].includes(action)) return 'amber';
+    return 'blue';
+  }
+
+  return (
+    <>
+      <Header title={L('audit')}>
+        <button onClick={load} className="btn bg-white border">↻</button>
+      </Header>
+
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+        <div className="card p-4">
+          <p className="text-xs text-slate-400">{L('movement')}</p>
+          <p className="text-2xl font-black">{rows.length}</p>
+        </div>
+        <div className="card p-4">
+          <p className="text-xs text-slate-400">CREATE</p>
+          <p className="text-2xl font-black text-emerald-600">{rows.filter(x => x.action === 'CREATE').length}</p>
+        </div>
+        <div className="card p-4">
+          <p className="text-xs text-slate-400">UPDATE</p>
+          <p className="text-2xl font-black text-amber-600">{rows.filter(x => x.action === 'UPDATE').length}</p>
+        </div>
+        <div className="card p-4">
+          <p className="text-xs text-slate-400">DELETE</p>
+          <p className="text-2xl font-black text-red-600">{rows.filter(x => x.action === 'DELETE').length}</p>
+        </div>
+      </div>
+
+      <div className="flex gap-2 mb-4 flex-wrap">
+        <select className="input max-w-xs" value={moduleFilter} onChange={e => setModuleFilter(e.target.value)}>
+          {modules.map(m => <option key={m} value={m}>{m === 'all' ? L('all') : m}</option>)}
+        </select>
+        <select className="input max-w-xs" value={actionFilter} onChange={e => setActionFilter(e.target.value)}>
+          {actions.map(a => <option key={a} value={a}>{a === 'all' ? L('all') : a}</option>)}
+        </select>
+      </div>
+
+      <Table>
+        <thead>
+          <tr>
+            <th>{L('date')}</th>
+            <th>{L('actor')}</th>
+            <th>{L('module')}</th>
+            <th>{L('action')}</th>
+            <th>{L('object')}</th>
+            <th>{L('detail')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filtered.map(x => (
+            <tr key={x.id}>
+              <td>{x.created_at ? new Date(x.created_at).toLocaleString('fr-FR') : '-'}</td>
+              <td>{x.user_label || '-'}</td>
+              <td>{x.module || '-'}</td>
+              <td><Badge tone={tone(x.action)}>{x.action}</Badge></td>
+              <td className="font-semibold">{x.object_label || '-'}</td>
+              <td>{x.detail || '-'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </>
+  );
+}
 
 function StockMovements({ L }) {
   const [rows, setRows] = useState([]);
@@ -896,7 +1209,7 @@ function StockMovements({ L }) {
   );
 }
 
-function Parties({ L, type }) {
+function Parties({ L, type, session }) {
   const [rows, setRows] = useState([]);
   const [form, setForm] = useState(null);
   const [err, setErr] = useState('');
@@ -929,7 +1242,7 @@ function Parties({ L, type }) {
   return (
     <>
       <Header title={type === 'clients' ? L('clients') : L('suppliers')}>
-        <button onClick={() => setForm({ name: '', ice: '', phone: '', city: '', address: '' })} className="btn bg-amber-500">{L('new')}</button>
+        {hasPerm(session, type === 'clients' ? 'clients.write' : 'suppliers.write') ? <button onClick={() => setForm({ name: '', ice: '', phone: '', city: '', address: '' })} className="btn bg-amber-500">{L('new')}</button> : null}
       </Header>
 
       <div className="grid md:grid-cols-3 gap-3">
@@ -938,8 +1251,8 @@ function Parties({ L, type }) {
             <b>{x.name}</b>
             <p className="text-sm text-slate-500">ICE: {x.ice || '-'}<br />Tél: {x.phone || '-'}<br />{x.city || ''}</p>
             <div className="flex gap-1 mt-3">
-              <button onClick={() => setForm(x)} className="btn bg-white border">{L('edit')}</button>
-              <button onClick={() => remove(x.id)} className="btn bg-red-600 text-white">{L('del')}</button>
+              {hasPerm(session, type === 'clients' ? 'clients.write' : 'suppliers.write') ? <button onClick={() => setForm(x)} className="btn bg-white border">{L('edit')}</button> : null}
+              {hasPerm(session, type === 'clients' ? 'clients.delete' : 'suppliers.delete') ? <button onClick={() => remove(x.id)} className="btn bg-red-600 text-white">{L('del')}</button> : null}
             </div>
           </div>
         ))}
@@ -957,7 +1270,7 @@ function Parties({ L, type }) {
   );
 }
 
-function Users({ L }) {
+function Users({ L, session }) {
   const [rows, setRows] = useState([]);
   const [roles, setRoles] = useState([]);
   const [form, setForm] = useState(null);
@@ -986,7 +1299,7 @@ function Users({ L }) {
   return (
     <>
       <Header title={L('users')}>
-        <button onClick={() => setForm({ username: '', password: 'changeme', full_name: '', role_id: roles[0]?.id })} className="btn bg-amber-500">{L('new')}</button>
+        {hasPerm(session, 'users.write') ? <button onClick={() => setForm({ username: '', password: 'changeme', full_name: '', role_id: roles[0]?.id })} className="btn bg-amber-500">{L('new')}</button> : null}
       </Header>
 
       <Table>
@@ -1008,5 +1321,95 @@ function Users({ L }) {
     </>
   );
 }
+
+
+function Permissions({ L }) {
+  const [roles, setRoles] = useState([]);
+  const [permissions, setPermissions] = useState([]);
+  const [rolePerms, setRolePerms] = useState([]);
+  const [err, setErr] = useState('');
+
+  async function load() {
+    try {
+      setErr('');
+      const data = await loadPermissionsMatrix();
+      setRoles(data.roles);
+      setPermissions(data.permissions);
+      setRolePerms(data.rolePerms);
+    } catch (e) {
+      setErr(e.message);
+    }
+  }
+
+  useEffect(() => { load(); }, []);
+
+  async function toggle(roleId, permissionId, checked) {
+    try {
+      await setRolePermission(roleId, permissionId, checked);
+      await load();
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  if (err) return <ErrorBox msg={err} />;
+
+  const grouped = permissions.reduce((acc, p) => {
+    const mod = p.module || 'Divers';
+    if (!acc[mod]) acc[mod] = [];
+    acc[mod].push(p);
+    return acc;
+  }, {});
+
+  function checked(roleId, permissionId) {
+    return rolePerms.some(x => Number(x.role_id) === Number(roleId) && Number(x.permission_id) === Number(permissionId));
+  }
+
+  return (
+    <>
+      <Header title={L('permissions')}>
+        <button onClick={load} className="btn bg-white border">↻</button>
+      </Header>
+
+      <div className="card overflow-auto">
+        <table className="table w-full">
+          <thead>
+            <tr>
+              <th>Module / Permission</th>
+              {roles.map(r => <th key={r.id}>{r.name}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {Object.entries(grouped).map(([mod, perms]) => (
+              <React.Fragment key={mod}>
+                <tr>
+                  <td colSpan={roles.length + 1} className="bg-slate-100 font-bold text-slate-700">{mod}</td>
+                </tr>
+                {perms.map(p => (
+                  <tr key={p.id}>
+                    <td>
+                      <div className="font-semibold">{p.label || p.code}</div>
+                      <div className="text-xs text-slate-400 font-mono">{p.code}</div>
+                    </td>
+                    {roles.map(r => (
+                      <td key={r.id}>
+                        <input
+                          type="checkbox"
+                          checked={checked(r.id, p.id)}
+                          onChange={e => toggle(r.id, p.id, e.target.checked)}
+                        />
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </React.Fragment>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+}
+
 
 createRoot(document.getElementById('root')).render(<App />);
