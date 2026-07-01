@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-console.log('DROGUERIEPRO V15 BRANCH SCOPE OK');
+console.log('DROGUERIEPRO V16 BRANCH MANAGEMENT OK');
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -21,7 +21,7 @@ const TXT = {
   fr: {
     login: 'Connexion', username: 'Utilisateur', password: 'Mot de passe', connect: 'Se connecter',
     dashboard: 'Tableau de bord', products: 'Produits / Stock', sales: 'Ventes', purchases: 'Achats',
-    payments: 'Paiements', settings: 'Paramètres', permissions: 'Autorisations', clients: 'Clients', suppliers: 'Fournisseurs', users: 'Utilisateurs', branch: 'Droguerie',
+    payments: 'Paiements', settings: 'Paramètres', permissions: 'Autorisations', clients: 'Clients', suppliers: 'Fournisseurs', users: 'Utilisateurs', branch: 'Droguerie', branches: 'Gestion drogueries', city: 'Ville', manager: 'Responsable', active: 'Actif', deactivate: 'Désactiver',
     logout: 'Déconnexion', lang: 'العربية', new: 'Nouveau', save: 'Enregistrer', edit: 'Modifier',
     del: 'Supprimer', actions: 'Actions', stock: 'Stock', price: 'Prix', create: 'Créer',
     direct: 'Direct', advance: 'Avancer', pay: 'Régler', partialDelivery: 'Livraison partielle',
@@ -34,7 +34,7 @@ const TXT = {
   ar: {
     login: 'تسجيل الدخول', username: 'المستخدم', password: 'كلمة المرور', connect: 'دخول',
     dashboard: 'لوحة القيادة', products: 'المنتجات / المخزون', sales: 'المبيعات', purchases: 'المشتريات',
-    payments: 'الأداءات', settings: 'الإعدادات', permissions: 'الصلاحيات', clients: 'الزبناء', suppliers: 'الموردون', users: 'المستخدمون', branch: 'الدروكري',
+    payments: 'الأداءات', settings: 'الإعدادات', permissions: 'الصلاحيات', clients: 'الزبناء', suppliers: 'الموردون', users: 'المستخدمون', branch: 'الدروكري', branches: 'تدبير الدروكريات', city: 'المدينة', manager: 'المسؤول', active: 'نشط', deactivate: 'تعطيل',
     logout: 'خروج', lang: 'Français', new: 'جديد', save: 'حفظ', edit: 'تعديل',
     del: 'حذف', actions: 'الإجراءات', stock: 'المخزون', price: 'الثمن', create: 'إنشاء',
     direct: 'مباشر', advance: 'المرحلة التالية', pay: 'تسوية', partialDelivery: 'تسليم جزئي',
@@ -296,6 +296,50 @@ async function loadBranches() {
   const { data, error } = await supabase.from('branches').select('*').order('name');
   if (error) throw new Error(error.message);
   return data || [];
+}
+
+
+
+async function saveBranch(branch) {
+  const payload = {
+    name: branch.name || '',
+    city: branch.city || '',
+    address: branch.address || '',
+    phone: branch.phone || '',
+    manager_name: branch.manager_name || '',
+    active: branch.active !== false
+  };
+
+  const q = branch.id
+    ? supabase.from('branches').update(payload).eq('id', branch.id)
+    : supabase.from('branches').insert(payload);
+
+  const { error } = await q;
+  if (error) throw new Error(error.message);
+}
+
+async function deleteBranch(id) {
+  const { error } = await supabase.from('branches').update({ active: false }).eq('id', id);
+  if (error) throw new Error(error.message);
+}
+
+async function loadUsersForBranch() {
+  const { data, error } = await supabase
+    .from('users')
+    .select('id, username, full_name, branch_id, roles(name)')
+    .order('full_name');
+
+  if (error) throw new Error(error.message);
+  return data || [];
+}
+
+async function assignUserBranch(userId, branchId) {
+  const { error } = await supabase
+    .from('users')
+    .update({ branch_id: branchId || null })
+    .eq('id', userId);
+
+  if (error) throw new Error(error.message);
 }
 
 
@@ -566,6 +610,7 @@ function Layout({ L, lang, toggleLang, session, setSession }) {
     ['payments', L('payments'), 'payments.read'],
     ['settings', L('settings'), 'settings.manage'],
     ['permissions', L('permissions'), 'permissions.manage'],
+    ['branches', L('branches'), 'branches.manage'],
     ['clients', L('clients'), 'clients.read'],
     ['suppliers', L('suppliers'), 'suppliers.read'],
     ['users', L('users'), 'users.read']
@@ -607,6 +652,7 @@ function Layout({ L, lang, toggleLang, session, setSession }) {
           {page === 'payments' ? <Payments L={L} /> : null}
           {page === 'settings' ? <Settings L={L} /> : null}
           {page === 'permissions' ? <Permissions L={L} /> : null}
+          {page === 'branches' ? <Branches L={L} /> : null}
           {page === 'clients' ? <Parties L={L} type="clients" /> : null}
           {page === 'suppliers' ? <Parties L={L} type="suppliers" /> : null}
           {page === 'users' ? <Users L={L} /> : null}
@@ -1241,5 +1287,148 @@ function Permissions({ L }) {
   const grouped=permissions.reduce((a,p)=>{ const m=p.module||'Divers'; (a[m] ||= []).push(p); return a; },{});
   return <><Header title={L('permissions')}><button onClick={load} className="btn bg-white border">↻</button></Header><div className="card overflow-auto"><table className="table w-full"><thead><tr><th>Module / Permission</th>{roles.map(r=><th key={r.id}>{r.name}</th>)}</tr></thead><tbody>{Object.entries(grouped).map(([mod,perms])=><React.Fragment key={mod}><tr><td colSpan={roles.length+1} className="bg-slate-100 font-bold">{mod}</td></tr>{perms.map(p=><tr key={p.id}><td><div className="font-semibold">{p.label||p.code}</div><div className="text-xs text-slate-400 font-mono">{p.code}</div></td>{roles.map(r=><td key={r.id}><input type="checkbox" checked={checked(r.id,p.id)} onChange={e=>toggle(r.id,p.id,e.target.checked)}/></td>)}</tr>)}</React.Fragment>)}</tbody></table></div></>;
 }
+
+
+function Branches({ L }) {
+  const [rows, setRows] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [form, setForm] = useState(null);
+  const [err, setErr] = useState('');
+
+  async function load() {
+    try {
+      setErr('');
+      const [branches, usersData] = await Promise.all([loadBranches(), loadUsersForBranch()]);
+      setRows(branches);
+      setUsers(usersData);
+    } catch (e) {
+      setErr(e.message);
+    }
+  }
+
+  useEffect(() => { load(); }, []);
+
+  async function save() {
+    try {
+      await saveBranch(form);
+      setForm(null);
+      await load();
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  async function deactivate(id) {
+    if (!confirm('Désactiver cette droguerie ?')) return;
+    try {
+      await deleteBranch(id);
+      await load();
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  async function assign(userId, branchId) {
+    try {
+      await assignUserBranch(userId, branchId ? Number(branchId) : null);
+      await load();
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  if (err) return <ErrorBox msg={err} />;
+
+  return (
+    <>
+      <Header title={L('branches')}>
+        <button
+          onClick={() => setForm({ name: '', city: '', address: '', phone: '', manager_name: '', active: true })}
+          className="btn bg-amber-500"
+        >
+          {L('new')}
+        </button>
+      </Header>
+
+      <div className="grid md:grid-cols-3 gap-4 mb-6">
+        {rows.map(b => (
+          <div key={b.id} className="card p-4">
+            <div className="flex justify-between gap-2">
+              <div>
+                <h2 className="font-bold text-lg">{b.name}</h2>
+                <p className="text-sm text-slate-500">{b.city || '-'}</p>
+              </div>
+              <Badge tone={b.active ? 'green' : 'red'}>{b.active ? L('active') : 'Inactive'}</Badge>
+            </div>
+            <div className="text-sm text-slate-600 mt-3">
+              <p>{L('phone')} : {b.phone || '-'}</p>
+              <p>{L('manager')} : {b.manager_name || '-'}</p>
+              <p>{L('address')} : {b.address || '-'}</p>
+            </div>
+            <div className="flex gap-2 mt-4">
+              <button onClick={() => setForm(b)} className="btn bg-white border">{L('edit')}</button>
+              <button onClick={() => deactivate(b.id)} className="btn bg-red-600 text-white">{L('deactivate')}</button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="card p-4">
+        <h2 className="font-bold mb-3">Affectation utilisateurs / drogueries</h2>
+        <Table>
+          <thead>
+            <tr>
+              <th>{L('username')}</th>
+              <th>{L('name')}</th>
+              <th>Profil</th>
+              <th>{L('branch')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map(u => (
+              <tr key={u.id}>
+                <td>{u.username}</td>
+                <td>{u.full_name || '-'}</td>
+                <td>{u.roles?.name || '-'}</td>
+                <td>
+                  <select className="input" value={u.branch_id || ''} onChange={e => assign(u.id, e.target.value)}>
+                    <option value="">Toutes / Aucune</option>
+                    {rows.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+                  </select>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </div>
+
+      {form ? (
+        <Modal title={L('branches')} onClose={() => setForm(null)}>
+          <label className="text-xs text-slate-500">{L('name')}
+            <input className="input mt-1 mb-2" value={form.name || ''} onChange={e => setForm({ ...form, name: e.target.value })} />
+          </label>
+          <label className="text-xs text-slate-500">{L('city')}
+            <input className="input mt-1 mb-2" value={form.city || ''} onChange={e => setForm({ ...form, city: e.target.value })} />
+          </label>
+          <label className="text-xs text-slate-500">{L('phone')}
+            <input className="input mt-1 mb-2" value={form.phone || ''} onChange={e => setForm({ ...form, phone: e.target.value })} />
+          </label>
+          <label className="text-xs text-slate-500">{L('manager')}
+            <input className="input mt-1 mb-2" value={form.manager_name || ''} onChange={e => setForm({ ...form, manager_name: e.target.value })} />
+          </label>
+          <label className="text-xs text-slate-500">{L('address')}
+            <textarea className="input mt-1 mb-2" value={form.address || ''} onChange={e => setForm({ ...form, address: e.target.value })} />
+          </label>
+          <label className="flex items-center gap-2 text-sm mb-3">
+            <input type="checkbox" checked={form.active !== false} onChange={e => setForm({ ...form, active: e.target.checked })} />
+            {L('active')}
+          </label>
+          <button onClick={save} className="btn bg-amber-500">{L('save')}</button>
+        </Modal>
+      ) : null}
+    </>
+  );
+}
+
 
 createRoot(document.getElementById('root')).render(<App />);
