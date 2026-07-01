@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-console.log('DROGUERIEPRO V13 STABLE FULL FIX OK');
+console.log('DROGUERIEPRO V14 PERMISSIONS FIX OK');
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -55,6 +55,11 @@ const PERMS = [
   'users.read', 'users.write'
 ];
 
+
+function hasPerm(session, code) {
+  return Array.isArray(session?.perms) && session.perms.includes(code);
+}
+
 function getStoredSession() {
   try {
     return JSON.parse(localStorage.getItem('droguerie_session') || 'null');
@@ -69,6 +74,31 @@ function setStoredSession(s) {
 
 function clearStoredSession() {
   localStorage.removeItem('droguerie_session');
+}
+
+async function getUserPermissions(userId) {
+  const { data: user, error: userError } = await supabase
+    .from('users')
+    .select('id, role_id')
+    .eq('id', userId)
+    .single();
+
+  if (userError) throw new Error(userError.message);
+
+  if (!user?.role_id) {
+    return [];
+  }
+
+  const { data, error } = await supabase
+    .from('role_permissions')
+    .select('permissions(code)')
+    .eq('role_id', user.role_id);
+
+  if (error) throw new Error(error.message);
+
+  return (data || [])
+    .map(x => x.permissions?.code)
+    .filter(Boolean);
 }
 
 function jsonValue(v, fallback) {
@@ -172,14 +202,16 @@ async function login(username, password) {
   if (error || !data) throw new Error('Identifiant incorrect');
   if (password !== data.password_hash) throw new Error('Mot de passe incorrect');
 
+  const userPerms = await getUserPermissions(data.id);
+
   return {
     user: {
       id: data.id,
       username: data.username,
       full_name: data.full_name,
-      role: data.roles?.name || 'Administrateur'
+      role: data.roles?.name || 'Sans profil'
     },
-    perms: PERMS
+    perms: userPerms
   };
 }
 
@@ -203,6 +235,16 @@ function App() {
   }
 
   return <Layout L={L} lang={lang} toggleLang={toggleLang} session={session} setSession={setSession} />;
+}
+
+
+async function refreshCurrentSession(setSession) {
+  const current = getStoredSession();
+  if (!current?.user?.id) return;
+  const perms = await getUserPermissions(current.user.id);
+  const updated = { ...current, perms };
+  setStoredSession(updated);
+  setSession(updated);
 }
 
 function ConfigMissing() {
@@ -411,7 +453,7 @@ async function loadRoles() {
   return data || [];
 }
 async function createUser(body) {
-  const { error } = await supabase.from('users').insert({ username: body.username, password_hash: body.password || 'changeme', full_name: body.full_name || '', role_id: body.role_id, active: true });
+  const { error } = await supabase.from('users').insert({ username: body.username, password_hash: body.password || 'changeme', full_name: body.full_name || '', role_id: body.role_id || 3, active: true });
   if (error) throw new Error(error.message);
 }
 
@@ -460,17 +502,17 @@ function Layout({ L, lang, toggleLang, session, setSession }) {
   const [page, setPage] = useState('dashboard');
 
   const menu = [
-    ['dashboard', L('dashboard')],
-    ['products', L('products')],
-    ['sales', L('sales')],
-    ['purchases', L('purchases')],
-    ['payments', L('payments')],
-    ['settings', L('settings')],
-    ['permissions', L('permissions')],
-    ['clients', L('clients')],
-    ['suppliers', L('suppliers')],
-    ['users', L('users')]
-  ];
+    ['dashboard', L('dashboard'), 'dashboard.read'],
+    ['products', L('products'), 'products.read'],
+    ['sales', L('sales'), 'sales.read'],
+    ['purchases', L('purchases'), 'purchases.read'],
+    ['payments', L('payments'), 'payments.read'],
+    ['settings', L('settings'), 'settings.manage'],
+    ['permissions', L('permissions'), 'permissions.manage'],
+    ['clients', L('clients'), 'clients.read'],
+    ['suppliers', L('suppliers'), 'suppliers.read'],
+    ['users', L('users'), 'users.read']
+  ].filter(item => hasPerm(session, item[2]));
 
   return (
     <div className={lang === 'ar' ? 'rtl' : ''}>
@@ -495,6 +537,7 @@ function Layout({ L, lang, toggleLang, session, setSession }) {
 
           <div className="p-3 border-t border-slate-800 space-y-2">
             <button onClick={toggleLang} className="btn bg-slate-800 w-full">{L('lang')}</button>
+            <button onClick={() => refreshCurrentSession(setSession)} className="btn bg-slate-800 w-full">Rafraîchir droits</button>
             <button onClick={() => { clearStoredSession(); setSession(null); }} className="btn bg-slate-800 w-full">{L('logout')}</button>
           </div>
         </aside>
