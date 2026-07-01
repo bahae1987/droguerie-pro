@@ -1,8 +1,8 @@
-import React,{useEffect,useMemo,useState}from'react';
+import React,{useEffect,useState}from'react';
 import{createRoot}from'react-dom/client';
 import{api,can,clearSession,dh,fmt,getSession,setSession}from'./api';
 import'./index.css';
-import{LayoutDashboard,Package,Receipt,ShoppingCart,Users,Truck,ShieldCheck,LogOut,Plus,ArrowRight,Save,RefreshCcw,Trash2,Pencil,Wallet,PackageCheck,FileText}from'lucide-react';
+import{LayoutDashboard,Package,Receipt,ShoppingCart,Users,Truck,ShieldCheck,LogOut,Plus,ArrowRight,Save,RefreshCcw,Trash2,Pencil,Wallet,PackageCheck}from'lucide-react';
 
 const today=()=>new Date().toISOString().slice(0,10);
 const labels={fr:{login:'Connexion',user:'Utilisateur',pass:'Mot de passe',connect:'Se connecter',dashboard:'Tableau de bord',products:'Produits',sales:'Ventes',purchases:'Achats',clients:'Clients',suppliers:'Fournisseurs',users:'Utilisateurs',payments:'Paiements',logout:'Déconnexion',new:'Nouveau',save:'Enregistrer',name:'Nom',stock:'Stock',price:'Prix',actions:'Actions',advance:'Avancer',pay:'Régler',role:'Profil'}};
@@ -29,5 +29,50 @@ function Payments({L}){const[rows,setRows]=useState([]),[tab,setTab]=useState('a
 function SimpleList({L,type,perms}){const[rows,setRows]=useState([]),[form,setForm]=useState(null);const load=()=>api(`/${type}`).then(setRows);useEffect(load,[]);const save=async()=>{await api(form.id?`/${type}/${form.id}`:`/${type}`,{method:form.id?'PUT':'POST',body:JSON.stringify(form)});setForm(null);load()};const del=async(id)=>{if(confirm('Supprimer ?')){await api(`/${type}/${id}`,{method:'DELETE'});load()}};const canWrite=can(perms,type==='clients'?'clients.write':'suppliers.write');return <><Header title={L(type)}>{canWrite&&<button onClick={()=>setForm({name:'',ice:'',phone:'',city:''})} className="btn bg-amber-500"><Plus size={16}/></button>}</Header><div className="grid md:grid-cols-3 gap-3">{rows.map(x=><div key={x.id} className="card p-4"><b>{x.name}</b><p className="text-sm text-slate-500">ICE: {x.ice||'-'}<br/>Tél: {x.phone||'-'}<br/>{x.city||''}</p><div className="flex gap-1 mt-3"><button onClick={()=>setForm(x)} className="btn bg-white border"><Pencil size={14}/></button><button onClick={()=>del(x.id)} className="btn bg-red-600 text-white"><Trash2 size={14}/></button></div></div>)}</div>{form&&<Modal title="Nouveau" onClose={()=>setForm(null)}>{['name','ice','phone','city','address'].map(k=><input key={k} className="input mb-2" placeholder={k} value={form[k]||''} onChange={e=>setForm({...form,[k]:e.target.value})}/>)}<button onClick={save} className="btn bg-amber-500">{L('save')}</button></Modal>}</>}
 function UsersPage({L}){const[rows,setRows]=useState([]),[roles,setRoles]=useState([]),[form,setForm]=useState(null);const load=()=>Promise.all([api('/users'),api('/roles')]).then(([u,r])=>{setRows(u);setRoles(r)});useEffect(load,[]);const save=async()=>{await api('/users',{method:'POST',body:JSON.stringify(form)});setForm(null);load()};return <><Header title={L('users')}><button onClick={()=>setForm({username:'',password:'changeme',full_name:'',role_id:roles[0]?.id})} className="btn bg-amber-500"><Plus size={16}/></button></Header><div className="card overflow-hidden"><table className="table w-full"><thead><tr><th>{L('user')}</th><th>Nom complet</th><th>{L('role')}</th><th>Actif</th></tr></thead><tbody>{rows.map(u=><tr key={u.id}><td>{u.username}</td><td>{u.full_name}</td><td>{u.role}</td><td>{u.active?'Oui':'Non'}</td></tr>)}</tbody></table></div>{form&&<Modal title="Utilisateur" onClose={()=>setForm(null)}>{['username','password','full_name'].map(k=><input key={k} className="input mb-2" placeholder={k} value={form[k]} onChange={e=>setForm({...form,[k]:e.target.value})}/>)}<select className="input mb-3" value={form.role_id} onChange={e=>setForm({...form,role_id:+e.target.value})}>{roles.map(r=><option key={r.id} value={r.id}>{r.name}</option>)}</select><button onClick={save} className="btn bg-amber-500">{L('save')}</button></Modal>}</>}
 
-function App(){const[session,setSessionState]=useState(getSession());if(!session)return <Login onLogin={setSessionState} lang="fr"/>;return <Shell session={session} setSessionState={setSessionState}/>}
-createRoot(document.getElementById('root')).render(<App/>);
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { error: null }
+  }
+  static getDerivedStateFromError(error) {
+    return { error }
+  }
+  componentDidCatch(error, info) {
+    console.error('Erreur React:', error, info)
+  }
+  render() {
+    if (this.state.error) {
+      return (
+        <div className="min-h-screen bg-slate-100 p-8">
+          <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow p-6">
+            <h1 className="text-xl font-bold text-red-600 mb-3">Erreur de chargement DrogueriePro</h1>
+            <p className="text-slate-600 mb-3">Vérifie les variables Vercel Supabase et le déploiement.</p>
+            <pre className="bg-slate-900 text-white p-4 rounded text-xs overflow-auto">{String(this.state.error?.message || this.state.error)}</pre>
+          </div>
+        </div>
+      )
+    }
+    return this.props.children
+  }
+}
+
+function MissingConfig() {
+  return (
+    <div className="min-h-screen bg-slate-100 grid place-items-center p-6">
+      <div className="bg-white rounded-2xl shadow p-6 max-w-xl">
+        <h1 className="font-bold text-xl text-red-600 mb-3">Configuration Supabase manquante</h1>
+        <p className="text-slate-600 mb-3">Dans Vercel, ajoute les variables suivantes puis redéploie :</p>
+        <pre className="bg-slate-900 text-white p-4 rounded text-xs">VITE_SUPABASE_URL=https://xxxxx.supabase.co{`\n`}VITE_SUPABASE_ANON_KEY=xxxxx</pre>
+      </div>
+    </div>
+  )
+}
+
+function App(){
+  if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) return <MissingConfig/>
+  const[session,setSessionState]=useState(getSession());
+  if(!session)return <Login onLogin={setSessionState} lang="fr"/>;
+  return <Shell session={session} setSessionState={setSessionState}/>
+}
+
+createRoot(document.getElementById('root')).render(<ErrorBoundary><App/></ErrorBoundary>);
