@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-console.log('DROGUERIEPRO V12 STABLE FINAL OK');
+console.log('DROGUERIEPRO V13 STABLE FULL FIX OK');
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -28,7 +28,7 @@ const TXT = {
     partialReceipt: 'Réception partielle', all: 'Tous', quotes: 'Devis', orders: 'Commandes',
     deliveries: 'Livraisons', receipts: 'Réceptions', invoices: 'Factures', remaining: 'Reste',
     paid: 'Réglée', unpaid: 'Non réglée', partial: 'Partielle', cashIn: 'Encaissements',
-    cashOut: 'Décaissements', quantity: 'Quantité', date: 'Date', customer: 'Client',
+    cashOut: 'Décaissements', vat: 'TVA', theme: 'Thème', company: 'Société', address: 'Adresse', phone: 'Téléphone', ice: 'ICE', cashRegister: 'Caisse', receiptNo: 'N° reçu', chequeNo: 'N° chèque', bank: 'Banque', dueDate: 'Échéance', paymentStatus: 'Statut', transferRef: 'Réf. virement', valueDate: 'Date valeur', terminal: 'TPE', transactionNo: 'N° transaction', billNo: 'N° effet', note: 'Observation', quantity: 'Quantité', date: 'Date', customer: 'Client',
     supplier: 'Fournisseur', product: 'Produit', base: 'Base'
   },
   ar: {
@@ -41,7 +41,7 @@ const TXT = {
     partialReceipt: 'استلام جزئي', all: 'الكل', quotes: 'العروض', orders: 'الطلبيات',
     deliveries: 'التسليمات', receipts: 'الاستلامات', invoices: 'الفواتير', remaining: 'الباقي',
     paid: 'مؤداة', unpaid: 'غير مؤداة', partial: 'جزئية', cashIn: 'المداخيل',
-    cashOut: 'المصاريف', quantity: 'الكمية', date: 'التاريخ', customer: 'الزبون',
+    cashOut: 'المصاريف', vat: 'الضريبة', theme: 'المظهر', company: 'الشركة', address: 'العنوان', phone: 'الهاتف', ice: 'ICE', cashRegister: 'الصندوق', receiptNo: 'رقم الوصل', chequeNo: 'رقم الشيك', bank: 'البنك', dueDate: 'الاستحقاق', paymentStatus: 'الحالة', transferRef: 'مرجع التحويل', valueDate: 'تاريخ القيمة', terminal: 'جهاز الأداء', transactionNo: 'رقم العملية', billNo: 'رقم الكمبيالة', note: 'ملاحظة', quantity: 'الكمية', date: 'التاريخ', customer: 'الزبون',
     supplier: 'المورد', product: 'المنتج', base: 'الأصل'
   }
 };
@@ -54,44 +54,6 @@ const PERMS = [
   'purchases.read', 'purchases.write', 'purchases.delete',
   'users.read', 'users.write'
 ];
-
-
-async function loadSettings() {
-  const defaults = { vat_rate: '20', theme: 'light', company_name: 'DrogueriePro', company_ice: '', company_phone: '', company_address: '' };
-  const { data, error } = await supabase.from('app_settings').select('*');
-  if (error) return defaults;
-  const result = { ...defaults };
-  (data || []).forEach(x => { result[x.key] = x.value; });
-  return result;
-}
-
-async function saveSettings(settings) {
-  const rows = Object.entries(settings).map(([key, value]) => ({ key, value: String(value ?? '') }));
-  const { error } = await supabase.from('app_settings').upsert(rows, { onConflict: 'key' });
-  if (error) throw new Error(error.message);
-}
-
-async function loadPermissionsMatrix() {
-  const [{ data: roles, error: rErr }, { data: permissions, error: pErr }, { data: rolePerms, error: rpErr }] = await Promise.all([
-    supabase.from('roles').select('*').order('id'),
-    supabase.from('permissions').select('*').order('module').order('code'),
-    supabase.from('role_permissions').select('*')
-  ]);
-  if (rErr) throw new Error(rErr.message);
-  if (pErr) throw new Error(pErr.message);
-  if (rpErr) throw new Error(rpErr.message);
-  return { roles: roles || [], permissions: permissions || [], rolePerms: rolePerms || [] };
-}
-
-async function setRolePermission(roleId, permissionId, enabled) {
-  if (enabled) {
-    const { error } = await supabase.from('role_permissions').upsert({ role_id: roleId, permission_id: permissionId }, { onConflict: 'role_id,permission_id' });
-    if (error) throw new Error(error.message);
-  } else {
-    const { error } = await supabase.from('role_permissions').delete().eq('role_id', roleId).eq('permission_id', permissionId);
-    if (error) throw new Error(error.message);
-  }
-}
 
 function getStoredSession() {
   try {
@@ -252,6 +214,205 @@ function ConfigMissing() {
       </div>
     </div>
   );
+}
+
+
+async function getVatRate() {
+  try {
+    const { data } = await supabase.from('app_settings').select('value').eq('key', 'vat_rate').maybeSingle();
+    return Number(data?.value || 20);
+  } catch { return 20; }
+}
+
+async function loadSettings() {
+  const defaults = { vat_rate: '20', theme: 'light', company_name: 'DrogueriePro', company_ice: '', company_phone: '', company_address: '' };
+  const { data, error } = await supabase.from('app_settings').select('*');
+  if (error) return defaults;
+  const out = { ...defaults };
+  (data || []).forEach(x => { out[x.key] = x.value; });
+  return out;
+}
+
+async function saveSettings(settings) {
+  const rows = Object.entries(settings).map(([key, value]) => ({ key, value: String(value ?? '') }));
+  const { error } = await supabase.from('app_settings').upsert(rows, { onConflict: 'key' });
+  if (error) throw new Error(error.message);
+}
+
+async function loadPermissionsMatrix() {
+  const [{ data: roles, error: rErr }, { data: permissions, error: pErr }, { data: rolePerms, error: rpErr }] = await Promise.all([
+    supabase.from('roles').select('*').order('id'),
+    supabase.from('permissions').select('*').order('module').order('code'),
+    supabase.from('role_permissions').select('*')
+  ]);
+  if (rErr) throw new Error(rErr.message);
+  if (pErr) throw new Error(pErr.message);
+  if (rpErr) throw new Error(rpErr.message);
+  return { roles: roles || [], permissions: permissions || [], rolePerms: rolePerms || [] };
+}
+
+async function setRolePermission(roleId, permissionId, enabled) {
+  if (enabled) {
+    const { error } = await supabase.from('role_permissions').upsert({ role_id: roleId, permission_id: permissionId }, { onConflict: 'role_id,permission_id' });
+    if (error) throw new Error(error.message);
+  } else {
+    const { error } = await supabase.from('role_permissions').delete().eq('role_id', roleId).eq('permission_id', permissionId);
+    if (error) throw new Error(error.message);
+  }
+}
+
+async function createDoc(type, body) {
+  const isSales = type === 'sales';
+  const start = body.start || (isSales ? 'devis' : 'commande');
+  const lines = body.lignes || [];
+  const vat = Number(body.tauxTva || await getVatRate());
+  const t = computeTotals(lines, vat, isSales);
+  let prefix, key;
+  if (isSales) {
+    prefix = start === 'facture' ? 'FAC' : start === 'commande' ? 'BC' : start === 'livraison' ? 'BL' : 'DEV';
+    key = start === 'facture' ? 'facture' : start === 'commande' ? 'commande' : start === 'livraison' ? 'bl' : 'devis';
+  } else {
+    prefix = start === 'facture' ? 'FF' : start === 'reception' ? 'BR' : 'CF';
+    key = start === 'facture' ? 'facture' : start === 'reception' ? 'reception' : 'commande';
+  }
+  const numbers = { [key]: await nextNumber(prefix) };
+  if (isSales && (start === 'livraison' || start === 'facture')) await updateStock(lines, -1, start === 'facture' ? 'Vente directe' : 'Livraison vente');
+  if (!isSales && (start === 'reception' || start === 'facture')) await updateStock(lines, 1, start === 'facture' ? 'Facture fournisseur directe' : 'Réception achat');
+  const session = getStoredSession();
+  const payload = isSales ? {
+    date: body.date || today(), client_id: body.clientId || null, client_name: body.clientNom || await partyName(type, body.clientId),
+    stage: start, numbers_json: numbers, lines_json: lines, payments_json: [], vat_rate: vat, total_ht: t.totalHT, vat: t.vat, total_ttc: t.totalTTC,
+    delivered: start === 'livraison' || start === 'facture', created_by: session?.user?.id || null, base_doc_id: body.baseDocId || null
+  } : {
+    date: body.date || today(), supplier_id: body.fournisseurId || null, supplier_name: body.fournisseurNom || await partyName(type, body.fournisseurId),
+    stage: start, numbers_json: numbers, lines_json: lines, payments_json: [], vat_rate: vat, total_ht: t.totalHT, vat: t.vat, total_ttc: t.totalTTC,
+    received: start === 'reception' || start === 'facture', created_by: session?.user?.id || null, base_doc_id: body.baseDocId || null
+  };
+  const { error } = await supabase.from(type).insert(payload);
+  if (error) throw new Error(error.message);
+}
+
+async function updateDoc(type, id, body) {
+  const isSales = type === 'sales';
+  const lines = body.lignes || [];
+  const vat = Number(body.tauxTva || await getVatRate());
+  const t = computeTotals(lines, vat, isSales);
+  const payload = { date: body.date || today(), lines_json: lines, vat_rate: vat, total_ht: t.totalHT, vat: t.vat, total_ttc: t.totalTTC };
+  if (isSales) { payload.client_id = body.clientId || null; payload.client_name = body.clientNom || await partyName(type, payload.client_id); }
+  else { payload.supplier_id = body.fournisseurId || null; payload.supplier_name = body.fournisseurNom || await partyName(type, payload.supplier_id); }
+  const { error } = await supabase.from(type).update(payload).eq('id', id);
+  if (error) throw new Error(error.message);
+}
+
+async function deleteDoc(type, id) {
+  const { data: doc, error: e1 } = await supabase.from(type).select('*').eq('id', id).single();
+  if (e1) throw new Error(e1.message);
+  const lines = jsonValue(doc.lines_json, []);
+  if (type === 'sales' && doc.delivered) await updateStock(lines, 1, 'Suppression vente - restitution stock');
+  if (type === 'purchases' && doc.received) await updateStock(lines, -1, 'Suppression achat - retrait stock');
+  const { error } = await supabase.from(type).delete().eq('id', id);
+  if (error) throw new Error(error.message);
+}
+
+async function advanceDoc(type, id) {
+  const isSales = type === 'sales';
+  const { data: doc, error } = await supabase.from(type).select('*').eq('id', id).single();
+  if (error) throw new Error(error.message);
+  const stages = isSales ? ['devis', 'commande', 'livraison', 'facture'] : ['commande', 'reception', 'facture'];
+  const next = stages[stages.indexOf(doc.stage) + 1];
+  if (!next) return;
+  const prefixes = isSales ? { commande: 'BC', livraison: 'BL', facture: 'FAC' } : { reception: 'BR', facture: 'FF' };
+  const keys = isSales ? { commande: 'commande', livraison: 'bl', facture: 'facture' } : { reception: 'reception', facture: 'facture' };
+  const numbers = { ...jsonValue(doc.numbers_json, {}), [keys[next]]: await nextNumber(prefixes[next]) };
+  const lines = jsonValue(doc.lines_json, []);
+  if (isSales && next === 'livraison' && !doc.delivered) await updateStock(lines, -1, 'Livraison vente');
+  if (!isSales && next === 'reception' && !doc.received) await updateStock(lines, 1, 'Réception achat');
+  const payload = isSales ? { stage: next, numbers_json: numbers, delivered: next === 'livraison' ? true : doc.delivered } : { stage: next, numbers_json: numbers, received: next === 'reception' ? true : doc.received };
+  const { error: e2 } = await supabase.from(type).update(payload).eq('id', id);
+  if (e2) throw new Error(e2.message);
+}
+
+async function payDoc(type, id, body) {
+  const { data: doc, error } = await supabase.from(type).select('*').eq('id', id).single();
+  if (error) throw new Error(error.message);
+  const payments = jsonValue(doc.payments_json, []);
+  const info = paymentInfo(doc);
+  const montant = Number(body.montant || info.rest || 0);
+  if (montant <= 0) throw new Error('Montant de règlement invalide');
+  payments.push({
+    id: String(Date.now()), date: body.date || today(), mode: body.mode || 'Espèces', montant,
+    cashRegister: body.cashRegister || '', receiptNo: body.receiptNo || '', chequeNo: body.chequeNo || '', bank: body.bank || '', dueDate: body.dueDate || '', paymentStatus: body.paymentStatus || '', transferRef: body.transferRef || '', valueDate: body.valueDate || '', terminal: body.terminal || '', transactionNo: body.transactionNo || '', billNo: body.billNo || '', note: body.note || ''
+  });
+  const { error: e2 } = await supabase.from(type).update({ payments_json: payments }).eq('id', id);
+  if (e2) throw new Error(e2.message);
+}
+
+async function partialDoc(type, id, body) {
+  const isSales = type === 'sales';
+  const { data: doc, error } = await supabase.from(type).select('*').eq('id', id).single();
+  if (error) throw new Error(error.message);
+  const original = jsonValue(doc.lines_json, []);
+  const lines = original.map(l => ({ ...l, qte: Number(body.qte || l.qte || 0) })).filter(l => Number(l.qte) > 0);
+  const vat = Number(doc.vat_rate || await getVatRate());
+  const t = computeTotals(lines, vat, isSales);
+  const stage = isSales ? 'livraison' : 'reception';
+  const prefix = isSales ? 'BL' : 'BR';
+  const key = isSales ? 'bl' : 'reception';
+  const numbers = { ...jsonValue(doc.numbers_json, {}), [key]: await nextNumber(prefix) };
+  if (isSales) await updateStock(lines, -1, 'Livraison partielle vente');
+  else await updateStock(lines, 1, 'Réception partielle achat');
+  const session = getStoredSession();
+  const payload = isSales ? {
+    date: body.date || today(), client_id: doc.client_id, client_name: doc.client_name, stage, numbers_json: numbers, lines_json: lines, payments_json: [], vat_rate: vat, total_ht: t.totalHT, vat: t.vat, total_ttc: t.totalTTC, delivered: true, created_by: session?.user?.id || null, base_doc_id: doc.id
+  } : {
+    date: body.date || today(), supplier_id: doc.supplier_id, supplier_name: doc.supplier_name, stage, numbers_json: numbers, lines_json: lines, payments_json: [], vat_rate: vat, total_ht: t.totalHT, vat: t.vat, total_ttc: t.totalTTC, received: true, created_by: session?.user?.id || null, base_doc_id: doc.id
+  };
+  const { error: e2 } = await supabase.from(type).insert(payload);
+  if (e2) throw new Error(e2.message);
+}
+
+async function loadPayments() {
+  const [{ data: sales, error: e1 }, { data: purchases, error: e2 }] = await Promise.all([
+    supabase.from('sales').select('*').order('id', { ascending: false }),
+    supabase.from('purchases').select('*').order('id', { ascending: false })
+  ]);
+  if (e1) throw new Error(e1.message);
+  if (e2) throw new Error(e2.message);
+  const enc = (sales || []).flatMap(d => jsonValue(d.payments_json, []).map(p => ({ type: 'encaissement', docType: 'vente', docId: d.id, docNumber: Object.values(jsonValue(d.numbers_json, {}))[0], tiers: d.client_name, ...p })));
+  const dec = (purchases || []).flatMap(d => jsonValue(d.payments_json, []).map(p => ({ type: 'decaissement', docType: 'achat', docId: d.id, docNumber: Object.values(jsonValue(d.numbers_json, {}))[0], tiers: d.supplier_name, ...p })));
+  return [...enc, ...dec].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+}
+
+async function loadParties(type) {
+  const { data, error } = await supabase.from(type).select('*').order('name');
+  if (error) throw new Error(error.message);
+  return data || [];
+}
+async function saveParty(type, body) {
+  const payload = type === 'clients'
+    ? { name: body.name || '', type: body.type || 'entreprise', ice: body.ice || '', phone: body.phone || '', city: body.city || '', address: body.address || '' }
+    : { name: body.name || '', ice: body.ice || '', phone: body.phone || '', city: body.city || '', contact: body.contact || '', address: body.address || '' };
+  const q = body.id ? supabase.from(type).update(payload).eq('id', body.id) : supabase.from(type).insert(payload);
+  const { error } = await q;
+  if (error) throw new Error(error.message);
+}
+async function deleteParty(type, id) {
+  const { error } = await supabase.from(type).delete().eq('id', id);
+  if (error) throw new Error(error.message);
+}
+async function loadUsers() {
+  const { data, error } = await supabase.from('users').select('id, username, full_name, active, roles(name)').order('id');
+  if (error) throw new Error(error.message);
+  return (data || []).map(u => ({ id: u.id, username: u.username, full_name: u.full_name, active: u.active, role: u.roles?.name }));
+}
+async function loadRoles() {
+  const { data, error } = await supabase.from('roles').select('*').order('id');
+  if (error) throw new Error(error.message);
+  return data || [];
+}
+async function createUser(body) {
+  const { error } = await supabase.from('users').insert({ username: body.username, password_hash: body.password || 'changeme', full_name: body.full_name || '', role_id: body.role_id, active: true });
+  if (error) throw new Error(error.message);
 }
 
 function LoginPage({ L, lang, onLogin }) {
@@ -655,12 +816,7 @@ function Docs({ L, type }) {
 
   async function settle() {
     try {
-      await payDoc(type, pay.id, {
-        date: pay.date, mode: pay.mode, montant: Number(pay.montant),
-        cashRegister: pay.cashRegister, receiptNo: pay.receiptNo, chequeNo: pay.chequeNo, bank: pay.bank,
-        dueDate: pay.dueDate, paymentStatus: pay.paymentStatus, transferRef: pay.transferRef, valueDate: pay.valueDate,
-        terminal: pay.terminal, transactionNo: pay.transactionNo, billNo: pay.billNo, note: pay.note
-      });
+      await payDoc(type, pay.id, { date: pay.date, mode: pay.mode, montant: Number(pay.montant), cashRegister: pay.cashRegister, receiptNo: pay.receiptNo, chequeNo: pay.chequeNo, bank: pay.bank, dueDate: pay.dueDate, paymentStatus: pay.paymentStatus, transferRef: pay.transferRef, valueDate: pay.valueDate, terminal: pay.terminal, transactionNo: pay.transactionNo, billNo: pay.billNo, note: pay.note });
       setPay(null);
       load();
     } catch (e) { alert(e.message); }
@@ -770,7 +926,7 @@ function PaymentModal({ L, isSales, pay, setPay, save, close }) {
       <p className="text-sm mb-2">{L('remaining')} : <b>{dh(pay.reste || 0)}</b></p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <Field label={L('date')} name="date" type="date" />
-        <label className="text-xs text-slate-500">Mode<select className="input mt-1 mb-2" value={mode} onChange={e => setPay({ ...pay, mode: e.target.value })}>{['Espèces','Chèque','Virement','Carte','Effet','Crédit'].map(x => <option key={x}>{x}</option>)}</select></label>
+        <label className="text-xs text-slate-500">Mode<select className="input mt-1 mb-2" value={mode} onChange={e => setPay({ ...pay, mode: e.target.value })}>{['Espèces', 'Chèque', 'Virement', 'Carte', 'Effet', 'Crédit'].map(x => <option key={x}>{x}</option>)}</select></label>
         <Field label="Montant" name="montant" type="number" />
         {mode === 'Espèces' && <><Field label={L('cashRegister')} name="cashRegister" /><Field label={L('receiptNo')} name="receiptNo" /></>}
         {mode === 'Chèque' && <><Field label={L('chequeNo')} name="chequeNo" /><Field label={L('bank')} name="bank" /><Field label={L('dueDate')} name="dueDate" type="date" /><SelectField label={L('paymentStatus')} name="paymentStatus" options={['En portefeuille','Déposé','Encaissé','Rejeté']} /></>}
@@ -834,14 +990,7 @@ function Payments({ L }) {
               <td>{p.docNumber || '#' + p.docId}</td>
               <td>{p.tiers}</td>
               <td>{p.mode}</td>
-              <td className="text-xs text-slate-500">
-                {p.chequeNo ? 'Chèque: ' + p.chequeNo + ' · ' : ''}
-                {p.billNo ? 'Effet: ' + p.billNo + ' · ' : ''}
-                {p.bank ? p.bank + ' · ' : ''}
-                {p.transferRef ? 'Vir: ' + p.transferRef + ' · ' : ''}
-                {p.transactionNo ? 'Tx: ' + p.transactionNo + ' · ' : ''}
-                {p.paymentStatus || p.receiptNo || p.cashRegister || p.note || '-'}
-              </td>
+              <td className="text-xs text-slate-500">{p.chequeNo ? 'Chèque: ' + p.chequeNo + ' · ' : ''}{p.billNo ? 'Effet: ' + p.billNo + ' · ' : ''}{p.bank ? p.bank + ' · ' : ''}{p.transferRef ? 'Vir: ' + p.transferRef + ' · ' : ''}{p.transactionNo ? 'Tx: ' + p.transactionNo + ' · ' : ''}{p.paymentStatus || p.receiptNo || p.cashRegister || p.note || '-'}</td>
               <td className="font-bold">{dh(p.montant)}</td>
             </tr>
           ))}
@@ -968,23 +1117,22 @@ function Users({ L }) {
 function Settings({ L }) {
   const [settings, setSettings] = useState(null);
   const [err, setErr] = useState('');
-  async function load() { try { setSettings(await loadSettings()); } catch (e) { setErr(e.message); } }
-  useEffect(() => { load(); }, []);
-  async function save() { try { await saveSettings(settings); alert('Paramètres enregistrés'); } catch (e) { alert(e.message); } }
+  async function load(){ try{ setSettings(await loadSettings()); }catch(e){ setErr(e.message); } }
+  useEffect(()=>{ load(); }, []);
+  async function save(){ try{ await saveSettings(settings); alert('Paramètres enregistrés'); }catch(e){ alert(e.message); } }
   if (err) return <ErrorBox msg={err} />;
   if (!settings) return <p>Chargement...</p>;
-  return <><Header title={L('settings')}><button onClick={save} className="btn bg-amber-500">{L('save')}</button></Header><div className="grid md:grid-cols-2 gap-4"><div className="card p-5"><h2 className="font-bold mb-3">{L('company')}</h2><label className="text-xs text-slate-500">{L('company')}<input className="input mt-1 mb-2" value={settings.company_name || ''} onChange={e => setSettings({ ...settings, company_name: e.target.value })} /></label><label className="text-xs text-slate-500">{L('ice')}<input className="input mt-1 mb-2" value={settings.company_ice || ''} onChange={e => setSettings({ ...settings, company_ice: e.target.value })} /></label><label className="text-xs text-slate-500">{L('phone')}<input className="input mt-1 mb-2" value={settings.company_phone || ''} onChange={e => setSettings({ ...settings, company_phone: e.target.value })} /></label><label className="text-xs text-slate-500">{L('address')}<textarea className="input mt-1" value={settings.company_address || ''} onChange={e => setSettings({ ...settings, company_address: e.target.value })} /></label></div><div className="card p-5"><h2 className="font-bold mb-3">{L('settings')}</h2><label className="text-xs text-slate-500">{L('vat')} %<input className="input mt-1 mb-2" type="number" value={settings.vat_rate || '20'} onChange={e => setSettings({ ...settings, vat_rate: e.target.value })} /></label><label className="text-xs text-slate-500">{L('theme')}<select className="input mt-1" value={settings.theme || 'light'} onChange={e => setSettings({ ...settings, theme: e.target.value })}><option value="light">Light</option><option value="dark">Dark</option><option value="corporate">Corporate</option></select></label></div></div></>;
+  return <><Header title={L('settings')}><button onClick={save} className="btn bg-amber-500">{L('save')}</button></Header><div className="grid md:grid-cols-2 gap-4"><div className="card p-5"><h2 className="font-bold mb-3">{L('company')}</h2><label className="text-xs text-slate-500">{L('company')}<input className="input mt-1 mb-2" value={settings.company_name || ''} onChange={e=>setSettings({...settings, company_name:e.target.value})}/></label><label className="text-xs text-slate-500">{L('ice')}<input className="input mt-1 mb-2" value={settings.company_ice || ''} onChange={e=>setSettings({...settings, company_ice:e.target.value})}/></label><label className="text-xs text-slate-500">{L('phone')}<input className="input mt-1 mb-2" value={settings.company_phone || ''} onChange={e=>setSettings({...settings, company_phone:e.target.value})}/></label><label className="text-xs text-slate-500">{L('address')}<textarea className="input mt-1" value={settings.company_address || ''} onChange={e=>setSettings({...settings, company_address:e.target.value})}/></label></div><div className="card p-5"><h2 className="font-bold mb-3">{L('settings')}</h2><label className="text-xs text-slate-500">{L('vat')} %<input className="input mt-1 mb-2" type="number" value={settings.vat_rate || '20'} onChange={e=>setSettings({...settings, vat_rate:e.target.value})}/></label><label className="text-xs text-slate-500">{L('theme')}<select className="input mt-1" value={settings.theme || 'light'} onChange={e=>setSettings({...settings, theme:e.target.value})}><option value="light">Light</option><option value="dark">Dark</option><option value="corporate">Corporate</option></select></label></div></div></>;
 }
-
 function Permissions({ L }) {
-  const [roles, setRoles] = useState([]), [permissions, setPermissions] = useState([]), [rolePerms, setRolePerms] = useState([]), [err, setErr] = useState('');
-  async function load() { try { const d = await loadPermissionsMatrix(); setRoles(d.roles); setPermissions(d.permissions); setRolePerms(d.rolePerms); } catch (e) { setErr(e.message); } }
-  useEffect(() => { load(); }, []);
-  function isChecked(roleId, permissionId) { return rolePerms.some(x => Number(x.role_id) === Number(roleId) && Number(x.permission_id) === Number(permissionId)); }
-  async function toggle(roleId, permissionId, checked) { try { await setRolePermission(roleId, permissionId, checked); await load(); } catch (e) { alert(e.message); } }
+  const [roles,setRoles]=useState([]), [permissions,setPermissions]=useState([]), [rolePerms,setRolePerms]=useState([]), [err,setErr]=useState('');
+  async function load(){ try{ const d=await loadPermissionsMatrix(); setRoles(d.roles); setPermissions(d.permissions); setRolePerms(d.rolePerms); }catch(e){ setErr(e.message); } }
+  useEffect(()=>{ load(); }, []);
+  function checked(rid,pid){ return rolePerms.some(x=>Number(x.role_id)===Number(rid)&&Number(x.permission_id)===Number(pid)); }
+  async function toggle(rid,pid,en){ try{ await setRolePermission(rid,pid,en); await load(); }catch(e){ alert(e.message); } }
   if (err) return <ErrorBox msg={err} />;
-  const grouped = permissions.reduce((acc, p) => { const mod = p.module || 'Divers'; if (!acc[mod]) acc[mod] = []; acc[mod].push(p); return acc; }, {});
-  return <><Header title={L('permissions')}><button onClick={load} className="btn bg-white border">↻</button></Header><div className="card overflow-auto"><table className="table w-full"><thead><tr><th>Module / Permission</th>{roles.map(r => <th key={r.id}>{r.name}</th>)}</tr></thead><tbody>{Object.entries(grouped).map(([mod, perms]) => <React.Fragment key={mod}><tr><td colSpan={roles.length + 1} className="bg-slate-100 font-bold">{mod}</td></tr>{perms.map(p => <tr key={p.id}><td><div className="font-semibold">{p.label || p.code}</div><div className="text-xs text-slate-400 font-mono">{p.code}</div></td>{roles.map(r => <td key={r.id}><input type="checkbox" checked={isChecked(r.id, p.id)} onChange={e => toggle(r.id, p.id, e.target.checked)} /></td>)}</tr>)}</React.Fragment>)}</tbody></table></div></>;
+  const grouped=permissions.reduce((a,p)=>{ const m=p.module||'Divers'; (a[m] ||= []).push(p); return a; },{});
+  return <><Header title={L('permissions')}><button onClick={load} className="btn bg-white border">↻</button></Header><div className="card overflow-auto"><table className="table w-full"><thead><tr><th>Module / Permission</th>{roles.map(r=><th key={r.id}>{r.name}</th>)}</tr></thead><tbody>{Object.entries(grouped).map(([mod,perms])=><React.Fragment key={mod}><tr><td colSpan={roles.length+1} className="bg-slate-100 font-bold">{mod}</td></tr>{perms.map(p=><tr key={p.id}><td><div className="font-semibold">{p.label||p.code}</div><div className="text-xs text-slate-400 font-mono">{p.code}</div></td>{roles.map(r=><td key={r.id}><input type="checkbox" checked={checked(r.id,p.id)} onChange={e=>toggle(r.id,p.id,e.target.checked)}/></td>)}</tr>)}</React.Fragment>)}</tbody></table></div></>;
 }
 
 createRoot(document.getElementById('root')).render(<App />);
