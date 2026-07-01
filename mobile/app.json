@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "DrogueriePro",
+    "slug": "drogueriepro",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#0f172a"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.drogueriepro.mobile"
+    },
+    "android": {
+      "package": "com.drogueriepro.mobile"
+    },
+    "extra": {
+      "supabaseUrl": "REMPLACER_PAR_VOTRE_SUPABASE_URL",
+      "supabaseAnonKey": "REMPLACER_PAR_VOTRE_SUPABASE_ANON_KEY"
+    }
+  }
+}
