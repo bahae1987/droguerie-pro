@@ -2,13 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  margin: 0;
+  background: #f8fafc;
+}
+
+.rtl {
+  direction: rtl;
+  text-align: right;
+}
+
+.rtl aside button {
+  text-align: right;
+}
+
 .input {
   width: 100%;
   border: 1px solid #cbd5e1;
   border-radius: 0.5rem;
   padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
+  background: white;
 }
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -19,11 +35,17 @@
   font-size: 0.875rem;
   font-weight: 600;
 }
+
 .card {
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 0.75rem;
 }
+
+.table {
+  border-collapse: collapse;
+}
+
 .table th {
   text-align: left;
   padding: 0.75rem;
@@ -31,6 +53,11 @@
   color: #64748b;
   background: #f8fafc;
 }
+
+.rtl .table th {
+  text-align: right;
+}
+
 .table td {
   padding: 0.75rem;
   border-top: 1px solid #f1f5f9;
