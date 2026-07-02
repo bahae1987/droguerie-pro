@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-console.log('DROGUERIEPRO V21 SAP FLOW STOCK AUDIT OK');
+console.log('DROGUERIEPRO V22 PRO DOCS PAYMENT PRINT AR OK');
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -29,7 +29,7 @@ const TXT = {
     deliveries: 'Livraisons', receipts: 'Réceptions', invoices: 'Factures', remaining: 'Reste',
     paid: 'Réglée', unpaid: 'Non réglée', partial: 'Partielle', cashIn: 'Encaissements',
     cashOut: 'Décaissements', vat: 'TVA', theme: 'Thème', company: 'Société', address: 'Adresse', phone: 'Téléphone', ice: 'ICE', cashRegister: 'Caisse', receiptNo: 'N° reçu', chequeNo: 'N° chèque', bank: 'Banque', dueDate: 'Échéance', paymentStatus: 'Statut', transferRef: 'Réf. virement', valueDate: 'Date valeur', terminal: 'TPE', transactionNo: 'N° transaction', billNo: 'N° effet', note: 'Observation', quantity: 'Quantité', date: 'Date', customer: 'Client',
-    supplier: 'Fournisseur', product: 'Produit', base: 'Base', remainingQty: 'Qté restante', orderedQty: 'Qté commandée', deliveredQty: 'Qté livrée', receivedQty: 'Qté reçue', open: 'Ouvert', closed: 'Clôturé', preview: 'Aperçu', print: 'Imprimer', unitPrice: 'PU', totalHT: 'Total HT', totalVAT: 'TVA', totalTTC: 'Total TTC'
+    supplier: 'Fournisseur', product: 'Produit', base: 'Base', remainingQty: 'Qté restante', orderedQty: 'Qté commandée', deliveredQty: 'Qté livrée', receivedQty: 'Qté reçue', open: 'Ouvert', closed: 'Clôturé', preview: 'Aperçu', print: 'Imprimer', unitPrice: 'PU', totalHT: 'Total HT', totalVAT: 'TVA', totalTTC: 'Total TTC', cancelPayment: 'Annuler règlement', canceled: 'Annulé', subtotal: 'Sous-total', signature: 'Signature', preparedBy: 'Préparé par', printDate: 'Date impression', legalNote: 'Document généré par DrogueriePro', arabicName: 'Nom arabe'
   },
   ar: {
     login: 'تسجيل الدخول', username: 'المستخدم', password: 'كلمة المرور', connect: 'دخول',
@@ -42,7 +42,7 @@ const TXT = {
     deliveries: 'التسليمات', receipts: 'الاستلامات', invoices: 'الفواتير', remaining: 'الباقي',
     paid: 'مؤداة', unpaid: 'غير مؤداة', partial: 'جزئية', cashIn: 'المداخيل',
     cashOut: 'المصاريف', vat: 'الضريبة', theme: 'المظهر', company: 'الشركة', address: 'العنوان', phone: 'الهاتف', ice: 'ICE', cashRegister: 'الصندوق', receiptNo: 'رقم الوصل', chequeNo: 'رقم الشيك', bank: 'البنك', dueDate: 'الاستحقاق', paymentStatus: 'الحالة', transferRef: 'مرجع التحويل', valueDate: 'تاريخ القيمة', terminal: 'جهاز الأداء', transactionNo: 'رقم العملية', billNo: 'رقم الكمبيالة', note: 'ملاحظة', quantity: 'الكمية', date: 'التاريخ', customer: 'الزبون',
-    supplier: 'المورد', product: 'المنتج', base: 'الأصل', remainingQty: 'الكمية المتبقية', orderedQty: 'الكمية المطلوبة', deliveredQty: 'الكمية المسلمة', receivedQty: 'الكمية المستلمة', open: 'مفتوح', closed: 'مغلق', preview: 'معاينة', print: 'طباعة', unitPrice: 'ثمن الوحدة', totalHT: 'المجموع بدون ضريبة', totalVAT: 'الضريبة', totalTTC: 'المجموع مع الضريبة'
+    supplier: 'المورد', product: 'المنتج', base: 'الأصل', remainingQty: 'الكمية المتبقية', orderedQty: 'الكمية المطلوبة', deliveredQty: 'الكمية المسلمة', receivedQty: 'الكمية المستلمة', open: 'مفتوح', closed: 'مغلق', preview: 'معاينة', print: 'طباعة', unitPrice: 'ثمن الوحدة', totalHT: 'المجموع بدون الضريبة', totalVAT: 'الضريبة', totalTTC: 'المجموع مع الضريبة', cancelPayment: 'إلغاء الأداء', canceled: 'ملغى', subtotal: 'المجموع الجزئي', signature: 'التوقيع', preparedBy: 'أنجز من طرف', printDate: 'تاريخ الطباعة', legalNote: 'وثيقة تم إنشاؤها بواسطة DrogueriePro', arabicName: 'الاسم بالعربية'
   }
 };
 
@@ -52,7 +52,7 @@ const PERMS = [
   'suppliers.read', 'suppliers.write', 'suppliers.delete',
   'sales.read', 'sales.write', 'sales.delete',
   'purchases.read', 'purchases.write', 'purchases.delete',
-  'users.read', 'users.write', 'stock.read', 'audit.read'
+  'users.read', 'users.write', 'stock.read', 'audit.read', 'payments.cancel'
 ];
 
 
@@ -111,7 +111,8 @@ function jsonValue(v, fallback) {
 
 function paymentInfo(doc) {
   const payments = jsonValue(doc.payments_json || doc.paiements, []);
-  const paid = payments.reduce((s, p) => s + Number(p.montant || 0), 0);
+  const activePayments = payments.filter(p => !p.canceled);
+  const paid = activePayments.reduce((s, p) => s + Number(p.montant || 0), 0);
   const total = Number(doc.total_ttc || doc.totalTTC || 0);
   const rest = Math.max(0, total - paid);
   const status = paid <= 0.001 ? 'unpaid' : rest <= 0.01 ? 'paid' : 'partial';
@@ -123,6 +124,7 @@ function mapProduct(p) {
     id: p.id,
     ref: p.ref || '',
     nom: p.name || '',
+    nomAr: p.name_ar || '',
     categorie: p.category || '',
     unite: p.unit || '',
     prixAchat: Number(p.purchase_price || 0),
@@ -801,12 +803,37 @@ async function payDoc(type, id, body) {
   const montant = Number(body.montant || info.rest || 0);
   if (montant <= 0) throw new Error('Montant de règlement invalide');
   payments.push({
-    id: String(Date.now()), date: body.date || today(), mode: body.mode || 'Espèces', montant,
+    id: String(Date.now()), canceled: false, canceledAt: '', canceledBy: '', cancelReason: '', date: body.date || today(), mode: body.mode || 'Espèces', montant,
     cashRegister: body.cashRegister || '', receiptNo: body.receiptNo || '', chequeNo: body.chequeNo || '', bank: body.bank || '', dueDate: body.dueDate || '', paymentStatus: body.paymentStatus || '', transferRef: body.transferRef || '', valueDate: body.valueDate || '', terminal: body.terminal || '', transactionNo: body.transactionNo || '', billNo: body.billNo || '', note: body.note || ''
   });
   const { error: e2 } = await supabase.from(type).update({ payments_json: payments }).eq('id', id);
   if (e2) throw new Error(e2.message);
   await auditLog(type === 'sales' ? 'Paiements ventes' : 'Paiements achats', 'PAYMENT', docNo(doc), 'Règlement ' + montant + ' DH');
+}
+
+
+async function cancelPayment(type, docId, paymentId, reason = '') {
+  const { data: doc, error } = await supabase.from(type).select('*').eq('id', docId).single();
+  if (error) throw new Error(error.message);
+
+  const payments = jsonValue(doc.payments_json, []);
+  const idx = payments.findIndex(p => String(p.id) === String(paymentId));
+  if (idx < 0) throw new Error('Règlement introuvable');
+  if (payments[idx].canceled) throw new Error('Règlement déjà annulé');
+
+  const session = getStoredSession();
+  payments[idx] = {
+    ...payments[idx],
+    canceled: true,
+    canceledAt: new Date().toISOString(),
+    canceledBy: currentUserLabel(),
+    cancelReason: reason || 'Annulation règlement'
+  };
+
+  const { error: e2 } = await supabase.from(type).update({ payments_json: payments }).eq('id', docId);
+  if (e2) throw new Error(e2.message);
+
+  await auditLog(type === 'sales' ? 'Paiements ventes' : 'Paiements achats', 'CANCEL_PAYMENT', docNo(doc), 'Annulation règlement ' + Number(payments[idx].montant || 0) + ' DH');
 }
 
 
@@ -898,8 +925,8 @@ async function loadPayments() {
   ]);
   if (e1) throw new Error(e1.message);
   if (e2) throw new Error(e2.message);
-  const enc = (sales || []).flatMap(d => jsonValue(d.payments_json, []).map(p => ({ type: 'encaissement', docType: 'vente', docId: d.id, docNumber: Object.values(jsonValue(d.numbers_json, {}))[0], tiers: d.client_name, ...p })));
-  const dec = (purchases || []).flatMap(d => jsonValue(d.payments_json, []).map(p => ({ type: 'decaissement', docType: 'achat', docId: d.id, docNumber: Object.values(jsonValue(d.numbers_json, {}))[0], tiers: d.supplier_name, ...p })));
+  const enc = (sales || []).flatMap(d => jsonValue(d.payments_json, []).map(p => ({ type: 'encaissement', sourceTable: 'sales', docType: 'vente', docId: d.id, docNumber: docNo(d), tiers: d.client_name, ...p })));
+  const dec = (purchases || []).flatMap(d => jsonValue(d.payments_json, []).map(p => ({ type: 'decaissement', sourceTable: 'purchases', docType: 'achat', docId: d.id, docNumber: docNo(d), tiers: d.supplier_name, ...p })));
   return [...enc, ...dec].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
 }
 
@@ -1179,6 +1206,7 @@ function Products({ L }) {
         ref: form.ref || '',
         name: form.nom || '',
         category: form.categorie || 'Divers',
+        name_ar: form.nomAr || '',
         unit: form.unite || 'Pièce',
         purchase_price: Number(form.prixAchat || 0),
         sale_price: Number(form.prixVente || 0),
@@ -1247,7 +1275,7 @@ function Products({ L }) {
 
 function ProductModal({ L, form, setForm, save, close }) {
   const fields = [
-    ['ref', L('ref')], ['nom', L('name')], ['categorie', L('category')], ['unite', 'Unité'],
+    ['ref', L('ref')], ['nom', L('name')], ['nomAr', L('arabicName')], ['categorie', L('category')], ['unite', 'Unité'],
     ['prixAchat', 'Prix achat'], ['prixVente', 'Prix vente'], ['quantite', L('quantity')], ['stockMin', 'Seuil']
   ];
   return (
@@ -1329,7 +1357,7 @@ function Docs({ L, type }) {
           produitId: product.id,
           ref: product.ref,
           nom: product.nom,
-          prixUnit: isSales ? product.prixVente : product.prixAchat,
+          prixUnit: Number(l.prixUnit ?? (isSales ? product.prixVente : product.prixAchat)),
           qte: Number(l.qte)
         };
       });
@@ -1418,7 +1446,7 @@ function Docs({ L, type }) {
                   <button onClick={() => setPreview(d)} className="btn bg-white border">{L('preview')}</button>
                   {paymentButtonVisible(d) ? <button onClick={() => setPay({ ...d, date: today(), mode: 'Espèces', montant: d.reste || d.totalTTC, cashRegister: '', receiptNo: '', chequeNo: '', bank: '', dueDate: '', paymentStatus: 'En portefeuille', transferRef: '', valueDate: '', terminal: '', transactionNo: '', billNo: '', note: '' })} className="btn bg-emerald-600 text-white">{L('pay')}</button> : null}
                   {d.stage !== 'facture' && docRemainingQty(d) > 0 ? <button onClick={() => setPartial({ doc: d, qte: docRemainingQty(d) || 1 })} className="btn bg-white border">{isSales ? L('partialDelivery') : L('partialReceipt')}</button> : null}
-                  <button onClick={() => setForm({ id: d.id, start: d.stage, date: d.date, partyId: isSales ? d.client_id : d.supplier_id, lignes: (d.lignes || []).map(l => ({ produitId: l.produitId, qte: l.qte })) })} className="btn bg-white border">{L('edit')}</button>
+                  <button onClick={() => setForm({ id: d.id, start: d.stage, date: d.date, partyId: isSales ? d.client_id : d.supplier_id, lignes: (d.lignes || []).map(l => ({ produitId: l.produitId, qte: l.qte, prixUnit: l.prixUnit })) })} className="btn bg-white border">{L('edit')}</button>
                   <button onClick={() => remove(d.id)} className="btn bg-red-600 text-white">{L('del')}</button>
                 </td>
               </tr>
@@ -1436,38 +1464,108 @@ function Docs({ L, type }) {
 }
 
 function DocModal({ L, isSales, form, setForm, products, parties, save, close }) {
-  function addLine() { setForm({ ...form, lignes: [...form.lignes, { produitId: products[0]?.id || '', qte: 1 }] }); }
-  function updateLine(i, k, v) { setForm({ ...form, lignes: form.lignes.map((l, idx) => idx === i ? { ...l, [k]: v } : l) }); }
+  function defaultPrice(productId) {
+    const p = products.find(x => String(x.id) === String(productId));
+    return p ? (isSales ? p.prixVente : p.prixAchat) : 0;
+  }
+
+  function addLine() {
+    const first = products[0];
+    setForm({
+      ...form,
+      lignes: [
+        ...form.lignes,
+        { produitId: first?.id || '', qte: 1, prixUnit: first ? (isSales ? first.prixVente : first.prixAchat) : 0 }
+      ]
+    });
+  }
+
+  function updateLine(i, k, v) {
+    setForm({
+      ...form,
+      lignes: form.lignes.map((l, idx) => {
+        if (idx !== i) return l;
+        if (k === 'produitId') {
+          return { ...l, produitId: v, prixUnit: defaultPrice(v) };
+        }
+        return { ...l, [k]: v };
+      })
+    });
+  }
+
+  function lineTotal(l) {
+    return Number(l.qte || 0) * Number(l.prixUnit ?? defaultPrice(l.produitId));
+  }
+
+  const total = (form.lignes || []).reduce((s, l) => s + lineTotal(l), 0);
 
   return (
     <Modal title={isSales ? L('sales') : L('purchases')} onClose={close} wide>
-      <label className="text-xs text-slate-500">{L('date')}
-        <input type="date" className="input mt-1 mb-2" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} />
-      </label>
-      <label className="text-xs text-slate-500">{isSales ? L('customer') : L('supplier')}
-        <select className="input mt-1 mb-2" value={form.partyId} onChange={e => setForm({ ...form, partyId: e.target.value })}>
-          {parties.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
-        </select>
-      </label>
-
-      <div className="space-y-2">
-        {form.lignes.map((l, i) => (
-          <div className="grid grid-cols-12 gap-2" key={i}>
-            <select className="input col-span-8" value={l.produitId} onChange={e => updateLine(i, 'produitId', e.target.value)}>
-              {products.map(p => <option key={p.id} value={p.id}>{p.nom} · {L('stock')} {p.quantite}</option>)}
-            </select>
-            <input className="input col-span-3" type="number" value={l.qte} onChange={e => updateLine(i, 'qte', e.target.value)} />
-            <button className="btn bg-red-50 text-red-600" onClick={() => setForm({ ...form, lignes: form.lignes.filter((_, idx) => idx !== i) })}>✕</button>
-          </div>
-        ))}
+      <div className="grid md:grid-cols-2 gap-3 mb-4">
+        <label className="text-xs text-slate-500">{L('date')}
+          <input type="date" className="input mt-1" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} />
+        </label>
+        <label className="text-xs text-slate-500">{isSales ? L('customer') : L('supplier')}
+          <select className="input mt-1" value={form.partyId} onChange={e => setForm({ ...form, partyId: e.target.value })}>
+            {parties.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+          </select>
+        </label>
       </div>
 
-      <button onClick={addLine} className="btn bg-white border mt-2">+ Ligne</button>
+      <div className="card overflow-hidden">
+        <table className="table w-full">
+          <thead>
+            <tr>
+              <th>{L('product')}</th>
+              <th>{L('quantity')}</th>
+              <th>{L('unitPrice')}</th>
+              <th>{L('totalTTC')}</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {form.lignes.map((l, i) => {
+              const price = l.prixUnit ?? defaultPrice(l.produitId);
+              return (
+                <tr key={i}>
+                  <td>
+                    <select className="input" value={l.produitId} onChange={e => updateLine(i, 'produitId', e.target.value)}>
+                      {products.map(p => (
+                        <option key={p.id} value={p.id}>
+                          {p.nom}{p.nomAr ? ' / ' + p.nomAr : ''} · {L('stock')} {p.quantite}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                  <td>
+                    <input className="input" type="number" min="0" step="0.0001" value={l.qte} onChange={e => updateLine(i, 'qte', e.target.value)} />
+                  </td>
+                  <td>
+                    <input className="input" type="number" min="0" step="0.01" value={price} onChange={e => updateLine(i, 'prixUnit', e.target.value)} />
+                  </td>
+                  <td className="font-bold">{dh(lineTotal({ ...l, prixUnit: price }))}</td>
+                  <td>
+                    <button className="btn bg-red-50 text-red-600" onClick={() => setForm({ ...form, lignes: form.lignes.filter((_, idx) => idx !== i) })}>✕</button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="flex justify-between items-center mt-4">
+        <button onClick={addLine} className="btn bg-white border">+ Ligne</button>
+        <div className="text-right">
+          <p className="text-xs text-slate-400">{L('totalTTC')}</p>
+          <p className="text-xl font-black">{dh(total)}</p>
+        </div>
+      </div>
+
       <button onClick={save} className="btn bg-amber-500 mt-4">{L('save')}</button>
     </Modal>
   );
 }
-
 
 function DocumentPreview({ L, isSales, doc, close }) {
   const [settings, setSettings] = useState(null);
@@ -1483,51 +1581,50 @@ function DocumentPreview({ L, isSales, doc, close }) {
   const docVAT = Number(doc.tva || doc.vat || (docTotalTTC - docTotalHT));
   const number = docNo(doc);
   const third = isSales ? (doc.client_name || doc.clientNom || '-') : (doc.supplier_name || doc.fournisseurNom || '-');
+  const session = getStoredSession();
+  const directionClass = localStorage.getItem('lang') === 'ar' ? 'rtl' : '';
 
-  function printDoc() {
-    window.print();
-  }
+  function printDoc() { window.print(); }
 
   if (!settings) return null;
 
   return (
     <Modal title={L('preview')} onClose={close} wide>
-      <div className="print-area bg-white text-slate-900">
-        <div className="flex justify-between items-start border-b pb-4 mb-4">
+      <div className={'print-area pro-document bg-white text-slate-900 ' + directionClass}>
+        <div className="doc-topline"></div>
+
+        <div className="doc-header">
           <div>
-            <h1 className="text-2xl font-black">{settings.company_name || 'DrogueriePro'}</h1>
-            <p className="text-sm text-slate-500">{settings.company_address || ''}</p>
-            <p className="text-sm text-slate-500">
+            <div className="doc-brand">{settings.company_name || 'DrogueriePro'}</div>
+            <div className="doc-muted">{settings.company_address || ''}</div>
+            <div className="doc-muted">
               {settings.company_phone ? 'Tél : ' + settings.company_phone : ''} {settings.company_ice ? ' · ICE : ' + settings.company_ice : ''}
-            </p>
+            </div>
           </div>
-          <div className="text-right">
-            <h2 className="text-xl font-bold">{isSales ? L('sales') : L('purchases')}</h2>
-            <p className="font-mono">{number}</p>
-            <p className="text-sm">{L('date')} : {doc.date || '-'}</p>
-            <Badge tone={docStatus(doc) === 'closed' ? 'green' : docStatus(doc) === 'partial' ? 'amber' : 'blue'}>
-              {doc.stage} · {docStatus(doc)}
-            </Badge>
+
+          <div className="doc-title-box">
+            <div className="doc-title">{isSales ? L('sales') : L('purchases')}</div>
+            <div className="doc-number">{number}</div>
+            <div className="doc-muted">{L('date')} : {doc.date || '-'}</div>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mb-5">
-          <div className="card p-3">
-            <p className="text-xs text-slate-400">{isSales ? L('customer') : L('supplier')}</p>
-            <p className="font-bold">{third}</p>
+        <div className="doc-info-grid">
+          <div className="doc-info-card">
+            <div className="doc-label">{isSales ? L('customer') : L('supplier')}</div>
+            <div className="doc-value">{third}</div>
           </div>
-          <div className="card p-3">
-            <p className="text-xs text-slate-400">{L('payment')}</p>
-            <p className="font-bold">
-              {doc.statutPaiement === 'paid' ? L('paid') : doc.statutPaiement === 'partial' ? L('partial') : L('unpaid')}
-            </p>
-            <p className="text-sm text-slate-500">{L('remaining')} : {dh(doc.reste || 0)}</p>
+          <div className="doc-info-card">
+            <div className="doc-label">{L('status')}</div>
+            <div className="doc-value">{doc.stage} · {docStatus(doc)}</div>
+            <div className="doc-muted">{L('payment')} : {paymentLabel(doc, L)} · {L('remaining')} : {dh(doc.reste || 0)}</div>
           </div>
         </div>
 
-        <table className="table w-full border">
+        <table className="doc-lines">
           <thead>
             <tr>
+              <th>#</th>
               <th>{L('ref')}</th>
               <th>{L('product')}</th>
               <th>{L('quantity')}</th>
@@ -1546,39 +1643,47 @@ function DocumentPreview({ L, isSales, doc, close }) {
               const vat = totalTTC - totalHT;
               return (
                 <tr key={i}>
-                  <td className="font-mono text-xs">{l.ref || '-'}</td>
+                  <td>{i + 1}</td>
+                  <td className="font-mono">{l.ref || '-'}</td>
                   <td>{l.nom || '-'}</td>
                   <td>{fmt(qty)}</td>
                   <td>{dh(puTTC)}</td>
                   <td>{dh(totalHT)}</td>
                   <td>{dh(vat)}</td>
-                  <td className="font-bold">{dh(totalTTC)}</td>
+                  <td className="doc-strong">{dh(totalTTC)}</td>
                 </tr>
               );
             })}
           </tbody>
         </table>
 
-        <div className="flex justify-end mt-5">
-          <div className="w-80 card p-4">
-            <div className="flex justify-between py-1">
-              <span>{L('totalHT')}</span>
-              <b>{dh(docTotalHT)}</b>
-            </div>
-            <div className="flex justify-between py-1">
-              <span>{L('totalVAT')} {vatRate}%</span>
-              <b>{dh(docVAT)}</b>
-            </div>
-            <div className="flex justify-between py-2 border-t mt-2 text-lg">
-              <span>{L('totalTTC')}</span>
-              <b>{dh(docTotalTTC)}</b>
-            </div>
+        <div className="doc-bottom">
+          <div className="doc-note">
+            <b>{L('note')} :</b><br />
+            {L('legalNote')}<br />
+            {doc.baseDocId ? `${L('base')} : #${doc.baseDocId}` : ''}
+          </div>
+
+          <div className="doc-totals">
+            <div><span>{L('totalHT')}</span><b>{dh(docTotalHT)}</b></div>
+            <div><span>{L('totalVAT')} {vatRate}%</span><b>{dh(docVAT)}</b></div>
+            <div className="grand-total"><span>{L('totalTTC')}</span><b>{dh(docTotalTTC)}</b></div>
           </div>
         </div>
 
-        {doc.baseDocId ? (
-          <p className="text-xs text-slate-500 mt-4">{L('base')} : #{doc.baseDocId}</p>
-        ) : null}
+        <div className="doc-footer">
+          <div>
+            <div className="doc-muted">{L('preparedBy')}</div>
+            <b>{session?.user?.full_name || session?.user?.username || '-'}</b>
+          </div>
+          <div>
+            <div className="doc-muted">{L('printDate')}</div>
+            <b>{new Date().toLocaleString('fr-FR')}</b>
+          </div>
+          <div className="signature-box">
+            <div className="doc-muted">{L('signature')}</div>
+          </div>
+        </div>
       </div>
 
       <div className="flex justify-end gap-2 mt-5 no-print">
@@ -1588,7 +1693,6 @@ function DocumentPreview({ L, isSales, doc, close }) {
     </Modal>
   );
 }
-
 
 function PaymentModal({ L, isSales, pay, setPay, save, close }) {
   const mode = pay.mode || 'Espèces';
@@ -1634,12 +1738,24 @@ function Payments({ L }) {
   const [rows, setRows] = useState([]);
   const [tab, setTab] = useState('all');
   const [err, setErr] = useState('');
+  const session = getStoredSession();
 
   async function load() {
     try {
       const rows = await loadPayments();
       setRows(rows);
     } catch (e) { setErr(e.message); }
+  }
+
+  async function cancel(p) {
+    const reason = prompt('Motif annulation règlement ?', 'Erreur de saisie');
+    if (reason === null) return;
+    try {
+      await cancelPayment(p.sourceTable, p.docId, p.id, reason);
+      await load();
+    } catch (e) {
+      alert(e.message);
+    }
   }
 
   useEffect(() => { load(); }, []);
@@ -1658,17 +1774,35 @@ function Payments({ L }) {
       </div>
 
       <Table>
-        <thead><tr><th>{L('date')}</th><th>Type</th><th>Document</th><th>Tiers</th><th>Mode</th><th>Détails</th><th>Montant</th></tr></thead>
+        <thead>
+          <tr>
+            <th>{L('date')}</th><th>Type</th><th>Document</th><th>Tiers</th><th>Mode</th><th>Détails</th><th>Montant</th><th>Statut</th><th>{L('actions')}</th>
+          </tr>
+        </thead>
         <tbody>
           {filtered.map((p, i) => (
-            <tr key={i}>
+            <tr key={i} className={p.canceled ? 'opacity-60' : ''}>
               <td>{p.date}</td>
               <td><Badge tone={p.type === 'encaissement' ? 'green' : 'red'}>{p.type === 'encaissement' ? L('cashIn') : L('cashOut')}</Badge></td>
               <td>{p.docNumber || '#' + p.docId}</td>
               <td>{p.tiers}</td>
               <td>{p.mode}</td>
-              <td className="text-xs text-slate-500">{p.chequeNo ? 'Chèque: ' + p.chequeNo + ' · ' : ''}{p.billNo ? 'Effet: ' + p.billNo + ' · ' : ''}{p.bank ? p.bank + ' · ' : ''}{p.transferRef ? 'Vir: ' + p.transferRef + ' · ' : ''}{p.transactionNo ? 'Tx: ' + p.transactionNo + ' · ' : ''}{p.paymentStatus || p.receiptNo || p.cashRegister || p.note || '-'}</td>
+              <td className="text-xs text-slate-500">
+                {p.chequeNo ? 'Chèque: ' + p.chequeNo + ' · ' : ''}
+                {p.billNo ? 'Effet: ' + p.billNo + ' · ' : ''}
+                {p.bank ? p.bank + ' · ' : ''}
+                {p.transferRef ? 'Vir: ' + p.transferRef + ' · ' : ''}
+                {p.transactionNo ? 'Tx: ' + p.transactionNo + ' · ' : ''}
+                {p.paymentStatus || p.receiptNo || p.cashRegister || p.note || '-'}
+                {p.canceled ? <div className="text-red-600">{L('canceled')} · {p.cancelReason || ''}</div> : null}
+              </td>
               <td className="font-bold">{dh(p.montant)}</td>
+              <td>{p.canceled ? <Badge tone="red">{L('canceled')}</Badge> : <Badge tone="green">OK</Badge>}</td>
+              <td>
+                {!p.canceled && hasPerm(session, 'payments.cancel')
+                  ? <button onClick={() => cancel(p)} className="btn bg-red-600 text-white">{L('cancelPayment')}</button>
+                  : '-'}
+              </td>
             </tr>
           ))}
         </tbody>
