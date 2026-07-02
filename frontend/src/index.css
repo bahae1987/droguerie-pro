@@ -217,3 +217,54 @@ body { margin: 0; background: #f8fafc; }
     -webkit-print-color-adjust: exact;
   }
 }
+
+
+/* V23 professional tables */
+.products-pro-table tbody tr,
+.docs-pro-table tbody tr,
+.audit-table tbody tr {
+  transition: background .15s ease, transform .15s ease;
+}
+.products-pro-table tbody tr:hover,
+.docs-pro-table tbody tr:hover,
+.audit-table tbody tr:hover {
+  background: #fffbeb;
+}
+.products-pro-table th,
+.docs-pro-table th,
+.audit-table th {
+  white-space: nowrap;
+}
+.products-pro-table td,
+.docs-pro-table td,
+.audit-table td {
+  vertical-align: top;
+}
+
+/* V23 realistic document print */
+.doc-title-box::after {
+  content: "DrogueriePro";
+  display: block;
+  margin-top: 8px;
+  color: #94a3b8;
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.doc-info-card {
+  box-shadow: 0 1px 0 rgba(15,23,42,.04);
+}
+.doc-lines th {
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.doc-footer {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 18px;
+}
+@media print {
+  .doc-lines th {
+    background: #0f172a !important;
+    color: #fff !important;
+  }
+}
