@@ -1663,4 +1663,314 @@ function Users({ L }) {
   );
 }
 
+
+function Settings({ L }) {
+  const [settings, setSettings] = useState(null);
+  const [err, setErr] = useState('');
+
+  async function load() {
+    try {
+      const data = await loadSettings();
+      setSettings(data);
+    } catch (e) {
+      setErr(e.message);
+    }
+  }
+
+  useEffect(() => { load(); }, []);
+
+  async function save() {
+    try {
+      await saveSettings(settings);
+      alert('Paramètres enregistrés');
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  if (err) return <ErrorBox msg={err} />;
+  if (!settings) return <p>Chargement...</p>;
+
+  return (
+    <>
+      <Header title={L('settings') || 'Paramètres'}>
+        <button onClick={save} className="btn bg-amber-500">{L('save') || 'Enregistrer'}</button>
+      </Header>
+
+      <div className="grid md:grid-cols-2 gap-4">
+        <div className="card p-5">
+          <h2 className="font-bold mb-3">{L('company') || 'Société'}</h2>
+
+          <label className="text-xs text-slate-500">{L('company') || 'Société'}
+            <input className="input mt-1 mb-2" value={settings.company_name || ''} onChange={e => setSettings({ ...settings, company_name: e.target.value })} />
+          </label>
+
+          <label className="text-xs text-slate-500">{L('ice') || 'ICE'}
+            <input className="input mt-1 mb-2" value={settings.company_ice || ''} onChange={e => setSettings({ ...settings, company_ice: e.target.value })} />
+          </label>
+
+          <label className="text-xs text-slate-500">{L('phone') || 'Téléphone'}
+            <input className="input mt-1 mb-2" value={settings.company_phone || ''} onChange={e => setSettings({ ...settings, company_phone: e.target.value })} />
+          </label>
+
+          <label className="text-xs text-slate-500">{L('address') || 'Adresse'}
+            <textarea className="input mt-1" value={settings.company_address || ''} onChange={e => setSettings({ ...settings, company_address: e.target.value })} />
+          </label>
+        </div>
+
+        <div className="card p-5">
+          <h2 className="font-bold mb-3">Paramètres généraux</h2>
+
+          <label className="text-xs text-slate-500">{L('vat') || 'TVA'} %
+            <input className="input mt-1 mb-2" type="number" value={settings.vat_rate || '20'} onChange={e => setSettings({ ...settings, vat_rate: e.target.value })} />
+          </label>
+
+          <label className="text-xs text-slate-500">{L('theme') || 'Thème'}
+            <select className="input mt-1" value={settings.theme || 'light'} onChange={e => setSettings({ ...settings, theme: e.target.value })}>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+              <option value="corporate">Corporate</option>
+            </select>
+          </label>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function Permissions({ L }) {
+  const [roles, setRoles] = useState([]);
+  const [permissions, setPermissions] = useState([]);
+  const [rolePerms, setRolePerms] = useState([]);
+  const [err, setErr] = useState('');
+
+  async function load() {
+    try {
+      const data = await loadPermissionsMatrix();
+      setRoles(data.roles);
+      setPermissions(data.permissions);
+      setRolePerms(data.rolePerms);
+    } catch (e) {
+      setErr(e.message);
+    }
+  }
+
+  useEffect(() => { load(); }, []);
+
+  function isChecked(roleId, permissionId) {
+    return rolePerms.some(x => Number(x.role_id) === Number(roleId) && Number(x.permission_id) === Number(permissionId));
+  }
+
+  async function toggle(roleId, permissionId, value) {
+    try {
+      await setRolePermission(roleId, permissionId, value);
+      await load();
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  if (err) return <ErrorBox msg={err} />;
+
+  const grouped = permissions.reduce((acc, p) => {
+    const mod = p.module || 'Divers';
+    if (!acc[mod]) acc[mod] = [];
+    acc[mod].push(p);
+    return acc;
+  }, {});
+
+  return (
+    <>
+      <Header title={L('permissions') || 'Autorisations'}>
+        <button onClick={load} className="btn bg-white border">↻</button>
+      </Header>
+
+      <div className="card overflow-auto">
+        <table className="table w-full">
+          <thead>
+            <tr>
+              <th>Module / Permission</th>
+              {roles.map(r => <th key={r.id}>{r.name}</th>)}
+            </tr>
+          </thead>
+
+          <tbody>
+            {Object.entries(grouped).map(([mod, perms]) => (
+              <React.Fragment key={mod}>
+                <tr>
+                  <td colSpan={roles.length + 1} className="bg-slate-100 font-bold">{mod}</td>
+                </tr>
+
+                {perms.map(p => (
+                  <tr key={p.id}>
+                    <td>
+                      <div className="font-semibold">{p.label || p.code}</div>
+                      <div className="text-xs text-slate-400 font-mono">{p.code}</div>
+                    </td>
+
+                    {roles.map(r => (
+                      <td key={r.id}>
+                        <input type="checkbox" checked={isChecked(r.id, p.id)} onChange={e => toggle(r.id, p.id, e.target.checked)} />
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </React.Fragment>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+}
+
+function Branches({ L }) {
+  const [rows, setRows] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [form, setForm] = useState(null);
+  const [err, setErr] = useState('');
+
+  async function load() {
+    try {
+      const [branches, usersData] = await Promise.all([loadBranches(), loadUsersForBranch()]);
+      setRows(branches);
+      setUsers(usersData);
+    } catch (e) {
+      setErr(e.message);
+    }
+  }
+
+  useEffect(() => { load(); }, []);
+
+  async function save() {
+    try {
+      await saveBranch(form);
+      setForm(null);
+      await load();
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  async function deactivate(id) {
+    if (!confirm('Désactiver cette droguerie ?')) return;
+
+    try {
+      await deleteBranch(id);
+      await load();
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  async function assign(userId, selectedBranchId) {
+    try {
+      await assignUserBranch(userId, selectedBranchId ? Number(selectedBranchId) : null);
+      await load();
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  if (err) return <ErrorBox msg={err} />;
+
+  return (
+    <>
+      <Header title={L('branches') || 'Gestion drogueries'}>
+        <button onClick={() => setForm({ name: '', city: '', address: '', phone: '', manager_name: '', active: true })} className="btn bg-amber-500">
+          {L('new') || 'Nouveau'}
+        </button>
+      </Header>
+
+      <div className="grid md:grid-cols-3 gap-4 mb-6">
+        {rows.map(b => (
+          <div key={b.id} className="card p-4">
+            <div className="flex justify-between gap-2">
+              <div>
+                <h2 className="font-bold text-lg">{b.name}</h2>
+                <p className="text-sm text-slate-500">{b.city || '-'}</p>
+              </div>
+              <Badge tone={b.active ? 'green' : 'red'}>{b.active ? (L('active') || 'Actif') : 'Inactif'}</Badge>
+            </div>
+
+            <div className="text-sm text-slate-600 mt-3">
+              <p>{L('phone') || 'Téléphone'} : {b.phone || '-'}</p>
+              <p>{L('manager') || 'Responsable'} : {b.manager_name || '-'}</p>
+              <p>{L('address') || 'Adresse'} : {b.address || '-'}</p>
+            </div>
+
+            <div className="flex gap-2 mt-4">
+              <button onClick={() => setForm(b)} className="btn bg-white border">{L('edit') || 'Modifier'}</button>
+              <button onClick={() => deactivate(b.id)} className="btn bg-red-600 text-white">{L('deactivate') || 'Désactiver'}</button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="card p-4">
+        <h2 className="font-bold mb-3">Affectation utilisateurs / drogueries</h2>
+
+        <Table>
+          <thead>
+            <tr>
+              <th>{L('username') || 'Utilisateur'}</th>
+              <th>{L('name') || 'Nom'}</th>
+              <th>Profil</th>
+              <th>{L('branch') || 'Droguerie'}</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {users.map(u => (
+              <tr key={u.id}>
+                <td>{u.username}</td>
+                <td>{u.full_name || '-'}</td>
+                <td>{u.roles?.name || '-'}</td>
+                <td>
+                  <select className="input" value={u.branch_id || ''} onChange={e => assign(u.id, e.target.value)}>
+                    <option value="">Toutes / Aucune</option>
+                    {rows.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+                  </select>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </div>
+
+      {form ? (
+        <Modal title={L('branches') || 'Droguerie'} onClose={() => setForm(null)}>
+          <label className="text-xs text-slate-500">{L('name') || 'Nom'}
+            <input className="input mt-1 mb-2" value={form.name || ''} onChange={e => setForm({ ...form, name: e.target.value })} />
+          </label>
+
+          <label className="text-xs text-slate-500">{L('city') || 'Ville'}
+            <input className="input mt-1 mb-2" value={form.city || ''} onChange={e => setForm({ ...form, city: e.target.value })} />
+          </label>
+
+          <label className="text-xs text-slate-500">{L('phone') || 'Téléphone'}
+            <input className="input mt-1 mb-2" value={form.phone || ''} onChange={e => setForm({ ...form, phone: e.target.value })} />
+          </label>
+
+          <label className="text-xs text-slate-500">{L('manager') || 'Responsable'}
+            <input className="input mt-1 mb-2" value={form.manager_name || ''} onChange={e => setForm({ ...form, manager_name: e.target.value })} />
+          </label>
+
+          <label className="text-xs text-slate-500">{L('address') || 'Adresse'}
+            <textarea className="input mt-1 mb-2" value={form.address || ''} onChange={e => setForm({ ...form, address: e.target.value })} />
+          </label>
+
+          <label className="flex items-center gap-2 text-sm mb-3">
+            <input type="checkbox" checked={form.active !== false} onChange={e => setForm({ ...form, active: e.target.checked })} />
+            {L('active') || 'Actif'}
+          </label>
+
+          <button onClick={save} className="btn bg-amber-500">{L('save') || 'Enregistrer'}</button>
+        </Modal>
+      ) : null}
+    </>
+  );
+}
+
+
 createRoot(document.getElementById('root')).render(<App />);
