@@ -42,3 +42,29 @@ body { margin: 0; background: #f8fafc; }
   border-top: 1px solid #f1f5f9;
   font-size: 0.875rem;
 }
+
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .print-area, .print-area * {
+    visibility: visible;
+  }
+  .print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 24px;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .fixed {
+    position: static !important;
+  }
+  .shadow-2xl {
+    box-shadow: none !important;
+  }
+}

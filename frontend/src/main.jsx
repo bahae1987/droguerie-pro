@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-console.log('DROGUERIEPRO V16 BRANCH MANAGEMENT OK');
+console.log('DROGUERIEPRO V19 DOC PRINT PREVIEW OK');
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -21,7 +21,7 @@ const TXT = {
   fr: {
     login: 'Connexion', username: 'Utilisateur', password: 'Mot de passe', connect: 'Se connecter',
     dashboard: 'Tableau de bord', products: 'Produits / Stock', sales: 'Ventes', purchases: 'Achats',
-    payments: 'Paiements', settings: 'Paramètres', permissions: 'Autorisations', clients: 'Clients', suppliers: 'Fournisseurs', users: 'Utilisateurs', branch: 'Droguerie', branches: 'Gestion drogueries', city: 'Ville', manager: 'Responsable', active: 'Actif', deactivate: 'Désactiver',
+    payments: 'Paiements', settings: 'Paramètres', permissions: 'Autorisations', clients: 'Clients', suppliers: 'Fournisseurs', users: 'Utilisateurs', branch: 'Droguerie', branches: 'Gestion drogueries', city: 'Ville', manager: 'Responsable', active: 'Actif', deactivate: 'Désactiver', activate: 'Activer', fullName: 'Nom complet', changePassword: 'Changer mot de passe',
     logout: 'Déconnexion', lang: 'العربية', new: 'Nouveau', save: 'Enregistrer', edit: 'Modifier',
     del: 'Supprimer', actions: 'Actions', stock: 'Stock', price: 'Prix', create: 'Créer',
     direct: 'Direct', advance: 'Avancer', pay: 'Régler', partialDelivery: 'Livraison partielle',
@@ -29,12 +29,12 @@ const TXT = {
     deliveries: 'Livraisons', receipts: 'Réceptions', invoices: 'Factures', remaining: 'Reste',
     paid: 'Réglée', unpaid: 'Non réglée', partial: 'Partielle', cashIn: 'Encaissements',
     cashOut: 'Décaissements', vat: 'TVA', theme: 'Thème', company: 'Société', address: 'Adresse', phone: 'Téléphone', ice: 'ICE', cashRegister: 'Caisse', receiptNo: 'N° reçu', chequeNo: 'N° chèque', bank: 'Banque', dueDate: 'Échéance', paymentStatus: 'Statut', transferRef: 'Réf. virement', valueDate: 'Date valeur', terminal: 'TPE', transactionNo: 'N° transaction', billNo: 'N° effet', note: 'Observation', quantity: 'Quantité', date: 'Date', customer: 'Client',
-    supplier: 'Fournisseur', product: 'Produit', base: 'Base'
+    supplier: 'Fournisseur', product: 'Produit', base: 'Base', remainingQty: 'Qté restante', orderedQty: 'Qté commandée', deliveredQty: 'Qté livrée', receivedQty: 'Qté reçue', open: 'Ouvert', closed: 'Clôturé', preview: 'Aperçu', print: 'Imprimer', unitPrice: 'PU', totalHT: 'Total HT', totalVAT: 'TVA', totalTTC: 'Total TTC'
   },
   ar: {
     login: 'تسجيل الدخول', username: 'المستخدم', password: 'كلمة المرور', connect: 'دخول',
     dashboard: 'لوحة القيادة', products: 'المنتجات / المخزون', sales: 'المبيعات', purchases: 'المشتريات',
-    payments: 'الأداءات', settings: 'الإعدادات', permissions: 'الصلاحيات', clients: 'الزبناء', suppliers: 'الموردون', users: 'المستخدمون', branch: 'الدروكري', branches: 'تدبير الدروكريات', city: 'المدينة', manager: 'المسؤول', active: 'نشط', deactivate: 'تعطيل',
+    payments: 'الأداءات', settings: 'الإعدادات', permissions: 'الصلاحيات', clients: 'الزبناء', suppliers: 'الموردون', users: 'المستخدمون', branch: 'الدروكري', branches: 'تدبير الدروكريات', city: 'المدينة', manager: 'المسؤول', active: 'نشط', deactivate: 'تعطيل', activate: 'تفعيل', fullName: 'الاسم الكامل', changePassword: 'تغيير كلمة المرور',
     logout: 'خروج', lang: 'Français', new: 'جديد', save: 'حفظ', edit: 'تعديل',
     del: 'حذف', actions: 'الإجراءات', stock: 'المخزون', price: 'الثمن', create: 'إنشاء',
     direct: 'مباشر', advance: 'المرحلة التالية', pay: 'تسوية', partialDelivery: 'تسليم جزئي',
@@ -42,7 +42,7 @@ const TXT = {
     deliveries: 'التسليمات', receipts: 'الاستلامات', invoices: 'الفواتير', remaining: 'الباقي',
     paid: 'مؤداة', unpaid: 'غير مؤداة', partial: 'جزئية', cashIn: 'المداخيل',
     cashOut: 'المصاريف', vat: 'الضريبة', theme: 'المظهر', company: 'الشركة', address: 'العنوان', phone: 'الهاتف', ice: 'ICE', cashRegister: 'الصندوق', receiptNo: 'رقم الوصل', chequeNo: 'رقم الشيك', bank: 'البنك', dueDate: 'الاستحقاق', paymentStatus: 'الحالة', transferRef: 'مرجع التحويل', valueDate: 'تاريخ القيمة', terminal: 'جهاز الأداء', transactionNo: 'رقم العملية', billNo: 'رقم الكمبيالة', note: 'ملاحظة', quantity: 'الكمية', date: 'التاريخ', customer: 'الزبون',
-    supplier: 'المورد', product: 'المنتج', base: 'الأصل'
+    supplier: 'المورد', product: 'المنتج', base: 'الأصل', remainingQty: 'الكمية المتبقية', orderedQty: 'الكمية المطلوبة', deliveredQty: 'الكمية المسلمة', receivedQty: 'الكمية المستلمة', open: 'مفتوح', closed: 'مغلق', preview: 'معاينة', print: 'طباعة', unitPrice: 'ثمن الوحدة', totalHT: 'المجموع بدون ضريبة', totalVAT: 'الضريبة', totalTTC: 'المجموع مع الضريبة'
   }
 };
 
@@ -145,7 +145,10 @@ function mapDoc(d) {
     tva: Number(d.vat || 0),
     reste: pay.rest,
     statutPaiement: pay.status,
-    baseDocId: d.base_doc_id || null
+    baseDocId: d.base_doc_id || null,
+    qtyDone: Number(d.qty_done || 0),
+    qtyStatus: docStatus(d),
+    qtyRemaining: docRemainingQty(d)
   };
 }
 
@@ -399,6 +402,70 @@ async function setRolePermission(roleId, permissionId, enabled) {
   }
 }
 
+
+function docNo(doc, key) {
+  const nums = jsonValue(doc.numbers_json || doc.numeros, {});
+  if (key && nums[key]) return nums[key];
+  return Object.values(nums)[0] || ('#' + doc.id);
+}
+
+function docQty(lines) {
+  return (lines || []).reduce((s, l) => s + Number(l.qte || 0), 0);
+}
+
+function docRemainingQty(doc) {
+  const lines = jsonValue(doc.lines_json || doc.lignes, []);
+  const total = docQty(lines);
+  const done = Number(doc.qty_done || 0);
+  return Math.max(0, total - done);
+}
+
+function docStatus(doc) {
+  const rem = docRemainingQty(doc);
+  if (doc.stage === 'facture') return 'closed';
+  if (rem <= 0 && ['livraison', 'reception'].includes(doc.stage)) return 'closed';
+  if (Number(doc.qty_done || 0) > 0) return 'partial';
+  return 'open';
+}
+
+function makePartialLines(doc, qte) {
+  const original = jsonValue(doc.lines_json || doc.lignes, []);
+  const remaining = docRemainingQty(doc);
+  const requested = Math.min(Number(qte || 0), remaining || Number(qte || 0));
+  if (!requested || requested <= 0) throw new Error('Quantité partielle invalide');
+
+  const total = docQty(original);
+  if (!total) throw new Error('Document sans quantité');
+
+  return original.map(l => {
+    const lineQty = Number(l.qte || 0);
+    const ratio = lineQty / total;
+    return { ...l, qte: Number((requested * ratio).toFixed(4)) };
+  }).filter(l => Number(l.qte) > 0);
+}
+
+function nextStageAllowed(doc, type) {
+  if (type === 'sales') {
+    if (doc.stage === 'devis') return 'commande';
+    if (doc.stage === 'commande') return 'livraison';
+    if (doc.stage === 'livraison') return 'facture';
+    return null;
+  }
+
+  if (doc.stage === 'commande') return 'reception';
+  if (doc.stage === 'reception') return 'facture';
+  return null;
+}
+
+function canPayDocument(doc) {
+  return doc.stage === 'facture';
+}
+
+function paymentButtonVisible(doc) {
+  return doc.stage === 'facture' && Number(doc.reste || 0) > 0;
+}
+
+
 async function createDoc(type, body) {
   const isSales = type === 'sales';
   const start = body.start || (isSales ? 'devis' : 'commande');
@@ -420,13 +487,17 @@ async function createDoc(type, body) {
   const payload = isSales ? {
     date: body.date || today(), client_id: body.clientId || null, client_name: body.clientNom || await partyName(type, body.clientId),
     stage: start, numbers_json: numbers, lines_json: lines, payments_json: [], vat_rate: vat, total_ht: t.totalHT, vat: t.vat, total_ttc: t.totalTTC,
-    delivered: start === 'livraison' || start === 'facture', created_by: session?.user?.id || null, base_doc_id: body.baseDocId || null,
+    delivered: start === 'livraison' || start === 'facture',
+    qty_done: (start === 'livraison' || start === 'facture') ? docQty(lines) : 0,
+    doc_status: (start === 'facture') ? 'closed' : ((start === 'livraison') ? 'closed' : 'open'), created_by: session?.user?.id || null, base_doc_id: body.baseDocId || null,
     branch_id: isAdmin(session) ? (body.branchId || branchId(session)) : branchId(session)
   } : {
     date: body.date || today(), supplier_id: body.fournisseurId || null,
       branch_id: isAdmin(getStoredSession()) ? (body.branch_id || branchId(getStoredSession())) : branchId(getStoredSession()), supplier_name: body.fournisseurNom || await partyName(type, body.fournisseurId),
     stage: start, numbers_json: numbers, lines_json: lines, payments_json: [], vat_rate: vat, total_ht: t.totalHT, vat: t.vat, total_ttc: t.totalTTC,
-    received: start === 'reception' || start === 'facture', created_by: session?.user?.id || null, base_doc_id: body.baseDocId || null,
+    received: start === 'reception' || start === 'facture',
+    qty_done: (start === 'reception' || start === 'facture') ? docQty(lines) : 0,
+    doc_status: (start === 'facture') ? 'closed' : ((start === 'reception') ? 'closed' : 'open'), created_by: session?.user?.id || null, base_doc_id: body.baseDocId || null,
     branch_id: isAdmin(session) ? (body.branchId || branchId(session)) : branchId(session)
   };
   const { error } = await supabase.from(type).insert(payload);
@@ -459,23 +530,57 @@ async function advanceDoc(type, id) {
   const isSales = type === 'sales';
   const { data: doc, error } = await supabase.from(type).select('*').eq('id', id).single();
   if (error) throw new Error(error.message);
-  const stages = isSales ? ['devis', 'commande', 'livraison', 'facture'] : ['commande', 'reception', 'facture'];
-  const next = stages[stages.indexOf(doc.stage) + 1];
+
+  const next = nextStageAllowed(doc, type);
   if (!next) return;
-  const prefixes = isSales ? { commande: 'BC', livraison: 'BL', facture: 'FAC' } : { reception: 'BR', facture: 'FF' };
-  const keys = isSales ? { commande: 'commande', livraison: 'bl', facture: 'facture' } : { reception: 'reception', facture: 'facture' };
-  const numbers = { ...jsonValue(doc.numbers_json, {}), [keys[next]]: await nextNumber(prefixes[next]) };
-  const lines = jsonValue(doc.lines_json, []);
-  if (isSales && next === 'livraison' && !doc.delivered) await updateStock(lines, -1, 'Livraison vente');
-  if (!isSales && next === 'reception' && !doc.received) await updateStock(lines, 1, 'Réception achat');
-  const payload = isSales ? { stage: next, numbers_json: numbers, delivered: next === 'livraison' ? true : doc.delivered } : { stage: next, numbers_json: numbers, received: next === 'reception' ? true : doc.received };
+
+  const oldLines = jsonValue(doc.lines_json, []);
+  const vatRate = Number(doc.vat_rate || 20);
+
+  const prefixes = isSales
+    ? { commande: 'CMDV', livraison: 'BLV', facture: 'FACV' }
+    : { reception: 'BRA', facture: 'FACA' };
+
+  const keys = isSales
+    ? { commande: 'commande', livraison: 'livraison', facture: 'facture' }
+    : { reception: 'reception', facture: 'facture' };
+
+  const nums = { ...jsonValue(doc.numbers_json, {}) };
+  nums[keys[next]] = nums[keys[next]] || await nextNumber(prefixes[next]);
+
+  if (isSales && next === 'livraison' && !doc.delivered) {
+    await updateStock(oldLines, -1, 'Livraison vente ' + nums[keys[next]]);
+  }
+
+  if (!isSales && next === 'reception' && !doc.received) {
+    await updateStock(oldLines, 1, 'Réception achat ' + nums[keys[next]]);
+  }
+
+  const totalQty = docQty(oldLines);
+
+  const payload = isSales
+    ? {
+        stage: next,
+        numbers_json: nums,
+        delivered: next === 'livraison' ? true : doc.delivered,
+        qty_done: (next === 'livraison' || next === 'facture') ? totalQty : Number(doc.qty_done || 0),
+        doc_status: next === 'facture' ? 'closed' : (next === 'livraison' ? 'closed' : 'open')
+      }
+    : {
+        stage: next,
+        numbers_json: nums,
+        received: next === 'reception' ? true : doc.received,
+        qty_done: (next === 'reception' || next === 'facture') ? totalQty : Number(doc.qty_done || 0),
+        doc_status: next === 'facture' ? 'closed' : (next === 'reception' ? 'closed' : 'open')
+      };
+
   const { error: e2 } = await supabase.from(type).update(payload).eq('id', id);
   if (e2) throw new Error(e2.message);
 }
-
 async function payDoc(type, id, body) {
   const { data: doc, error } = await supabase.from(type).select('*').eq('id', id).single();
   if (error) throw new Error(error.message);
+  if (doc.stage !== 'facture') throw new Error('Le règlement est autorisé uniquement sur les factures');
   const payments = jsonValue(doc.payments_json, []);
   const info = paymentInfo(doc);
   const montant = Number(body.montant || info.rest || 0);
@@ -492,28 +597,84 @@ async function partialDoc(type, id, body) {
   const isSales = type === 'sales';
   const { data: doc, error } = await supabase.from(type).select('*').eq('id', id).single();
   if (error) throw new Error(error.message);
-  const original = jsonValue(doc.lines_json, []);
-  const lines = original.map(l => ({ ...l, qte: Number(body.qte || l.qte || 0) })).filter(l => Number(l.qte) > 0);
-  const vat = Number(doc.vat_rate || await getVatRate());
-  const t = computeTotals(lines, vat, isSales);
-  const stage = isSales ? 'livraison' : 'reception';
-  const prefix = isSales ? 'BL' : 'BR';
-  const key = isSales ? 'bl' : 'reception';
-  const numbers = { ...jsonValue(doc.numbers_json, {}), [key]: await nextNumber(prefix) };
-  if (isSales) await updateStock(lines, -1, 'Livraison partielle vente');
-  else await updateStock(lines, 1, 'Réception partielle achat');
+
+  if (doc.stage === 'facture') throw new Error('Action partielle non autorisée sur une facture');
+
+  const next = isSales ? 'livraison' : 'reception';
+  if (isSales && !['commande', 'livraison'].includes(doc.stage)) throw new Error('La livraison partielle se fait depuis une commande');
+  if (!isSales && !['commande', 'reception'].includes(doc.stage)) throw new Error('La réception partielle se fait depuis une commande achat');
+
+  const remaining = docRemainingQty(doc);
+  const reqQty = Number(body.qte || 0);
+  if (reqQty <= 0) throw new Error('Quantité invalide');
+  if (remaining > 0 && reqQty > remaining) throw new Error('Quantité supérieure au reste');
+
+  const lines = makePartialLines(doc, reqQty);
+  const vatRate = Number(doc.vat_rate || 20);
+  const t = computeTotals(lines, vatRate, isSales);
+
+  const prefix = isSales ? 'BLV' : 'BRA';
+  const key = isSales ? 'livraison' : 'reception';
+  const numbers = { [key]: await nextNumber(prefix) };
+
+  if (isSales) await updateStock(lines, -1, 'Livraison partielle vente ' + numbers[key]);
+  else await updateStock(lines, 1, 'Réception partielle achat ' + numbers[key]);
+
   const session = getStoredSession();
+  const newDone = Number(doc.qty_done || 0) + docQty(lines);
+  const originalTotal = docQty(jsonValue(doc.lines_json, []));
+  const status = newDone >= originalTotal ? 'closed' : 'partial';
+
   const payload = isSales ? {
-    date: body.date || today(), client_id: doc.client_id, client_name: doc.client_name, stage, numbers_json: numbers, lines_json: lines, payments_json: [], vat_rate: vat, total_ht: t.totalHT, vat: t.vat, total_ttc: t.totalTTC, delivered: true, created_by: session?.user?.id || null, base_doc_id: doc.id,
+    date: body.date || today(),
+    client_id: doc.client_id,
+    client_name: doc.client_name,
+    stage: 'livraison',
+    numbers_json: numbers,
+    lines_json: lines,
+    payments_json: [],
+    vat_rate: vatRate,
+    total_ht: t.totalHT,
+    vat: t.vat,
+    total_ttc: t.totalTTC,
+    delivered: true,
+    qty_done: docQty(lines),
+    doc_status: status,
+    created_by: session?.user?.id || null,
+    base_doc_id: doc.id,
     branch_id: doc.branch_id || branchId(session)
   } : {
-    date: body.date || today(), supplier_id: doc.supplier_id, supplier_name: doc.supplier_name, stage, numbers_json: numbers, lines_json: lines, payments_json: [], vat_rate: vat, total_ht: t.totalHT, vat: t.vat, total_ttc: t.totalTTC, received: true, created_by: session?.user?.id || null, base_doc_id: doc.id,
+    date: body.date || today(),
+    supplier_id: doc.supplier_id,
+    supplier_name: doc.supplier_name,
+    stage: 'reception',
+    numbers_json: numbers,
+    lines_json: lines,
+    payments_json: [],
+    vat_rate: vatRate,
+    total_ht: t.totalHT,
+    vat: t.vat,
+    total_ttc: t.totalTTC,
+    received: true,
+    qty_done: docQty(lines),
+    doc_status: status,
+    created_by: session?.user?.id || null,
+    base_doc_id: doc.id,
     branch_id: doc.branch_id || branchId(session)
   };
+
   const { error: e2 } = await supabase.from(type).insert(payload);
   if (e2) throw new Error(e2.message);
-}
 
+  const parentStatus = newDone >= originalTotal ? 'closed' : 'partial';
+  const { error: e3 } = await supabase.from(type).update({
+    qty_done: newDone,
+    doc_status: parentStatus,
+    delivered: isSales ? newDone >= originalTotal : doc.delivered,
+    received: !isSales ? newDone >= originalTotal : doc.received
+  }).eq('id', id);
+  if (e3) throw new Error(e3.message);
+}
 async function loadPayments() {
   const [{ data: sales, error: e1 }, { data: purchases, error: e2 }] = await Promise.all([
     applyDocScope(supabase.from('sales').select('*'), 'sales', getStoredSession()).order('id', { ascending: false }),
@@ -553,8 +714,31 @@ async function loadRoles() {
   if (error) throw new Error(error.message);
   return data || [];
 }
-async function createUser(body) {
-  const { error } = await supabase.from('users').insert({ username: body.username, password_hash: body.password || 'changeme', full_name: body.full_name || '', role_id: body.role_id || 3, branch_id: body.branch_id || null, active: true });
+async function saveUser(body) {
+  const payload = {
+    username: body.username || '',
+    full_name: body.full_name || '',
+    role_id: body.role_id || 3,
+    branch_id: body.branch_id || null,
+    active: body.active !== false
+  };
+
+  if (body.password) {
+    payload.password_hash = body.password;
+  }
+
+  if (body.id) {
+    const { error } = await supabase.from('users').update(payload).eq('id', body.id);
+    if (error) throw new Error(error.message);
+  } else {
+    payload.password_hash = body.password || 'changeme';
+    const { error } = await supabase.from('users').insert(payload);
+    if (error) throw new Error(error.message);
+  }
+}
+
+async function setUserActive(userId, active) {
+  const { error } = await supabase.from('users').update({ active }).eq('id', userId);
   if (error) throw new Error(error.message);
 }
 
@@ -884,6 +1068,7 @@ function Docs({ L, type }) {
   const [form, setForm] = useState(null);
   const [pay, setPay] = useState(null);
   const [partial, setPartial] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [tab, setTab] = useState('all');
   const [err, setErr] = useState('');
 
@@ -992,7 +1177,7 @@ function Docs({ L, type }) {
 
       <Table>
         <thead>
-          <tr><th>N°</th><th>{L('base')}</th><th>{L('date')}</th><th>{isSales ? L('customer') : L('supplier')}</th><th>{L('status')}</th><th>{L('total')}</th><th>{L('payment')}</th><th>{L('actions')}</th></tr>
+          <tr><th>N°</th><th>{L('base')}</th><th>{L('date')}</th><th>{isSales ? L('customer') : L('supplier')}</th><th>{L('status')}</th><th>{L('quantity')}</th><th>{L('total')}</th><th>{L('payment')}</th><th>{L('actions')}</th></tr>
         </thead>
         <tbody>
           {filtered.map(d => {
@@ -1000,17 +1185,19 @@ function Docs({ L, type }) {
             const tone = d.statutPaiement === 'paid' ? 'green' : d.statutPaiement === 'partial' ? 'amber' : 'red';
             return (
               <tr key={d.id}>
-                <td className="font-mono text-xs">{Object.values(d.numeros || {})[0] || '#' + d.id}</td>
+                <td className="font-mono text-xs">{docNo(d)}</td>
                 <td>{d.baseDocId ? <Badge tone="blue">#{d.baseDocId}</Badge> : '-'}</td>
                 <td>{d.date}</td>
                 <td>{d.client_name || d.supplier_name || d.clientNom || d.fournisseurNom}</td>
-                <td><Badge tone="blue">{d.stage}</Badge></td>
+                <td><Badge tone={docStatus(d) === 'closed' ? 'green' : docStatus(d) === 'partial' ? 'amber' : 'blue'}>{d.stage} · {docStatus(d) === 'closed' ? L('closed') : docStatus(d) === 'partial' ? L('partial') : L('open')}</Badge></td>
+                <td className="text-xs">{L('quantity')}: {docQty(d.lignes)}<br />{L('remainingQty')}: {docRemainingQty(d)}</td>
                 <td>{dh(d.totalTTC)}</td>
                 <td><Badge tone={tone}>{status}{d.reste > 0 ? ' · ' + L('remaining') + ' ' + dh(d.reste) : ''}</Badge></td>
                 <td className="flex gap-1 flex-wrap">
                   <button onClick={() => advance(d.id)} className="btn bg-slate-800 text-white">{L('advance')}</button>
-                  <button onClick={() => setPay({ ...d, date: today(), mode: 'Espèces', montant: d.reste || d.totalTTC, cashRegister: '', receiptNo: '', chequeNo: '', bank: '', dueDate: '', paymentStatus: 'En portefeuille', transferRef: '', valueDate: '', terminal: '', transactionNo: '', billNo: '', note: '' })} className="btn bg-emerald-600 text-white">{L('pay')}</button>
-                  {d.stage !== 'facture' ? <button onClick={() => setPartial({ doc: d, qte: d.lignes?.[0]?.qte || 1 })} className="btn bg-white border">{isSales ? L('partialDelivery') : L('partialReceipt')}</button> : null}
+                  <button onClick={() => setPreview(d)} className="btn bg-white border">{L('preview')}</button>
+                  {paymentButtonVisible(d) ? <button onClick={() => setPay({ ...d, date: today(), mode: 'Espèces', montant: d.reste || d.totalTTC, cashRegister: '', receiptNo: '', chequeNo: '', bank: '', dueDate: '', paymentStatus: 'En portefeuille', transferRef: '', valueDate: '', terminal: '', transactionNo: '', billNo: '', note: '' })} className="btn bg-emerald-600 text-white">{L('pay')}</button> : null}
+                  {d.stage !== 'facture' && docRemainingQty(d) > 0 ? <button onClick={() => setPartial({ doc: d, qte: docRemainingQty(d) || 1 })} className="btn bg-white border">{isSales ? L('partialDelivery') : L('partialReceipt')}</button> : null}
                   <button onClick={() => setForm({ id: d.id, start: d.stage, date: d.date, partyId: isSales ? d.client_id : d.supplier_id, lignes: (d.lignes || []).map(l => ({ produitId: l.produitId, qte: l.qte })) })} className="btn bg-white border">{L('edit')}</button>
                   <button onClick={() => remove(d.id)} className="btn bg-red-600 text-white">{L('del')}</button>
                 </td>
@@ -1023,6 +1210,7 @@ function Docs({ L, type }) {
       {form ? <DocModal L={L} isSales={isSales} form={form} setForm={setForm} products={products} parties={parties} save={save} close={() => setForm(null)} /> : null}
       {pay ? <PaymentModal L={L} isSales={isSales} pay={pay} setPay={setPay} save={settle} close={() => setPay(null)} /> : null}
       {partial ? <PartialModal L={L} isSales={isSales} partial={partial} setPartial={setPartial} save={doPartial} close={() => setPartial(null)} /> : null}
+      {preview ? <DocumentPreview L={L} isSales={isSales} doc={preview} close={() => setPreview(null)} /> : null}
     </>
   );
 }
@@ -1059,6 +1247,128 @@ function DocModal({ L, isSales, form, setForm, products, parties, save, close })
     </Modal>
   );
 }
+
+
+function DocumentPreview({ L, isSales, doc, close }) {
+  const [settings, setSettings] = useState(null);
+
+  useEffect(() => {
+    loadSettings().then(setSettings).catch(() => setSettings({ company_name: 'DrogueriePro' }));
+  }, []);
+
+  const lines = doc.lignes || jsonValue(doc.lines_json, []);
+  const vatRate = Number(doc.tauxTva || doc.vat_rate || settings?.vat_rate || 20);
+  const docTotalTTC = Number(doc.totalTTC || doc.total_ttc || 0);
+  const docTotalHT = Number(doc.totalHT || doc.total_ht || (docTotalTTC / (1 + vatRate / 100)));
+  const docVAT = Number(doc.tva || doc.vat || (docTotalTTC - docTotalHT));
+  const number = docNo(doc);
+  const third = isSales ? (doc.client_name || doc.clientNom || '-') : (doc.supplier_name || doc.fournisseurNom || '-');
+
+  function printDoc() {
+    window.print();
+  }
+
+  if (!settings) return null;
+
+  return (
+    <Modal title={L('preview')} onClose={close} wide>
+      <div className="print-area bg-white text-slate-900">
+        <div className="flex justify-between items-start border-b pb-4 mb-4">
+          <div>
+            <h1 className="text-2xl font-black">{settings.company_name || 'DrogueriePro'}</h1>
+            <p className="text-sm text-slate-500">{settings.company_address || ''}</p>
+            <p className="text-sm text-slate-500">
+              {settings.company_phone ? 'Tél : ' + settings.company_phone : ''} {settings.company_ice ? ' · ICE : ' + settings.company_ice : ''}
+            </p>
+          </div>
+          <div className="text-right">
+            <h2 className="text-xl font-bold">{isSales ? L('sales') : L('purchases')}</h2>
+            <p className="font-mono">{number}</p>
+            <p className="text-sm">{L('date')} : {doc.date || '-'}</p>
+            <Badge tone={docStatus(doc) === 'closed' ? 'green' : docStatus(doc) === 'partial' ? 'amber' : 'blue'}>
+              {doc.stage} · {docStatus(doc)}
+            </Badge>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 mb-5">
+          <div className="card p-3">
+            <p className="text-xs text-slate-400">{isSales ? L('customer') : L('supplier')}</p>
+            <p className="font-bold">{third}</p>
+          </div>
+          <div className="card p-3">
+            <p className="text-xs text-slate-400">{L('payment')}</p>
+            <p className="font-bold">
+              {doc.statutPaiement === 'paid' ? L('paid') : doc.statutPaiement === 'partial' ? L('partial') : L('unpaid')}
+            </p>
+            <p className="text-sm text-slate-500">{L('remaining')} : {dh(doc.reste || 0)}</p>
+          </div>
+        </div>
+
+        <table className="table w-full border">
+          <thead>
+            <tr>
+              <th>{L('ref')}</th>
+              <th>{L('product')}</th>
+              <th>{L('quantity')}</th>
+              <th>{L('unitPrice')}</th>
+              <th>{L('totalHT')}</th>
+              <th>{L('totalVAT')}</th>
+              <th>{L('totalTTC')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {lines.map((l, i) => {
+              const qty = Number(l.qte || 0);
+              const puTTC = Number(l.prixUnit || 0);
+              const totalTTC = qty * puTTC;
+              const totalHT = totalTTC / (1 + vatRate / 100);
+              const vat = totalTTC - totalHT;
+              return (
+                <tr key={i}>
+                  <td className="font-mono text-xs">{l.ref || '-'}</td>
+                  <td>{l.nom || '-'}</td>
+                  <td>{fmt(qty)}</td>
+                  <td>{dh(puTTC)}</td>
+                  <td>{dh(totalHT)}</td>
+                  <td>{dh(vat)}</td>
+                  <td className="font-bold">{dh(totalTTC)}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+
+        <div className="flex justify-end mt-5">
+          <div className="w-80 card p-4">
+            <div className="flex justify-between py-1">
+              <span>{L('totalHT')}</span>
+              <b>{dh(docTotalHT)}</b>
+            </div>
+            <div className="flex justify-between py-1">
+              <span>{L('totalVAT')} {vatRate}%</span>
+              <b>{dh(docVAT)}</b>
+            </div>
+            <div className="flex justify-between py-2 border-t mt-2 text-lg">
+              <span>{L('totalTTC')}</span>
+              <b>{dh(docTotalTTC)}</b>
+            </div>
+          </div>
+        </div>
+
+        {doc.baseDocId ? (
+          <p className="text-xs text-slate-500 mt-4">{L('base')} : #{doc.baseDocId}</p>
+        ) : null}
+      </div>
+
+      <div className="flex justify-end gap-2 mt-5 no-print">
+        <button onClick={close} className="btn bg-white border">Fermer</button>
+        <button onClick={printDoc} className="btn bg-amber-500">{L('print')}</button>
+      </div>
+    </Modal>
+  );
+}
+
 
 function PaymentModal({ L, isSales, pay, setPay, save, close }) {
   const mode = pay.mode || 'Espèces';
@@ -1217,90 +1527,10 @@ function Users({ L }) {
 
   async function load() {
     try {
-      const [users, roles, branches] = await Promise.all([loadUsers(), loadRoles(), loadBranches()]);
+      const [users, rolesData, branchesData] = await Promise.all([loadUsers(), loadRoles(), loadBranches()]);
       setRows(users);
-      setRoles(roles);
-      setBranches(branches);
-    } catch (e) { setErr(e.message); }
-  }
-
-  useEffect(() => { load(); }, []);
-
-  async function save() {
-    try {
-      await createUser(form);
-      setForm(null);
-      load();
-    } catch (e) { alert(e.message); }
-  }
-
-  if (err) return <ErrorBox msg={err} />;
-
-  return (
-    <>
-      <Header title={L('users')}>
-        <button onClick={() => setForm({ username: '', password: 'changeme', full_name: '', role_id: roles[0]?.id, branch_id: branches[0]?.id || '' })} className="btn bg-amber-500">{L('new')}</button>
-      </Header>
-
-      <Table>
-        <thead><tr><th>{L('username')}</th><th>{L('name')}</th><th>Rôle</th><th>{L('branch')}</th><th>Actif</th></tr></thead>
-        <tbody>{rows.map(u => <tr key={u.id}><td>{u.username}</td><td>{u.full_name}</td><td>{u.role}</td><td>{u.branch_name || '-'}</td><td>{u.active ? 'Oui' : 'Non'}</td></tr>)}</tbody>
-      </Table>
-
-      {form ? (
-        <Modal title={L('users')} onClose={() => setForm(null)}>
-          {['username', 'password', 'full_name'].map(k => (
-            <input key={k} className="input mb-2" placeholder={k} value={form[k] || ''} onChange={e => setForm({ ...form, [k]: e.target.value })} />
-          ))}
-          <select className="input mb-3" value={form.role_id} onChange={e => setForm({ ...form, role_id: Number(e.target.value) })}>
-            {roles.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
-          </select>
-          <select className="input mb-3" value={form.branch_id || ''} onChange={e => setForm({ ...form, branch_id: e.target.value ? Number(e.target.value) : null })}>
-            <option value="">Toutes / Aucune</option>
-            {branches.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
-          </select>
-          <button onClick={save} className="btn bg-amber-500">{L('save')}</button>
-        </Modal>
-      ) : null}
-    </>
-  );
-}
-
-
-function Settings({ L }) {
-  const [settings, setSettings] = useState(null);
-  const [err, setErr] = useState('');
-  async function load(){ try{ setSettings(await loadSettings()); }catch(e){ setErr(e.message); } }
-  useEffect(()=>{ load(); }, []);
-  async function save(){ try{ await saveSettings(settings); alert('Paramètres enregistrés'); }catch(e){ alert(e.message); } }
-  if (err) return <ErrorBox msg={err} />;
-  if (!settings) return <p>Chargement...</p>;
-  return <><Header title={L('settings')}><button onClick={save} className="btn bg-amber-500">{L('save')}</button></Header><div className="grid md:grid-cols-2 gap-4"><div className="card p-5"><h2 className="font-bold mb-3">{L('company')}</h2><label className="text-xs text-slate-500">{L('company')}<input className="input mt-1 mb-2" value={settings.company_name || ''} onChange={e=>setSettings({...settings, company_name:e.target.value})}/></label><label className="text-xs text-slate-500">{L('ice')}<input className="input mt-1 mb-2" value={settings.company_ice || ''} onChange={e=>setSettings({...settings, company_ice:e.target.value})}/></label><label className="text-xs text-slate-500">{L('phone')}<input className="input mt-1 mb-2" value={settings.company_phone || ''} onChange={e=>setSettings({...settings, company_phone:e.target.value})}/></label><label className="text-xs text-slate-500">{L('address')}<textarea className="input mt-1" value={settings.company_address || ''} onChange={e=>setSettings({...settings, company_address:e.target.value})}/></label></div><div className="card p-5"><h2 className="font-bold mb-3">{L('settings')}</h2><label className="text-xs text-slate-500">{L('vat')} %<input className="input mt-1 mb-2" type="number" value={settings.vat_rate || '20'} onChange={e=>setSettings({...settings, vat_rate:e.target.value})}/></label><label className="text-xs text-slate-500">{L('theme')}<select className="input mt-1" value={settings.theme || 'light'} onChange={e=>setSettings({...settings, theme:e.target.value})}><option value="light">Light</option><option value="dark">Dark</option><option value="corporate">Corporate</option></select></label></div></div></>;
-}
-function Permissions({ L }) {
-  const [roles,setRoles]=useState([]), [permissions,setPermissions]=useState([]), [rolePerms,setRolePerms]=useState([]), [err,setErr]=useState('');
-  async function load(){ try{ const d=await loadPermissionsMatrix(); setRoles(d.roles); setPermissions(d.permissions); setRolePerms(d.rolePerms); }catch(e){ setErr(e.message); } }
-  useEffect(()=>{ load(); }, []);
-  function checked(rid,pid){ return rolePerms.some(x=>Number(x.role_id)===Number(rid)&&Number(x.permission_id)===Number(pid)); }
-  async function toggle(rid,pid,en){ try{ await setRolePermission(rid,pid,en); await load(); }catch(e){ alert(e.message); } }
-  if (err) return <ErrorBox msg={err} />;
-  const grouped=permissions.reduce((a,p)=>{ const m=p.module||'Divers'; (a[m] ||= []).push(p); return a; },{});
-  return <><Header title={L('permissions')}><button onClick={load} className="btn bg-white border">↻</button></Header><div className="card overflow-auto"><table className="table w-full"><thead><tr><th>Module / Permission</th>{roles.map(r=><th key={r.id}>{r.name}</th>)}</tr></thead><tbody>{Object.entries(grouped).map(([mod,perms])=><React.Fragment key={mod}><tr><td colSpan={roles.length+1} className="bg-slate-100 font-bold">{mod}</td></tr>{perms.map(p=><tr key={p.id}><td><div className="font-semibold">{p.label||p.code}</div><div className="text-xs text-slate-400 font-mono">{p.code}</div></td>{roles.map(r=><td key={r.id}><input type="checkbox" checked={checked(r.id,p.id)} onChange={e=>toggle(r.id,p.id,e.target.checked)}/></td>)}</tr>)}</React.Fragment>)}</tbody></table></div></>;
-}
-
-
-function Branches({ L }) {
-  const [rows, setRows] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [form, setForm] = useState(null);
-  const [err, setErr] = useState('');
-
-  async function load() {
-    try {
-      setErr('');
-      const [branches, usersData] = await Promise.all([loadBranches(), loadUsersForBranch()]);
-      setRows(branches);
-      setUsers(usersData);
+      setRoles(rolesData);
+      setBranches(branchesData);
     } catch (e) {
       setErr(e.message);
     }
@@ -1308,9 +1538,33 @@ function Branches({ L }) {
 
   useEffect(() => { load(); }, []);
 
+  function newUser() {
+    setForm({
+      username: '',
+      password: 'changeme',
+      full_name: '',
+      role_id: roles[0]?.id || 3,
+      branch_id: branches[0]?.id || '',
+      active: true
+    });
+  }
+
+  function editUser(u) {
+    const role = roles.find(r => r.name === u.role);
+    setForm({
+      id: u.id,
+      username: u.username || '',
+      password: '',
+      full_name: u.full_name || '',
+      role_id: role?.id || u.role_id || 3,
+      branch_id: u.branch_id || '',
+      active: u.active !== false
+    });
+  }
+
   async function save() {
     try {
-      await saveBranch(form);
+      await saveUser(form);
       setForm(null);
       await load();
     } catch (e) {
@@ -1318,19 +1572,10 @@ function Branches({ L }) {
     }
   }
 
-  async function deactivate(id) {
-    if (!confirm('Désactiver cette droguerie ?')) return;
+  async function toggleActive(u) {
+    if (!confirm((u.active ? L('deactivate') : L('activate')) + ' ?')) return;
     try {
-      await deleteBranch(id);
-      await load();
-    } catch (e) {
-      alert(e.message);
-    }
-  }
-
-  async function assign(userId, branchId) {
-    try {
-      await assignUserBranch(userId, branchId ? Number(branchId) : null);
+      await setUserActive(u.id, !u.active);
       await load();
     } catch (e) {
       alert(e.message);
@@ -1341,94 +1586,81 @@ function Branches({ L }) {
 
   return (
     <>
-      <Header title={L('branches')}>
-        <button
-          onClick={() => setForm({ name: '', city: '', address: '', phone: '', manager_name: '', active: true })}
-          className="btn bg-amber-500"
-        >
-          {L('new')}
-        </button>
+      <Header title={L('users')}>
+        <button onClick={newUser} className="btn bg-amber-500">{L('new')}</button>
       </Header>
 
-      <div className="grid md:grid-cols-3 gap-4 mb-6">
-        {rows.map(b => (
-          <div key={b.id} className="card p-4">
-            <div className="flex justify-between gap-2">
-              <div>
-                <h2 className="font-bold text-lg">{b.name}</h2>
-                <p className="text-sm text-slate-500">{b.city || '-'}</p>
-              </div>
-              <Badge tone={b.active ? 'green' : 'red'}>{b.active ? L('active') : 'Inactive'}</Badge>
-            </div>
-            <div className="text-sm text-slate-600 mt-3">
-              <p>{L('phone')} : {b.phone || '-'}</p>
-              <p>{L('manager')} : {b.manager_name || '-'}</p>
-              <p>{L('address')} : {b.address || '-'}</p>
-            </div>
-            <div className="flex gap-2 mt-4">
-              <button onClick={() => setForm(b)} className="btn bg-white border">{L('edit')}</button>
-              <button onClick={() => deactivate(b.id)} className="btn bg-red-600 text-white">{L('deactivate')}</button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="card p-4">
-        <h2 className="font-bold mb-3">Affectation utilisateurs / drogueries</h2>
-        <Table>
-          <thead>
-            <tr>
-              <th>{L('username')}</th>
-              <th>{L('name')}</th>
-              <th>Profil</th>
-              <th>{L('branch')}</th>
+      <Table>
+        <thead>
+          <tr>
+            <th>{L('username')}</th>
+            <th>{L('fullName')}</th>
+            <th>{L('role')}</th>
+            <th>{L('branch')}</th>
+            <th>{L('active')}</th>
+            <th>{L('actions')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map(u => (
+            <tr key={u.id}>
+              <td className="font-mono text-xs">{u.username}</td>
+              <td>{u.full_name || '-'}</td>
+              <td><Badge tone="blue">{u.role || '-'}</Badge></td>
+              <td>{u.branch_name || '-'}</td>
+              <td>
+                <Badge tone={u.active ? 'green' : 'red'}>
+                  {u.active ? L('active') : 'Inactif'}
+                </Badge>
+              </td>
+              <td className="flex gap-1 flex-wrap">
+                <button onClick={() => editUser(u)} className="btn bg-white border">{L('edit')}</button>
+                <button onClick={() => toggleActive(u)} className={u.active ? 'btn bg-red-600 text-white' : 'btn bg-emerald-600 text-white'}>
+                  {u.active ? L('deactivate') : L('activate')}
+                </button>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {users.map(u => (
-              <tr key={u.id}>
-                <td>{u.username}</td>
-                <td>{u.full_name || '-'}</td>
-                <td>{u.roles?.name || '-'}</td>
-                <td>
-                  <select className="input" value={u.branch_id || ''} onChange={e => assign(u.id, e.target.value)}>
-                    <option value="">Toutes / Aucune</option>
-                    {rows.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
-                  </select>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      </div>
+          ))}
+        </tbody>
+      </Table>
 
       {form ? (
-        <Modal title={L('branches')} onClose={() => setForm(null)}>
-          <label className="text-xs text-slate-500">{L('name')}
-            <input className="input mt-1 mb-2" value={form.name || ''} onChange={e => setForm({ ...form, name: e.target.value })} />
+        <Modal title={form.id ? L('edit') : L('new')} onClose={() => setForm(null)}>
+          <label className="text-xs text-slate-500">{L('username')}
+            <input className="input mt-1 mb-2" value={form.username || ''} onChange={e => setForm({ ...form, username: e.target.value })} disabled={!!form.id} />
           </label>
-          <label className="text-xs text-slate-500">{L('city')}
-            <input className="input mt-1 mb-2" value={form.city || ''} onChange={e => setForm({ ...form, city: e.target.value })} />
+
+          <label className="text-xs text-slate-500">{L('fullName')}
+            <input className="input mt-1 mb-2" value={form.full_name || ''} onChange={e => setForm({ ...form, full_name: e.target.value })} />
           </label>
-          <label className="text-xs text-slate-500">{L('phone')}
-            <input className="input mt-1 mb-2" value={form.phone || ''} onChange={e => setForm({ ...form, phone: e.target.value })} />
+
+          <label className="text-xs text-slate-500">{form.id ? L('changePassword') : L('password')}
+            <input className="input mt-1 mb-2" type="password" value={form.password || ''} onChange={e => setForm({ ...form, password: e.target.value })} placeholder={form.id ? 'Laisser vide pour ne pas changer' : ''} />
           </label>
-          <label className="text-xs text-slate-500">{L('manager')}
-            <input className="input mt-1 mb-2" value={form.manager_name || ''} onChange={e => setForm({ ...form, manager_name: e.target.value })} />
+
+          <label className="text-xs text-slate-500">{L('role')}
+            <select className="input mt-1 mb-2" value={form.role_id || ''} onChange={e => setForm({ ...form, role_id: Number(e.target.value) })}>
+              {roles.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
+            </select>
           </label>
-          <label className="text-xs text-slate-500">{L('address')}
-            <textarea className="input mt-1 mb-2" value={form.address || ''} onChange={e => setForm({ ...form, address: e.target.value })} />
+
+          <label className="text-xs text-slate-500">{L('branch')}
+            <select className="input mt-1 mb-2" value={form.branch_id || ''} onChange={e => setForm({ ...form, branch_id: e.target.value ? Number(e.target.value) : null })}>
+              <option value="">Toutes / Aucune</option>
+              {branches.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+            </select>
           </label>
-          <label className="flex items-center gap-2 text-sm mb-3">
+
+          <label className="flex items-center gap-2 text-sm mb-4">
             <input type="checkbox" checked={form.active !== false} onChange={e => setForm({ ...form, active: e.target.checked })} />
             {L('active')}
           </label>
+
           <button onClick={save} className="btn bg-amber-500">{L('save')}</button>
         </Modal>
       ) : null}
     </>
   );
 }
-
 
 createRoot(document.getElementById('root')).render(<App />);
