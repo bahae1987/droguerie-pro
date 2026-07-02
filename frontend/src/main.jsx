@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-console.log('DROGUERIEPRO V19 DOC PRINT PREVIEW OK');
+console.log('DROGUERIEPRO V21 SAP FLOW STOCK AUDIT OK');
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -21,7 +21,7 @@ const TXT = {
   fr: {
     login: 'Connexion', username: 'Utilisateur', password: 'Mot de passe', connect: 'Se connecter',
     dashboard: 'Tableau de bord', products: 'Produits / Stock', sales: 'Ventes', purchases: 'Achats',
-    payments: 'Paiements', settings: 'Paramètres', permissions: 'Autorisations', clients: 'Clients', suppliers: 'Fournisseurs', users: 'Utilisateurs', branch: 'Droguerie', branches: 'Gestion drogueries', city: 'Ville', manager: 'Responsable', active: 'Actif', deactivate: 'Désactiver', activate: 'Activer', fullName: 'Nom complet', changePassword: 'Changer mot de passe',
+    payments: 'Paiements', stockMoves: 'Mouvements stock', audit: 'Traçabilité', settings: 'Paramètres', permissions: 'Autorisations', clients: 'Clients', suppliers: 'Fournisseurs', users: 'Utilisateurs', branch: 'Droguerie', branches: 'Gestion drogueries', city: 'Ville', manager: 'Responsable', active: 'Actif', deactivate: 'Désactiver', activate: 'Activer', fullName: 'Nom complet', changePassword: 'Changer mot de passe',
     logout: 'Déconnexion', lang: 'العربية', new: 'Nouveau', save: 'Enregistrer', edit: 'Modifier',
     del: 'Supprimer', actions: 'Actions', stock: 'Stock', price: 'Prix', create: 'Créer',
     direct: 'Direct', advance: 'Avancer', pay: 'Régler', partialDelivery: 'Livraison partielle',
@@ -34,7 +34,7 @@ const TXT = {
   ar: {
     login: 'تسجيل الدخول', username: 'المستخدم', password: 'كلمة المرور', connect: 'دخول',
     dashboard: 'لوحة القيادة', products: 'المنتجات / المخزون', sales: 'المبيعات', purchases: 'المشتريات',
-    payments: 'الأداءات', settings: 'الإعدادات', permissions: 'الصلاحيات', clients: 'الزبناء', suppliers: 'الموردون', users: 'المستخدمون', branch: 'الدروكري', branches: 'تدبير الدروكريات', city: 'المدينة', manager: 'المسؤول', active: 'نشط', deactivate: 'تعطيل', activate: 'تفعيل', fullName: 'الاسم الكامل', changePassword: 'تغيير كلمة المرور',
+    payments: 'الأداءات', stockMoves: 'حركات المخزون', audit: 'التتبع', settings: 'الإعدادات', permissions: 'الصلاحيات', clients: 'الزبناء', suppliers: 'الموردون', users: 'المستخدمون', branch: 'الدروكري', branches: 'تدبير الدروكريات', city: 'المدينة', manager: 'المسؤول', active: 'نشط', deactivate: 'تعطيل', activate: 'تفعيل', fullName: 'الاسم الكامل', changePassword: 'تغيير كلمة المرور',
     logout: 'خروج', lang: 'Français', new: 'جديد', save: 'حفظ', edit: 'تعديل',
     del: 'حذف', actions: 'الإجراءات', stock: 'المخزون', price: 'الثمن', create: 'إنشاء',
     direct: 'مباشر', advance: 'المرحلة التالية', pay: 'تسوية', partialDelivery: 'تسليم جزئي',
@@ -52,7 +52,7 @@ const PERMS = [
   'suppliers.read', 'suppliers.write', 'suppliers.delete',
   'sales.read', 'sales.write', 'sales.delete',
   'purchases.read', 'purchases.write', 'purchases.delete',
-  'users.read', 'users.write'
+  'users.read', 'users.write', 'stock.read', 'audit.read'
 ];
 
 
@@ -171,8 +171,10 @@ async function nextNumber(prefix) {
   return prefix + '-' + new Date().getFullYear() + '-' + String(value).padStart(4, '0');
 }
 
-async function updateStock(lines, sign, reason) {
-  for (const line of lines) {
+
+async function updateStock(lines, sign, reason, meta = {}) {
+  const session = getStoredSession();
+  for (const line of normalizeLines(lines)) {
     const productId = Number(line.produitId || line.product_id || line.id);
     const qty = Number(line.qte || line.quantity || 0);
     if (!productId || !qty) continue;
@@ -185,13 +187,21 @@ async function updateStock(lines, sign, reason) {
     const { error: updateError } = await supabase.from('products').update({ quantity: newQty }).eq('id', productId);
     if (updateError) throw new Error(updateError.message);
 
-    await supabase.from('stock_movements').insert({
+    const movement = {
       product_id: productId,
       quantity: qty * sign,
       reason,
       created_at: new Date().toISOString()
-    });
+    };
+
+    if (meta.docType) movement.doc_type = meta.docType;
+    if (meta.docNumber) movement.doc_number = meta.docNumber;
+    if (session?.user?.id) movement.user_id = session.user.id;
+    if (session?.user) movement.user_label = currentUserLabel();
+
+    await supabase.from('stock_movements').insert(movement);
   }
+  await auditLog('Stock', 'STOCK', meta.docNumber || reason, reason);
 }
 
 async function login(username, password) {
@@ -212,7 +222,9 @@ async function login(username, password) {
       id: data.id,
       username: data.username,
       full_name: data.full_name,
-      role: data.roles?.name || 'Sans profil'
+      role: data.roles?.name || 'Sans profil',
+      branch_id: data.branch_id || null,
+      branch_name: data.branches?.name || ''
     },
     perms: userPerms
   };
@@ -346,6 +358,64 @@ async function assignUserBranch(userId, branchId) {
 }
 
 
+
+function currentUserLabel() {
+  const s = getStoredSession();
+  return s?.user?.full_name || s?.user?.username || 'system';
+}
+
+async function auditLog(moduleName, action, objectLabel, detail) {
+  try {
+    const s = getStoredSession();
+    await supabase.from('audit_logs').insert({
+      module: moduleName,
+      action,
+      object_label: String(objectLabel || ''),
+      detail: String(detail || ''),
+      user_id: s?.user?.id || null,
+      user_label: currentUserLabel(),
+      branch_id: s?.user?.branch_id || null,
+      created_at: new Date().toISOString()
+    });
+  } catch (e) {
+    console.warn('Audit log error:', e.message);
+  }
+}
+
+async function loadAuditLogs() {
+  const session = getStoredSession();
+  let q = supabase.from('audit_logs').select('*').order('created_at', { ascending: false }).limit(500);
+  if (!isAdmin(session) && branchId(session)) q = q.eq('branch_id', branchId(session));
+  const { data, error } = await q;
+  if (error) throw new Error(error.message);
+  return data || [];
+}
+
+async function loadStockMovements() {
+  const session = getStoredSession();
+  let q = supabase
+    .from('stock_movements')
+    .select('id, product_id, quantity, reason, created_at, user_label, doc_type, doc_number, products(ref, name, branch_id)')
+    .order('created_at', { ascending: false });
+
+  const { data, error } = await q;
+  if (error) throw new Error(error.message);
+
+  return (data || [])
+    .filter(m => isAdmin(session) || !branchId(session) || Number(m.products?.branch_id || 0) === Number(branchId(session)))
+    .map(m => ({
+      id: m.id,
+      ref: m.products?.ref || '',
+      productName: m.products?.name || '',
+      quantity: Number(m.quantity || 0),
+      reason: m.reason || '',
+      date: m.created_at,
+      userLabel: m.user_label || '',
+      docType: m.doc_type || '',
+      docNumber: m.doc_number || ''
+    }));
+}
+
 function ConfigMissing() {
   return (
     <div className="min-h-screen grid place-items-center bg-slate-100 p-6">
@@ -403,9 +473,26 @@ async function setRolePermission(roleId, permissionId, enabled) {
 }
 
 
+
 function docNo(doc, key) {
   const nums = jsonValue(doc.numbers_json || doc.numeros, {});
   if (key && nums[key]) return nums[key];
+
+  const stageKey = {
+    devis: 'devis',
+    commande: 'commande',
+    livraison: 'livraison',
+    reception: 'reception',
+    facture: 'facture'
+  }[doc.stage];
+
+  if (stageKey && nums[stageKey]) return nums[stageKey];
+
+  const preferred = ['facture', 'livraison', 'reception', 'commande', 'devis'];
+  for (const k of preferred) {
+    if (nums[k]) return nums[k];
+  }
+
   return Object.values(nums)[0] || ('#' + doc.id);
 }
 
@@ -466,65 +553,187 @@ function paymentButtonVisible(doc) {
 }
 
 
+function docPrefix(type, stage) {
+  if (type === 'sales') {
+    return { devis: 'DEV', commande: 'CMDV', livraison: 'BLV', facture: 'FACV' }[stage] || 'DOCV';
+  }
+  return { commande: 'CMDA', reception: 'BRA', facture: 'FACA' }[stage] || 'DOCA';
+}
+
+function docKey(type, stage) {
+  if (type === 'sales') {
+    return { devis: 'devis', commande: 'commande', livraison: 'livraison', facture: 'facture' }[stage] || stage;
+  }
+  return { commande: 'commande', reception: 'reception', facture: 'facture' }[stage] || stage;
+}
+
+function normalizeLines(lines) {
+  return (lines || []).map(l => ({
+    ...l,
+    produitId: Number(l.produitId || l.product_id || l.id),
+    qte: Number(l.qte || l.quantity || 0),
+    prixUnit: Number(l.prixUnit || l.unit_price || 0)
+  })).filter(l => l.produitId && l.qte > 0);
+}
+
+function scaleLinesToQty(lines, qtyToProcess) {
+  const total = docQty(lines);
+  const qty = Math.min(Number(qtyToProcess || 0), total);
+  if (!qty || qty <= 0) throw new Error('Quantité invalide');
+  return normalizeLines(lines).map(l => ({
+    ...l,
+    qte: Number((Number(l.qte || 0) * qty / total).toFixed(4))
+  })).filter(l => l.qte > 0);
+}
+
+function paymentLabel(doc, L) {
+  if (doc.statutPaiement === 'paid') return L('paid');
+  if (doc.statutPaiement === 'partial') return L('partial');
+  return L('unpaid');
+}
+
+
+
+
+
+async function partyName(type, id, fallback = '') {
+  if (!id) return fallback;
+  const table = type === 'sales' ? 'clients' : 'suppliers';
+  const { data } = await supabase.from(table).select('name').eq('id', id).maybeSingle();
+  return data?.name || fallback;
+}
+
 async function createDoc(type, body) {
   const isSales = type === 'sales';
   const start = body.start || (isSales ? 'devis' : 'commande');
-  const lines = body.lignes || [];
+  const lines = normalizeLines(body.lignes || []);
+  if (!lines.length) throw new Error('Le document doit contenir au moins une ligne');
+
   const vat = Number(body.tauxTva || await getVatRate());
   const t = computeTotals(lines, vat, isSales);
-  let prefix, key;
-  if (isSales) {
-    prefix = start === 'facture' ? 'FAC' : start === 'commande' ? 'BC' : start === 'livraison' ? 'BL' : 'DEV';
-    key = start === 'facture' ? 'facture' : start === 'commande' ? 'commande' : start === 'livraison' ? 'bl' : 'devis';
-  } else {
-    prefix = start === 'facture' ? 'FF' : start === 'reception' ? 'BR' : 'CF';
-    key = start === 'facture' ? 'facture' : start === 'reception' ? 'reception' : 'commande';
-  }
-  const numbers = { [key]: await nextNumber(prefix) };
-  if (isSales && (start === 'livraison' || start === 'facture')) await updateStock(lines, -1, start === 'facture' ? 'Vente directe' : 'Livraison vente');
-  if (!isSales && (start === 'reception' || start === 'facture')) await updateStock(lines, 1, start === 'facture' ? 'Facture fournisseur directe' : 'Réception achat');
+  const prefix = docPrefix(type, start);
+  const key = docKey(type, start);
+  const docNumber = await nextNumber(prefix);
+  const numbers = { [key]: docNumber };
   const session = getStoredSession();
+  const qty = docQty(lines);
+
+  const movesStock = isSales
+    ? ['livraison', 'facture'].includes(start)
+    : ['reception', 'facture'].includes(start);
+
+  if (movesStock) {
+    await updateStock(
+      lines,
+      isSales ? -1 : 1,
+      (isSales ? 'Sortie stock ' : 'Entrée stock ') + docNumber,
+      { docType: start, docNumber }
+    );
+  }
+
   const payload = isSales ? {
-    date: body.date || today(), client_id: body.clientId || null, client_name: body.clientNom || await partyName(type, body.clientId),
-    stage: start, numbers_json: numbers, lines_json: lines, payments_json: [], vat_rate: vat, total_ht: t.totalHT, vat: t.vat, total_ttc: t.totalTTC,
-    delivered: start === 'livraison' || start === 'facture',
-    qty_done: (start === 'livraison' || start === 'facture') ? docQty(lines) : 0,
-    doc_status: (start === 'facture') ? 'closed' : ((start === 'livraison') ? 'closed' : 'open'), created_by: session?.user?.id || null, base_doc_id: body.baseDocId || null,
+    date: body.date || today(),
+    client_id: body.clientId || null,
+    client_name: body.clientNom || await partyName(type, body.clientId),
+    stage: start,
+    numbers_json: numbers,
+    lines_json: lines,
+    payments_json: [],
+    vat_rate: vat,
+    total_ht: t.totalHT,
+    vat: t.vat,
+    total_ttc: t.totalTTC,
+    delivered: ['livraison', 'facture'].includes(start),
+    qty_done: movesStock ? qty : 0,
+    doc_status: start === 'facture' ? 'closed' : (movesStock ? 'closed' : 'open'),
+    created_by: session?.user?.id || null,
+    base_doc_id: body.baseDocId || null,
     branch_id: isAdmin(session) ? (body.branchId || branchId(session)) : branchId(session)
   } : {
-    date: body.date || today(), supplier_id: body.fournisseurId || null,
-      branch_id: isAdmin(getStoredSession()) ? (body.branch_id || branchId(getStoredSession())) : branchId(getStoredSession()), supplier_name: body.fournisseurNom || await partyName(type, body.fournisseurId),
-    stage: start, numbers_json: numbers, lines_json: lines, payments_json: [], vat_rate: vat, total_ht: t.totalHT, vat: t.vat, total_ttc: t.totalTTC,
-    received: start === 'reception' || start === 'facture',
-    qty_done: (start === 'reception' || start === 'facture') ? docQty(lines) : 0,
-    doc_status: (start === 'facture') ? 'closed' : ((start === 'reception') ? 'closed' : 'open'), created_by: session?.user?.id || null, base_doc_id: body.baseDocId || null,
+    date: body.date || today(),
+    supplier_id: body.fournisseurId || null,
+    supplier_name: body.fournisseurNom || await partyName(type, body.fournisseurId),
+    stage: start,
+    numbers_json: numbers,
+    lines_json: lines,
+    payments_json: [],
+    vat_rate: vat,
+    total_ht: t.totalHT,
+    vat: t.vat,
+    total_ttc: t.totalTTC,
+    received: ['reception', 'facture'].includes(start),
+    qty_done: movesStock ? qty : 0,
+    doc_status: start === 'facture' ? 'closed' : (movesStock ? 'closed' : 'open'),
+    created_by: session?.user?.id || null,
+    base_doc_id: body.baseDocId || null,
     branch_id: isAdmin(session) ? (body.branchId || branchId(session)) : branchId(session)
   };
+
   const { error } = await supabase.from(type).insert(payload);
   if (error) throw new Error(error.message);
+  await auditLog(isSales ? 'Ventes' : 'Achats', 'CREATE', docNumber, 'Création ' + start);
 }
+
 
 async function updateDoc(type, id, body) {
   const isSales = type === 'sales';
-  const lines = body.lignes || [];
+  const { data: existing, error: readError } = await supabase.from(type).select('*').eq('id', id).single();
+  if (readError) throw new Error(readError.message);
+
+  if (existing.stage === 'facture' && jsonValue(existing.payments_json, []).length) {
+    throw new Error('Impossible de modifier une facture déjà réglée');
+  }
+
+  const lines = normalizeLines(body.lignes || []);
+  if (!lines.length) throw new Error('Le document doit contenir au moins une ligne');
+
   const vat = Number(body.tauxTva || await getVatRate());
   const t = computeTotals(lines, vat, isSales);
-  const payload = { date: body.date || today(), lines_json: lines, vat_rate: vat, total_ht: t.totalHT, vat: t.vat, total_ttc: t.totalTTC };
-  if (isSales) { payload.client_id = body.clientId || null; payload.client_name = body.clientNom || await partyName(type, payload.client_id); }
-  else { payload.supplier_id = body.fournisseurId || null; payload.supplier_name = body.fournisseurNom || await partyName(type, payload.supplier_id); }
+  const payload = {
+    date: body.date || today(),
+    lines_json: lines,
+    vat_rate: vat,
+    total_ht: t.totalHT,
+    vat: t.vat,
+    total_ttc: t.totalTTC
+  };
+
+  if (isSales) {
+    payload.client_id = body.clientId || null;
+    payload.client_name = body.clientNom || await partyName(type, payload.client_id);
+  } else {
+    payload.supplier_id = body.fournisseurId || null;
+    payload.supplier_name = body.fournisseurNom || await partyName(type, payload.supplier_id);
+  }
+
   const { error } = await supabase.from(type).update(payload).eq('id', id);
   if (error) throw new Error(error.message);
+  await auditLog(isSales ? 'Ventes' : 'Achats', 'UPDATE', docNo(existing), 'Modification document');
 }
+
 
 async function deleteDoc(type, id) {
   const { data: doc, error: e1 } = await supabase.from(type).select('*').eq('id', id).single();
   if (e1) throw new Error(e1.message);
+
+  const payments = jsonValue(doc.payments_json, []);
+  if (payments.length) throw new Error('Impossible de supprimer un document avec règlement');
+
   const lines = jsonValue(doc.lines_json, []);
-  if (type === 'sales' && doc.delivered) await updateStock(lines, 1, 'Suppression vente - restitution stock');
-  if (type === 'purchases' && doc.received) await updateStock(lines, -1, 'Suppression achat - retrait stock');
+  const number = docNo(doc);
+
+  if (type === 'sales' && doc.delivered) {
+    await updateStock(lines, 1, 'Annulation sortie stock ' + number, { docType: doc.stage, docNumber: number });
+  }
+  if (type === 'purchases' && doc.received) {
+    await updateStock(lines, -1, 'Annulation entrée stock ' + number, { docType: doc.stage, docNumber: number });
+  }
+
   const { error } = await supabase.from(type).delete().eq('id', id);
   if (error) throw new Error(error.message);
+  await auditLog(type === 'sales' ? 'Ventes' : 'Achats', 'DELETE', number, 'Suppression document');
 }
+
 
 async function advanceDoc(type, id) {
   const isSales = type === 'sales';
@@ -534,49 +743,55 @@ async function advanceDoc(type, id) {
   const next = nextStageAllowed(doc, type);
   if (!next) return;
 
-  const oldLines = jsonValue(doc.lines_json, []);
-  const vatRate = Number(doc.vat_rate || 20);
+  const oldLines = normalizeLines(jsonValue(doc.lines_json, []));
+  const remaining = docRemainingQty(doc);
+  if ((next === 'livraison' || next === 'reception') && remaining <= 0) {
+    throw new Error('Aucune quantité restante à traiter');
+  }
 
-  const prefixes = isSales
-    ? { commande: 'CMDV', livraison: 'BLV', facture: 'FACV' }
-    : { reception: 'BRA', facture: 'FACA' };
-
-  const keys = isSales
-    ? { commande: 'commande', livraison: 'livraison', facture: 'facture' }
-    : { reception: 'reception', facture: 'facture' };
-
+  const key = docKey(type, next);
+  const prefix = docPrefix(type, next);
   const nums = { ...jsonValue(doc.numbers_json, {}) };
-  nums[keys[next]] = nums[keys[next]] || await nextNumber(prefixes[next]);
-
-  if (isSales && next === 'livraison' && !doc.delivered) {
-    await updateStock(oldLines, -1, 'Livraison vente ' + nums[keys[next]]);
-  }
-
-  if (!isSales && next === 'reception' && !doc.received) {
-    await updateStock(oldLines, 1, 'Réception achat ' + nums[keys[next]]);
-  }
+  nums[key] = nums[key] || await nextNumber(prefix);
 
   const totalQty = docQty(oldLines);
+  let newDone = Number(doc.qty_done || 0);
+  let status = 'open';
 
-  const payload = isSales
-    ? {
-        stage: next,
-        numbers_json: nums,
-        delivered: next === 'livraison' ? true : doc.delivered,
-        qty_done: (next === 'livraison' || next === 'facture') ? totalQty : Number(doc.qty_done || 0),
-        doc_status: next === 'facture' ? 'closed' : (next === 'livraison' ? 'closed' : 'open')
-      }
-    : {
-        stage: next,
-        numbers_json: nums,
-        received: next === 'reception' ? true : doc.received,
-        qty_done: (next === 'reception' || next === 'facture') ? totalQty : Number(doc.qty_done || 0),
-        doc_status: next === 'facture' ? 'closed' : (next === 'reception' ? 'closed' : 'open')
-      };
+  if (isSales && next === 'livraison') {
+    const linesToMove = remaining < totalQty ? scaleLinesToQty(oldLines, remaining) : oldLines;
+    await updateStock(linesToMove, -1, 'Livraison vente ' + nums[key], { docType: next, docNumber: nums[key] });
+    newDone = totalQty;
+    status = 'closed';
+  } else if (!isSales && next === 'reception') {
+    const linesToMove = remaining < totalQty ? scaleLinesToQty(oldLines, remaining) : oldLines;
+    await updateStock(linesToMove, 1, 'Réception achat ' + nums[key], { docType: next, docNumber: nums[key] });
+    newDone = totalQty;
+    status = 'closed';
+  } else if (next === 'facture') {
+    newDone = totalQty;
+    status = 'closed';
+  }
+
+  const payload = isSales ? {
+    stage: next,
+    numbers_json: nums,
+    delivered: next === 'livraison' ? true : doc.delivered,
+    qty_done: newDone,
+    doc_status: status
+  } : {
+    stage: next,
+    numbers_json: nums,
+    received: next === 'reception' ? true : doc.received,
+    qty_done: newDone,
+    doc_status: status
+  };
 
   const { error: e2 } = await supabase.from(type).update(payload).eq('id', id);
   if (e2) throw new Error(e2.message);
+  await auditLog(isSales ? 'Ventes' : 'Achats', 'ADVANCE', nums[key], 'Passage à ' + next);
 }
+
 async function payDoc(type, id, body) {
   const { data: doc, error } = await supabase.from(type).select('*').eq('id', id).single();
   if (error) throw new Error(error.message);
@@ -591,7 +806,9 @@ async function payDoc(type, id, body) {
   });
   const { error: e2 } = await supabase.from(type).update({ payments_json: payments }).eq('id', id);
   if (e2) throw new Error(e2.message);
+  await auditLog(type === 'sales' ? 'Paiements ventes' : 'Paiements achats', 'PAYMENT', docNo(doc), 'Règlement ' + montant + ' DH');
 }
+
 
 async function partialDoc(type, id, body) {
   const isSales = type === 'sales';
@@ -599,8 +816,6 @@ async function partialDoc(type, id, body) {
   if (error) throw new Error(error.message);
 
   if (doc.stage === 'facture') throw new Error('Action partielle non autorisée sur une facture');
-
-  const next = isSales ? 'livraison' : 'reception';
   if (isSales && !['commande', 'livraison'].includes(doc.stage)) throw new Error('La livraison partielle se fait depuis une commande');
   if (!isSales && !['commande', 'reception'].includes(doc.stage)) throw new Error('La réception partielle se fait depuis une commande achat');
 
@@ -609,27 +824,26 @@ async function partialDoc(type, id, body) {
   if (reqQty <= 0) throw new Error('Quantité invalide');
   if (remaining > 0 && reqQty > remaining) throw new Error('Quantité supérieure au reste');
 
-  const lines = makePartialLines(doc, reqQty);
-  const vatRate = Number(doc.vat_rate || 20);
+  const lines = scaleLinesToQty(jsonValue(doc.lines_json, []), reqQty);
+  const vatRate = Number(doc.vat_rate || await getVatRate());
   const t = computeTotals(lines, vatRate, isSales);
+  const stage = isSales ? 'livraison' : 'reception';
+  const key = docKey(type, stage);
+  const number = await nextNumber(docPrefix(type, stage));
+  const numbers = { [key]: number };
 
-  const prefix = isSales ? 'BLV' : 'BRA';
-  const key = isSales ? 'livraison' : 'reception';
-  const numbers = { [key]: await nextNumber(prefix) };
-
-  if (isSales) await updateStock(lines, -1, 'Livraison partielle vente ' + numbers[key]);
-  else await updateStock(lines, 1, 'Réception partielle achat ' + numbers[key]);
+  await updateStock(lines, isSales ? -1 : 1, (isSales ? 'Livraison partielle ' : 'Réception partielle ') + number, { docType: stage, docNumber: number });
 
   const session = getStoredSession();
-  const newDone = Number(doc.qty_done || 0) + docQty(lines);
   const originalTotal = docQty(jsonValue(doc.lines_json, []));
-  const status = newDone >= originalTotal ? 'closed' : 'partial';
+  const newDone = Number(doc.qty_done || 0) + docQty(lines);
+  const parentStatus = newDone >= originalTotal ? 'closed' : 'partial';
 
   const payload = isSales ? {
     date: body.date || today(),
     client_id: doc.client_id,
     client_name: doc.client_name,
-    stage: 'livraison',
+    stage,
     numbers_json: numbers,
     lines_json: lines,
     payments_json: [],
@@ -639,7 +853,7 @@ async function partialDoc(type, id, body) {
     total_ttc: t.totalTTC,
     delivered: true,
     qty_done: docQty(lines),
-    doc_status: status,
+    doc_status: 'closed',
     created_by: session?.user?.id || null,
     base_doc_id: doc.id,
     branch_id: doc.branch_id || branchId(session)
@@ -647,7 +861,7 @@ async function partialDoc(type, id, body) {
     date: body.date || today(),
     supplier_id: doc.supplier_id,
     supplier_name: doc.supplier_name,
-    stage: 'reception',
+    stage,
     numbers_json: numbers,
     lines_json: lines,
     payments_json: [],
@@ -657,7 +871,7 @@ async function partialDoc(type, id, body) {
     total_ttc: t.totalTTC,
     received: true,
     qty_done: docQty(lines),
-    doc_status: status,
+    doc_status: 'closed',
     created_by: session?.user?.id || null,
     base_doc_id: doc.id,
     branch_id: doc.branch_id || branchId(session)
@@ -666,7 +880,6 @@ async function partialDoc(type, id, body) {
   const { error: e2 } = await supabase.from(type).insert(payload);
   if (e2) throw new Error(e2.message);
 
-  const parentStatus = newDone >= originalTotal ? 'closed' : 'partial';
   const { error: e3 } = await supabase.from(type).update({
     qty_done: newDone,
     doc_status: parentStatus,
@@ -674,7 +887,10 @@ async function partialDoc(type, id, body) {
     received: !isSales ? newDone >= originalTotal : doc.received
   }).eq('id', id);
   if (e3) throw new Error(e3.message);
+
+  await auditLog(isSales ? 'Ventes' : 'Achats', isSales ? 'PARTIAL_DELIVERY' : 'PARTIAL_RECEIPT', number, 'Quantité traitée : ' + docQty(lines));
 }
+
 async function loadPayments() {
   const [{ data: sales, error: e1 }, { data: purchases, error: e2 }] = await Promise.all([
     applyDocScope(supabase.from('sales').select('*'), 'sales', getStoredSession()).order('id', { ascending: false }),
@@ -792,6 +1008,8 @@ function Layout({ L, lang, toggleLang, session, setSession }) {
     ['sales', L('sales'), 'sales.read'],
     ['purchases', L('purchases'), 'purchases.read'],
     ['payments', L('payments'), 'payments.read'],
+    ['stockMoves', L('stockMoves'), 'stock.read'],
+    ['audit', L('audit'), 'audit.read'],
     ['settings', L('settings'), 'settings.manage'],
     ['permissions', L('permissions'), 'permissions.manage'],
     ['branches', L('branches'), 'branches.manage'],
@@ -834,6 +1052,8 @@ function Layout({ L, lang, toggleLang, session, setSession }) {
           {page === 'sales' ? <Docs L={L} type="sales" /> : null}
           {page === 'purchases' ? <Docs L={L} type="purchases" /> : null}
           {page === 'payments' ? <Payments L={L} /> : null}
+          {page === 'stockMoves' ? <StockMovements L={L} /> : null}
+          {page === 'audit' ? <AuditLog L={L} /> : null}
           {page === 'settings' ? <Settings L={L} /> : null}
           {page === 'permissions' ? <Permissions L={L} /> : null}
           {page === 'branches' ? <Branches L={L} /> : null}
@@ -945,7 +1165,7 @@ function Products({ L }) {
 
   async function load() {
     try {
-      const { data, error } = await applyProductScope(applyProductScope(supabase.from('products').select('*'), getStoredSession()), getStoredSession()).order('name');
+      const { data, error } = await applyProductScope(supabase.from('products').select('*'), getStoredSession()).order('name');
       if (error) throw error;
       setRows((data || []).map(mapProduct));
     } catch (e) { setErr(e.message); }
@@ -1076,7 +1296,7 @@ function Docs({ L, type }) {
     try {
       const [{ data: docs, error: dErr }, { data: prod, error: pErr }, { data: party, error: tErr }] = await Promise.all([
         applyDocScope(supabase.from(type).select('*'), type, getStoredSession()).order('id', { ascending: false }),
-        applyProductScope(applyProductScope(supabase.from('products').select('*'), getStoredSession()), getStoredSession()).order('name'),
+        applyProductScope(supabase.from('products').select('*'), getStoredSession()).order('name'),
         supabase.from(isSales ? 'clients' : 'suppliers').select('*').order('name')
       ]);
       if (dErr) throw dErr;
@@ -1659,6 +1879,162 @@ function Users({ L }) {
           <button onClick={save} className="btn bg-amber-500">{L('save')}</button>
         </Modal>
       ) : null}
+    </>
+  );
+}
+
+
+
+function StockMovements({ L }) {
+  const [rows, setRows] = useState([]);
+  const [tab, setTab] = useState('all');
+  const [err, setErr] = useState('');
+
+  async function load() {
+    try {
+      setErr('');
+      setRows(await loadStockMovements());
+    } catch (e) {
+      setErr(e.message);
+    }
+  }
+
+  useEffect(() => { load(); }, []);
+
+  if (err) return <ErrorBox msg={err} />;
+
+  const filtered = tab === 'in'
+    ? rows.filter(x => x.quantity > 0)
+    : tab === 'out'
+      ? rows.filter(x => x.quantity < 0)
+      : rows;
+
+  const totalIn = rows.filter(x => x.quantity > 0).reduce((s, x) => s + x.quantity, 0);
+  const totalOut = rows.filter(x => x.quantity < 0).reduce((s, x) => s + Math.abs(x.quantity), 0);
+
+  return (
+    <>
+      <Header title={L('stockMoves')}>
+        <button onClick={load} className="btn bg-white border">↻</button>
+      </Header>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div className="card p-4"><p className="text-xs text-slate-400">{L('stockIn')}</p><p className="text-2xl font-black text-emerald-600">{fmt(totalIn)}</p></div>
+        <div className="card p-4"><p className="text-xs text-slate-400">{L('stockOut')}</p><p className="text-2xl font-black text-red-600">{fmt(totalOut)}</p></div>
+        <div className="card p-4"><p className="text-xs text-slate-400">{L('movement')}</p><p className="text-2xl font-black">{rows.length}</p></div>
+      </div>
+
+      <div className="flex gap-2 mb-4">
+        <button onClick={() => setTab('all')} className={'btn ' + (tab === 'all' ? 'bg-slate-800 text-white' : 'bg-white border')}>{L('all')}</button>
+        <button onClick={() => setTab('in')} className={'btn ' + (tab === 'in' ? 'bg-emerald-600 text-white' : 'bg-white border')}>{L('stockIn')}</button>
+        <button onClick={() => setTab('out')} className={'btn ' + (tab === 'out' ? 'bg-red-600 text-white' : 'bg-white border')}>{L('stockOut')}</button>
+      </div>
+
+      <Table>
+        <thead>
+          <tr>
+            <th>{L('date')}</th>
+            <th>{L('ref')}</th>
+            <th>{L('product')}</th>
+            <th>{L('quantity')}</th>
+            <th>{L('docType')}</th>
+            <th>N° Doc</th>
+            <th>{L('actor')}</th>
+            <th>{L('reason')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filtered.map(m => (
+            <tr key={m.id}>
+              <td>{m.date ? new Date(m.date).toLocaleString('fr-FR') : '-'}</td>
+              <td className="font-mono text-xs">{m.ref || '-'}</td>
+              <td className="font-semibold">{m.productName || '-'}</td>
+              <td><Badge tone={m.quantity >= 0 ? 'green' : 'red'}>{m.quantity >= 0 ? '+' : ''}{fmt(m.quantity)}</Badge></td>
+              <td>{m.docType || '-'}</td>
+              <td className="font-mono text-xs">{m.docNumber || '-'}</td>
+              <td>{m.userLabel || '-'}</td>
+              <td>{m.reason || '-'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </>
+  );
+}
+
+function AuditLog({ L }) {
+  const [rows, setRows] = useState([]);
+  const [moduleFilter, setModuleFilter] = useState('all');
+  const [actionFilter, setActionFilter] = useState('all');
+  const [err, setErr] = useState('');
+
+  async function load() {
+    try {
+      setErr('');
+      setRows(await loadAuditLogs());
+    } catch (e) {
+      setErr(e.message);
+    }
+  }
+
+  useEffect(() => { load(); }, []);
+
+  if (err) return <ErrorBox msg={err} />;
+
+  const modules = ['all', ...Array.from(new Set(rows.map(x => x.module).filter(Boolean)))];
+  const actions = ['all', ...Array.from(new Set(rows.map(x => x.action).filter(Boolean)))];
+
+  const filtered = rows.filter(x =>
+    (moduleFilter === 'all' || x.module === moduleFilter) &&
+    (actionFilter === 'all' || x.action === actionFilter)
+  );
+
+  function tone(action) {
+    if (['CREATE', 'ADVANCE', 'PAYMENT', 'STOCK', 'PARTIAL_DELIVERY', 'PARTIAL_RECEIPT'].includes(action)) return 'green';
+    if (['DELETE'].includes(action)) return 'red';
+    if (['UPDATE'].includes(action)) return 'amber';
+    return 'blue';
+  }
+
+  return (
+    <>
+      <Header title={L('audit')}>
+        <button onClick={load} className="btn bg-white border">↻</button>
+      </Header>
+
+      <div className="flex gap-2 mb-4 flex-wrap">
+        <select className="input max-w-xs" value={moduleFilter} onChange={e => setModuleFilter(e.target.value)}>
+          {modules.map(m => <option key={m} value={m}>{m === 'all' ? L('all') : m}</option>)}
+        </select>
+        <select className="input max-w-xs" value={actionFilter} onChange={e => setActionFilter(e.target.value)}>
+          {actions.map(a => <option key={a} value={a}>{a === 'all' ? L('all') : a}</option>)}
+        </select>
+      </div>
+
+      <Table>
+        <thead>
+          <tr>
+            <th>{L('date')}</th>
+            <th>{L('actor')}</th>
+            <th>{L('module')}</th>
+            <th>Action</th>
+            <th>Objet</th>
+            <th>{L('detail')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filtered.map(x => (
+            <tr key={x.id}>
+              <td>{x.created_at ? new Date(x.created_at).toLocaleString('fr-FR') : '-'}</td>
+              <td>{x.user_label || '-'}</td>
+              <td>{x.module || '-'}</td>
+              <td><Badge tone={tone(x.action)}>{x.action || '-'}</Badge></td>
+              <td className="font-semibold">{x.object_label || '-'}</td>
+              <td>{x.detail || '-'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
     </>
   );
 }

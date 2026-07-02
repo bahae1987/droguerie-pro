@@ -68,3 +68,5 @@ body { margin: 0; background: #f8fafc; }
     box-shadow: none !important;
   }
 }
+
+.max-w-xs { max-width: 20rem; }
