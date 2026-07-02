@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-console.log('DROGUERIEPRO V28 PARTIAL PAYMENTS FIX OK');
+console.log('DROGUERIEPRO V29 AUTH STOCK BRANCH OK');
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -52,7 +52,7 @@ const PERMS = [
   'suppliers.read', 'suppliers.write', 'suppliers.delete',
   'sales.read', 'sales.write', 'sales.delete',
   'purchases.read', 'purchases.write', 'purchases.delete',
-  'users.read', 'users.write', 'stock.read', 'audit.read', 'payments.cancel'
+  'users.read', 'users.write', 'stock.read', 'stock.adjust', 'audit.read', 'payments.read', 'payments.cancel', 'sales.pay', 'purchases.pay'
 ];
 
 
@@ -101,6 +101,45 @@ async function getUserPermissions(userId) {
     .filter(Boolean);
 }
 
+
+function can(code) {
+  return hasPerm(getStoredSession(), code);
+}
+
+function requirePerm(code, label = 'Action') {
+  if (!can(code)) {
+    throw new Error(label + ' non autorisée');
+  }
+}
+
+function currentBranchId() {
+  return branchId(getStoredSession());
+}
+
+function branchScopePayload(payload = {}) {
+  const session = getStoredSession();
+  if (isAdmin(session)) {
+    return { ...payload, branch_id: payload.branch_id || payload.branchId || branchId(session) || null };
+  }
+  return { ...payload, branch_id: branchId(session) };
+}
+
+async function getProductBranchId(productId) {
+  const { data, error } = await supabase.from('products').select('branch_id').eq('id', productId).maybeSingle();
+  if (error) throw new Error(error.message);
+  return data?.branch_id || null;
+}
+
+async function assertProductInUserBranch(productId) {
+  const session = getStoredSession();
+  if (isAdmin(session)) return;
+  const pBranch = await getProductBranchId(productId);
+  if (Number(pBranch || 0) !== Number(branchId(session) || 0)) {
+    throw new Error('Produit non autorisé : il appartient à une autre droguerie');
+  }
+}
+
+
 function jsonValue(v, fallback) {
   if (!v) return fallback;
   if (typeof v === 'string') {
@@ -131,7 +170,9 @@ function mapProduct(p) {
     prixVente: Number(p.sale_price || 0),
     quantite: Number(p.quantity || 0),
     stockMin: Number(p.min_stock || 0),
-    fournisseurId: p.supplier_id
+    fournisseurId: p.supplier_id,
+    branchId: p.branch_id || null,
+    branchName: p.branches?.name || ''
   };
 }
 
@@ -181,8 +222,17 @@ async function updateStock(lines, sign, reason, meta = {}) {
     const qty = Number(line.qte || line.quantity || 0);
     if (!productId || !qty) continue;
 
-    const { data: product, error: readError } = await supabase.from('products').select('quantity').eq('id', productId).single();
+    const { data: product, error: readError } = await supabase
+      .from('products')
+      .select('quantity, branch_id')
+      .eq('id', productId)
+      .single();
+
     if (readError) throw new Error(readError.message);
+
+    if (!isAdmin(session) && Number(product.branch_id || 0) !== Number(branchId(session) || 0)) {
+      throw new Error('Mouvement stock refusé : produit hors droguerie utilisateur');
+    }
 
     const newQty = Number(product.quantity || 0) + qty * sign;
 
@@ -193,6 +243,7 @@ async function updateStock(lines, sign, reason, meta = {}) {
       product_id: productId,
       quantity: qty * sign,
       reason,
+      branch_id: product.branch_id || branchId(session) || null,
       created_at: new Date().toISOString()
     };
 
@@ -397,25 +448,28 @@ async function loadStockMovements() {
   const session = getStoredSession();
   let q = supabase
     .from('stock_movements')
-    .select('id, product_id, quantity, reason, created_at, user_label, doc_type, doc_number, products(ref, name, branch_id)')
+    .select('id, product_id, quantity, reason, created_at, user_label, doc_type, doc_number, branch_id, products(ref, name, branch_id), branches(name)')
     .order('created_at', { ascending: false });
+
+  if (!isAdmin(session) && branchId(session)) {
+    q = q.eq('branch_id', branchId(session));
+  }
 
   const { data, error } = await q;
   if (error) throw new Error(error.message);
 
-  return (data || [])
-    .filter(m => isAdmin(session) || !branchId(session) || Number(m.products?.branch_id || 0) === Number(branchId(session)))
-    .map(m => ({
-      id: m.id,
-      ref: m.products?.ref || '',
-      productName: m.products?.name || '',
-      quantity: Number(m.quantity || 0),
-      reason: m.reason || '',
-      date: m.created_at,
-      userLabel: m.user_label || '',
-      docType: m.doc_type || '',
-      docNumber: m.doc_number || ''
-    }));
+  return (data || []).map(m => ({
+    id: m.id,
+    ref: m.products?.ref || '',
+    productName: m.products?.name || '',
+    quantity: Number(m.quantity || 0),
+    reason: m.reason || '',
+    date: m.created_at,
+    userLabel: m.user_label || '',
+    docType: m.doc_type || '',
+    docNumber: m.doc_number || '',
+    branchName: m.branches?.name || ''
+  }));
 }
 
 
@@ -773,6 +827,7 @@ async function partyName(type, id, fallback = '') {
 }
 
 async function createDoc(type, body) {
+  requirePerm(type === 'sales' ? 'sales.write' : 'purchases.write', type === 'sales' ? 'Création vente' : 'Création achat');
   const isSales = type === 'sales';
   const start = body.start || (isSales ? 'devis' : 'commande');
   const lines = normalizeLines(body.lignes || []);
@@ -847,6 +902,7 @@ async function createDoc(type, body) {
 
 
 async function updateDoc(type, id, body) {
+  requirePerm(type === 'sales' ? 'sales.write' : 'purchases.write', type === 'sales' ? 'Modification vente' : 'Modification achat');
   const isSales = type === 'sales';
   const { data: existing, error: readError } = await supabase.from(type).select('*').eq('id', id).single();
   if (readError) throw new Error(readError.message);
@@ -884,6 +940,7 @@ async function updateDoc(type, id, body) {
 
 
 async function deleteDoc(type, id) {
+  requirePerm(type === 'sales' ? 'sales.delete' : 'purchases.delete', type === 'sales' ? 'Suppression vente' : 'Suppression achat');
   const { data: doc, error: e1 } = await supabase.from(type).select('*').eq('id', id).single();
   if (e1) throw new Error(e1.message);
 
@@ -969,6 +1026,7 @@ async function advanceDoc(type, id) {
 }
 
 async function payDoc(type, id, body) {
+  requirePerm(type === 'sales' ? 'sales.pay' : 'purchases.pay', type === 'sales' ? 'Encaissement' : 'Décaissement');
   const { data: doc, error } = await supabase.from(type).select('*').eq('id', id).single();
   if (error) throw new Error(error.message);
   if (doc.stage !== 'facture') throw new Error('Le règlement est autorisé uniquement sur les factures');
@@ -1104,19 +1162,30 @@ async function loadPayments() {
 }
 
 async function loadParties(type) {
-  const { data, error } = await supabase.from(type).select('*').order('name');
+  let q = supabase.from(type).select('*').order('name');
+  const session = getStoredSession();
+  if (!isAdmin(session) && branchId(session)) {
+    q = q.eq('branch_id', branchId(session));
+  }
+  const { data, error } = await q;
   if (error) throw new Error(error.message);
   return data || [];
 }
 async function saveParty(type, body) {
+  const writePerm = type === 'clients' ? 'clients.write' : 'suppliers.write';
+  requirePerm(writePerm, type === 'clients' ? 'Gestion clients' : 'Gestion fournisseurs');
+
   const payload = type === 'clients'
-    ? { name: body.name || '', type: body.type || 'entreprise', ice: body.ice || '', phone: body.phone || '', city: body.city || '', address: body.address || '' }
-    : { name: body.name || '', ice: body.ice || '', phone: body.phone || '', city: body.city || '', contact: body.contact || '', address: body.address || '' };
+    ? { name: body.name || '', type: body.type || 'entreprise', ice: body.ice || '', phone: body.phone || '', city: body.city || '', address: body.address || '', branch_id: isAdmin(getStoredSession()) ? (body.branch_id || currentBranchId()) : currentBranchId() }
+    : { name: body.name || '', ice: body.ice || '', phone: body.phone || '', city: body.city || '', contact: body.contact || '', address: body.address || '', branch_id: isAdmin(getStoredSession()) ? (body.branch_id || currentBranchId()) : currentBranchId() };
   const q = body.id ? supabase.from(type).update(payload).eq('id', body.id) : supabase.from(type).insert(payload);
   const { error } = await q;
   if (error) throw new Error(error.message);
 }
 async function deleteParty(type, id) {
+  const delPerm = type === 'clients' ? 'clients.delete' : 'suppliers.delete';
+  requirePerm(delPerm, type === 'clients' ? 'Suppression client' : 'Suppression fournisseur');
+
   const { error } = await supabase.from(type).delete().eq('id', id);
   if (error) throw new Error(error.message);
 }
@@ -1372,7 +1441,7 @@ function Products({ L }) {
 
   async function load() {
     try {
-      const { data, error } = await applyProductScope(supabase.from('products').select('*'), getStoredSession()).order('name');
+      const { data, error } = await applyProductScope(supabase.from('products').select('*, branches(name)'), getStoredSession()).order('name');
       if (error) throw error;
       setRows((data || []).map(mapProduct));
     } catch (e) { setErr(e.message); }
@@ -1457,9 +1526,9 @@ function Products({ L }) {
                 <Badge tone={(p.prixVente - p.prixAchat) >= 0 ? 'green' : 'red'}>{dh(p.prixVente - p.prixAchat)}</Badge>
               </td>
               <td className="flex gap-1">
-                <button onClick={() => setForm(p)} className="btn bg-white border">{L('edit')}</button>
+                {can('products.write') ? <button onClick={() => setForm(p)} className="btn bg-white border">{L('edit')}</button> : null}
                 <button onClick={() => setStock({ ...p, qte: 1, reason: L('stock') })} className="btn bg-white border">{L('stock')}</button>
-                <button onClick={() => remove(p.id)} className="btn bg-red-600 text-white">{L('del')}</button>
+                {can('products.delete') ? <button onClick={() => remove(p.id)} className="btn bg-red-600 text-white">{L('del')}</button> : null}
               </td>
             </tr>
           ))}
@@ -1509,6 +1578,9 @@ function StockModal({ L, stock, setStock, save, close }) {
 
 function Docs({ L, type }) {
   const isSales = type === 'sales';
+  const canWriteDoc = can(isSales ? 'sales.write' : 'purchases.write');
+  const canDeleteDoc = can(isSales ? 'sales.delete' : 'purchases.delete');
+  const canPayDoc = can(isSales ? 'sales.pay' : 'purchases.pay');
   const [rows, setRows] = useState([]);
   const [products, setProducts] = useState([]);
   const [parties, setParties] = useState([]);
@@ -1523,7 +1595,7 @@ function Docs({ L, type }) {
     try {
       const [{ data: docs, error: dErr }, { data: prod, error: pErr }, { data: party, error: tErr }] = await Promise.all([
         applyDocScope(supabase.from(type).select('*'), type, getStoredSession()).order('id', { ascending: false }),
-        applyProductScope(supabase.from('products').select('*'), getStoredSession()).order('name'),
+        applyProductScope(supabase.from('products').select('*, branches(name)'), getStoredSession()).order('name'),
         supabase.from(isSales ? 'clients' : 'suppliers').select('*').order('name')
       ]);
       if (dErr) throw dErr;
@@ -1662,12 +1734,12 @@ function Docs({ L, type }) {
                 <td className="font-mono font-bold">{dh(d.totalTTC)}</td>
                 <td><Badge tone={tone}>{status}{d.reste > 0 ? ' · ' + L('remaining') + ' ' + dh(d.reste) : ''}</Badge></td>
                 <td className="flex gap-1 flex-wrap">
-                  <button onClick={() => advance(d.id)} className="btn bg-slate-800 text-white">{L('advance')}</button>
+                  {canWriteDoc ? <button onClick={() => advance(d.id)} className="btn bg-slate-800 text-white">{L('advance')}</button> : null}
                   <button onClick={() => setPreview(d)} className="btn bg-white border">{L('preview')}</button>
-                  {paymentButtonVisible(d) ? <button onClick={() => setPay({ ...d, date: today(), mode: 'Espèces', montant: d.reste || d.totalTTC, cashRegister: '', receiptNo: '', chequeNo: '', bank: '', dueDate: '', paymentStatus: 'En portefeuille', transferRef: '', valueDate: '', terminal: '', transactionNo: '', billNo: '', note: '' })} className="btn bg-emerald-600 text-white">{L('pay')}</button> : null}
+                  {canPayDoc && paymentButtonVisible(d) ? <button onClick={() => setPay({ ...d, date: today(), mode: 'Espèces', montant: d.reste || d.totalTTC, cashRegister: '', receiptNo: '', chequeNo: '', bank: '', dueDate: '', paymentStatus: 'En portefeuille', transferRef: '', valueDate: '', terminal: '', transactionNo: '', billNo: '', note: '' })} className="btn bg-emerald-600 text-white">{L('pay')}</button> : null}
                   {d.stage !== 'facture' && docRemainingQty(d) > 0 ? <button onClick={() => setPartial({ doc: d, date: today(), lignes: docRemainingLines(d).map(l => ({ ...l, qteToProcess: Number(l.remainingQty || 0), excluded: false })) })} className="btn bg-white border">{isSales ? L('partialDelivery') : L('partialReceipt')}</button> : null}
                   <button onClick={() => setForm({ id: d.id, start: d.stage, date: d.date, partyId: isSales ? d.client_id : d.supplier_id, lignes: (d.lignes || []).map(l => ({ produitId: l.produitId, qte: l.qte, prixUnit: l.prixUnit })) })} className="btn bg-white border">{L('edit')}</button>
-                  <button onClick={() => remove(d.id)} className="btn bg-red-600 text-white">{L('del')}</button>
+                  {canDeleteDoc ? <button onClick={() => remove(d.id)} className="btn bg-red-600 text-white">{L('del')}</button> : null}
                 </td>
               </tr>
             );
@@ -2195,6 +2267,8 @@ function PartialModal({ L, isSales, partial, setPartial, save, close }) {
 }
 
 function Parties({ L, type }) {
+  const canWriteParty = can(type === 'clients' ? 'clients.write' : 'suppliers.write');
+  const canDeleteParty = can(type === 'clients' ? 'clients.delete' : 'suppliers.delete');
   const [rows, setRows] = useState([]);
   const [form, setForm] = useState(null);
   const [err, setErr] = useState('');
@@ -2227,7 +2301,7 @@ function Parties({ L, type }) {
   return (
     <>
       <Header title={type === 'clients' ? L('clients') : L('suppliers')}>
-        <button onClick={() => setForm({ name: '', ice: '', phone: '', city: '', address: '' })} className="btn bg-amber-500">{L('new')}</button>
+        {canWriteParty ? <button onClick={() => setForm({ name: '', type: 'entreprise', ice: '', phone: '', city: '', address: '', contact: '' })} className="btn bg-amber-500">{L('new')}</button> : null}
       </Header>
 
       <div className="grid md:grid-cols-3 gap-3">
