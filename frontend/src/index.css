@@ -431,3 +431,22 @@ body { margin: 0; background: #f8fafc; }
   color: #64748b;
   font-size: 12px;
 }
+
+/* V31 stock / auth / clients pro */
+.permissions-pro input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+.permissions-pro tbody tr:hover {
+  background: #fffbeb;
+}
+.client-owner-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 2px 8px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 12px;
+  font-weight: 700;
+}

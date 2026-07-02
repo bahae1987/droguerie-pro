@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-console.log('DROGUERIEPRO V30 DOC TRACE STOCK UI OK');
+console.log('DROGUERIEPRO V31 STOCK AUTH CLIENTS PRO OK');
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -29,7 +29,7 @@ const TXT = {
     deliveries: 'Livraisons', receipts: 'Réceptions', invoices: 'Factures', remaining: 'Reste',
     paid: 'Réglée', unpaid: 'Non réglée', partial: 'Partielle', cashIn: 'Encaissements',
     cashOut: 'Décaissements', vat: 'TVA', theme: 'Thème', company: 'Société', address: 'Adresse', phone: 'Téléphone', ice: 'ICE', cashRegister: 'Caisse', receiptNo: 'N° reçu', chequeNo: 'N° chèque', bank: 'Banque', dueDate: 'Échéance', paymentStatus: 'Statut', transferRef: 'Réf. virement', valueDate: 'Date valeur', terminal: 'TPE', transactionNo: 'N° transaction', billNo: 'N° effet', note: 'Observation', quantity: 'Quantité', date: 'Date', customer: 'Client',
-    supplier: 'Fournisseur', product: 'Produit', base: 'Base', remainingQty: 'Qté restante', orderedQty: 'Qté commandée', deliveredQty: 'Qté livrée', receivedQty: 'Qté reçue', qtyToProcess: 'Qté à traiter', alreadyProcessed: 'Déjà traité', includeLine: 'Inclure', removeLine: 'Retirer ligne', restoreLine: 'Restaurer ligne', open: 'Ouvert', closed: 'Clôturé', preview: 'Aperçu', print: 'Imprimer', unitPrice: 'PU', totalHT: 'Total HT', totalVAT: 'TVA', totalTTC: 'Total TTC', cancelPayment: 'Annuler règlement', canceled: 'Annulé', subtotal: 'Sous-total', signature: 'Signature', preparedBy: 'Préparé par', printDate: 'Date impression', legalNote: 'Document généré par DrogueriePro', arabicName: 'Nom arabe', docType: 'Type document', purchasePrice: 'Prix achat', salePrice: 'Prix vente', margin: 'Marge', movement: 'Mouvement', object: 'Objet', detail: 'Détail', actor: 'Utilisateur', createdBy: 'Créé par', baseDocNo: 'N° doc. base', location: 'Emplacement'
+    supplier: 'Fournisseur', product: 'Produit', base: 'Base', remainingQty: 'Qté restante', orderedQty: 'Qté commandée', deliveredQty: 'Qté livrée', receivedQty: 'Qté reçue', qtyToProcess: 'Qté à traiter', alreadyProcessed: 'Déjà traité', includeLine: 'Inclure', removeLine: 'Retirer ligne', restoreLine: 'Restaurer ligne', open: 'Ouvert', closed: 'Clôturé', preview: 'Aperçu', print: 'Imprimer', unitPrice: 'PU', totalHT: 'Total HT', totalVAT: 'TVA', totalTTC: 'Total TTC', cancelPayment: 'Annuler règlement', canceled: 'Annulé', subtotal: 'Sous-total', signature: 'Signature', preparedBy: 'Préparé par', printDate: 'Date impression', legalNote: 'Document généré par DrogueriePro', arabicName: 'Nom arabe', docType: 'Type document', purchasePrice: 'Prix achat', salePrice: 'Prix vente', margin: 'Marge', movement: 'Mouvement', object: 'Objet', detail: 'Détail', actor: 'Utilisateur', createdBy: 'Créé par', baseDocNo: 'N° doc. base', location: 'Emplacement', assignedTo: 'Affecté à', clientOwner: 'Compte', stockTransfer: 'Transfert stock', fromBranch: 'Droguerie source', toBranch: 'Droguerie destination', stockValue: 'Valeur stock', lowStock: 'Stock critique', stockByBranch: 'Stock par droguerie', adjustment: 'Ajustement', stockIn: 'Entrée stock', stockOut: 'Sortie stock', reason: 'Motif', category: 'Catégorie', ref: 'Référence', name: 'Nom', role: 'Profil'
   },
   ar: {
     login: 'تسجيل الدخول', username: 'المستخدم', password: 'كلمة المرور', connect: 'دخول',
@@ -42,17 +42,17 @@ const TXT = {
     deliveries: 'التسليمات', receipts: 'الاستلامات', invoices: 'الفواتير', remaining: 'الباقي',
     paid: 'مؤداة', unpaid: 'غير مؤداة', partial: 'جزئية', cashIn: 'المداخيل',
     cashOut: 'المصاريف', vat: 'الضريبة', theme: 'المظهر', company: 'الشركة', address: 'العنوان', phone: 'الهاتف', ice: 'ICE', cashRegister: 'الصندوق', receiptNo: 'رقم الوصل', chequeNo: 'رقم الشيك', bank: 'البنك', dueDate: 'الاستحقاق', paymentStatus: 'الحالة', transferRef: 'مرجع التحويل', valueDate: 'تاريخ القيمة', terminal: 'جهاز الأداء', transactionNo: 'رقم العملية', billNo: 'رقم الكمبيالة', note: 'ملاحظة', quantity: 'الكمية', date: 'التاريخ', customer: 'الزبون',
-    supplier: 'المورد', product: 'المنتج', base: 'الأصل', remainingQty: 'الكمية المتبقية', orderedQty: 'الكمية المطلوبة', deliveredQty: 'الكمية المسلمة', receivedQty: 'الكمية المستلمة', qtyToProcess: 'الكمية المراد معالجتها', alreadyProcessed: 'تمت معالجته', includeLine: 'تضمين', removeLine: 'حذف السطر', restoreLine: 'استرجاع السطر', open: 'مفتوح', closed: 'مغلق', preview: 'معاينة', print: 'طباعة', unitPrice: 'ثمن الوحدة', totalHT: 'المجموع بدون الضريبة', totalVAT: 'الضريبة', totalTTC: 'المجموع مع الضريبة', cancelPayment: 'إلغاء الأداء', canceled: 'ملغى', subtotal: 'المجموع الجزئي', signature: 'التوقيع', preparedBy: 'أنجز من طرف', printDate: 'تاريخ الطباعة', legalNote: 'وثيقة تم إنشاؤها بواسطة DrogueriePro', arabicName: 'الاسم بالعربية', docType: 'نوع الوثيقة', purchasePrice: 'ثمن الشراء', salePrice: 'ثمن البيع', margin: 'الهامش', movement: 'الحركة', object: 'العنصر', detail: 'التفاصيل', actor: 'المستخدم', createdBy: 'أنشئ من طرف', baseDocNo: 'رقم الوثيقة الأصلية', location: 'الموقع'
+    supplier: 'المورد', product: 'المنتج', base: 'الأصل', remainingQty: 'الكمية المتبقية', orderedQty: 'الكمية المطلوبة', deliveredQty: 'الكمية المسلمة', receivedQty: 'الكمية المستلمة', qtyToProcess: 'الكمية المراد معالجتها', alreadyProcessed: 'تمت معالجته', includeLine: 'تضمين', removeLine: 'حذف السطر', restoreLine: 'استرجاع السطر', open: 'مفتوح', closed: 'مغلق', preview: 'معاينة', print: 'طباعة', unitPrice: 'ثمن الوحدة', totalHT: 'المجموع بدون الضريبة', totalVAT: 'الضريبة', totalTTC: 'المجموع مع الضريبة', cancelPayment: 'إلغاء الأداء', canceled: 'ملغى', subtotal: 'المجموع الجزئي', signature: 'التوقيع', preparedBy: 'أنجز من طرف', printDate: 'تاريخ الطباعة', legalNote: 'وثيقة تم إنشاؤها بواسطة DrogueriePro', arabicName: 'الاسم بالعربية', docType: 'نوع الوثيقة', purchasePrice: 'ثمن الشراء', salePrice: 'ثمن البيع', margin: 'الهامش', movement: 'الحركة', object: 'العنصر', detail: 'التفاصيل', actor: 'المستخدم', createdBy: 'أنشئ من طرف', baseDocNo: 'رقم الوثيقة الأصلية', location: 'الموقع', assignedTo: 'مكلف به', clientOwner: 'الحساب', stockTransfer: 'تحويل المخزون', fromBranch: 'الدروكري المصدر', toBranch: 'الدروكري الوجهة', stockValue: 'قيمة المخزون', lowStock: 'مخزون حرج', stockByBranch: 'المخزون حسب الدروكري', adjustment: 'تعديل المخزون', stockIn: 'دخول المخزون', stockOut: 'خروج المخزون', reason: 'السبب', category: 'الفئة', ref: 'المرجع', name: 'الاسم', role: 'الدور'
   }
 };
 
 const PERMS = [
   'dashboard.read', 'products.read', 'products.write', 'products.delete',
-  'clients.read', 'clients.write', 'clients.delete',
+  'clients.read', 'clients.write', 'clients.delete', 'clients.assign',
   'suppliers.read', 'suppliers.write', 'suppliers.delete',
   'sales.read', 'sales.write', 'sales.delete',
   'purchases.read', 'purchases.write', 'purchases.delete',
-  'users.read', 'users.write', 'stock.read', 'stock.adjust', 'audit.read', 'payments.read', 'payments.cancel', 'sales.pay', 'purchases.pay'
+  'users.read', 'users.write', 'stock.read', 'stock.adjust', 'stock.transfer', 'audit.read', 'payments.read', 'payments.cancel', 'sales.pay', 'purchases.pay'
 ];
 
 
@@ -139,6 +139,157 @@ async function assertProductInUserBranch(productId) {
   }
 }
 
+
+
+const PARTY_PERMS = {
+  clients: { read: 'clients.read', write: 'clients.write', delete: 'clients.delete' },
+  suppliers: { read: 'suppliers.read', write: 'suppliers.write', delete: 'suppliers.delete' }
+};
+
+function roleName(session = getStoredSession()) {
+  return session?.user?.role || '';
+}
+
+function canManageAllBranchData(session = getStoredSession()) {
+  return isAdmin(session) || isManager(session);
+}
+
+function canSeePartyRecord(record, type, session = getStoredSession()) {
+  if (isAdmin(session)) return true;
+  if (isManager(session)) return Number(record.branch_id || 0) === Number(branchId(session) || 0);
+
+  if (type === 'clients') {
+    return Number(record.assigned_to || 0) === Number(session?.user?.id || 0)
+      || Number(record.created_by || 0) === Number(session?.user?.id || 0);
+  }
+
+  return Number(record.branch_id || 0) === Number(branchId(session) || 0);
+}
+
+function enrichParties(rows, usersMap = {}) {
+  return (rows || []).map(x => ({
+    ...x,
+    createdByLabel: usersMap[x.created_by] || (x.created_by ? ('User #' + x.created_by) : '-'),
+    assignedToLabel: usersMap[x.assigned_to] || (x.assigned_to ? ('User #' + x.assigned_to) : '-')
+  }));
+}
+
+async function loadBranchStockSummary() {
+  const session = getStoredSession();
+  let q = supabase
+    .from('products')
+    .select('id, quantity, min_stock, purchase_price, branch_id, branches(name)');
+
+  if (!isAdmin(session) && branchId(session)) {
+    q = q.eq('branch_id', branchId(session));
+  }
+
+  const { data, error } = await q;
+  if (error) throw new Error(error.message);
+
+  const byBranch = {};
+  (data || []).forEach(p => {
+    const id = p.branch_id || 0;
+    const name = p.branches?.name || 'Sans droguerie';
+    if (!byBranch[id]) byBranch[id] = { branchId: id, branchName: name, products: 0, qty: 0, value: 0, lowStock: 0 };
+    byBranch[id].products += 1;
+    byBranch[id].qty += Number(p.quantity || 0);
+    byBranch[id].value += Number(p.quantity || 0) * Number(p.purchase_price || 0);
+    if (Number(p.quantity || 0) <= Number(p.min_stock || 0)) byBranch[id].lowStock += 1;
+  });
+
+  return Object.values(byBranch);
+}
+
+async function transferStock({ productId, toBranchId, quantity, reason }) {
+  requirePerm('stock.adjust', 'Transfert stock');
+
+  const qty = Number(quantity || 0);
+  if (!productId || !toBranchId || qty <= 0) throw new Error('Transfert stock invalide');
+
+  const session = getStoredSession();
+  const { data: product, error } = await supabase
+    .from('products')
+    .select('*')
+    .eq('id', productId)
+    .single();
+
+  if (error) throw new Error(error.message);
+
+  if (!isAdmin(session) && Number(product.branch_id || 0) !== Number(branchId(session) || 0)) {
+    throw new Error('Transfert refusé : produit hors droguerie utilisateur');
+  }
+
+  if (Number(product.branch_id || 0) === Number(toBranchId)) {
+    throw new Error('La droguerie destination doit être différente');
+  }
+
+  if (Number(product.quantity || 0) < qty) {
+    throw new Error('Stock insuffisant pour le transfert');
+  }
+
+  const docNumber = 'TRF-' + new Date().getFullYear() + '-' + Date.now();
+
+  await updateStock([{ produitId: product.id, qte: qty }], -1, reason || 'Transfert stock sortie', { docType: 'Transfert', docNumber });
+
+  const { data: destProduct, error: destErr } = await supabase
+    .from('products')
+    .select('*')
+    .eq('ref', product.ref)
+    .eq('branch_id', toBranchId)
+    .maybeSingle();
+
+  if (destErr) throw new Error(destErr.message);
+
+  if (destProduct?.id) {
+    const newQty = Number(destProduct.quantity || 0) + qty;
+    const { error: upErr } = await supabase.from('products').update({ quantity: newQty }).eq('id', destProduct.id);
+    if (upErr) throw new Error(upErr.message);
+
+    await supabase.from('stock_movements').insert({
+      product_id: destProduct.id,
+      quantity: qty,
+      reason: reason || 'Transfert stock entrée',
+      branch_id: toBranchId,
+      doc_type: 'Transfert',
+      doc_number: docNumber,
+      user_id: session?.user?.id || null,
+      user_label: currentUserLabel(),
+      created_at: new Date().toISOString()
+    });
+  } else {
+    const copy = {
+      ref: product.ref,
+      name: product.name,
+      name_ar: product.name_ar || '',
+      category: product.category || '',
+      unit: product.unit || 'Pièce',
+      purchase_price: product.purchase_price || 0,
+      sale_price: product.sale_price || 0,
+      quantity: qty,
+      min_stock: product.min_stock || 0,
+      supplier_id: product.supplier_id || null,
+      branch_id: toBranchId
+    };
+
+    const { data: inserted, error: insErr } = await supabase.from('products').insert(copy).select('id').single();
+    if (insErr) throw new Error(insErr.message);
+
+    await supabase.from('stock_movements').insert({
+      product_id: inserted.id,
+      quantity: qty,
+      reason: reason || 'Transfert stock entrée',
+      branch_id: toBranchId,
+      doc_type: 'Transfert',
+      doc_number: docNumber,
+      user_id: session?.user?.id || null,
+      user_label: currentUserLabel(),
+      created_at: new Date().toISOString()
+    });
+  }
+
+  await auditLog('Stock', 'TRANSFER', docNumber, 'Transfert stock vers droguerie #' + toBranchId + ' quantité ' + qty);
+}
 
 function jsonValue(v, fallback) {
   if (!v) return fallback;
@@ -1198,32 +1349,58 @@ async function loadPayments() {
 }
 
 async function loadParties(type) {
-  let q = supabase.from(type).select('*').order('name');
   const session = getStoredSession();
+  let q = supabase.from(type).select('*').order('name');
+
   if (!isAdmin(session) && branchId(session)) {
     q = q.eq('branch_id', branchId(session));
   }
+
   const { data, error } = await q;
   if (error) throw new Error(error.message);
-  return data || [];
+
+  const labels = await loadUserLabels();
+  return enrichParties((data || []).filter(x => canSeePartyRecord(x, type, session)), labels);
 }
 async function saveParty(type, body) {
   const writePerm = type === 'clients' ? 'clients.write' : 'suppliers.write';
   requirePerm(writePerm, type === 'clients' ? 'Gestion clients' : 'Gestion fournisseurs');
 
+  const session = getStoredSession();
+  const common = {
+    name: body.name || '',
+    ice: body.ice || '',
+    phone: body.phone || '',
+    city: body.city || '',
+    address: body.address || '',
+    branch_id: isAdmin(session) ? (body.branch_id || body.branchId || branchId(session)) : branchId(session),
+    assigned_to: type === 'clients' ? (body.assigned_to || body.assignedTo || session?.user?.id || null) : null
+  };
+
+  if (!body.id) {
+    common.created_by = session?.user?.id || null;
+    common.created_by_label = currentUserLabel();
+  }
+
   const payload = type === 'clients'
-    ? { name: body.name || '', type: body.type || 'entreprise', ice: body.ice || '', phone: body.phone || '', city: body.city || '', address: body.address || '', branch_id: isAdmin(getStoredSession()) ? (body.branch_id || currentBranchId()) : currentBranchId() }
-    : { name: body.name || '', ice: body.ice || '', phone: body.phone || '', city: body.city || '', contact: body.contact || '', address: body.address || '', branch_id: isAdmin(getStoredSession()) ? (body.branch_id || currentBranchId()) : currentBranchId() };
+    ? { ...common, type: body.type || 'entreprise' }
+    : { ...common, contact: body.contact || '' };
+
   const q = body.id ? supabase.from(type).update(payload).eq('id', body.id) : supabase.from(type).insert(payload);
   const { error } = await q;
   if (error) throw new Error(error.message);
+
+  await auditLog(type === 'clients' ? 'Clients' : 'Fournisseurs', body.id ? 'UPDATE' : 'CREATE', payload.name, body.id ? 'Modification tiers' : 'Création tiers');
 }
 async function deleteParty(type, id) {
   const delPerm = type === 'clients' ? 'clients.delete' : 'suppliers.delete';
   requirePerm(delPerm, type === 'clients' ? 'Suppression client' : 'Suppression fournisseur');
 
+  const { data: row } = await supabase.from(type).select('name').eq('id', id).maybeSingle();
   const { error } = await supabase.from(type).delete().eq('id', id);
   if (error) throw new Error(error.message);
+
+  await auditLog(type === 'clients' ? 'Clients' : 'Fournisseurs', 'DELETE', row?.name || id, 'Suppression tiers');
 }
 async function loadUsers() {
   const { data, error } = await supabase.from('users').select('id, username, full_name, active, branch_id, branches(name), roles(name)').order('id');
@@ -1468,23 +1645,47 @@ function Dashboard({ L }) {
 }
 
 function Products({ L }) {
+  const canWriteProduct = can('products.write');
+  const canDeleteProduct = can('products.delete');
+  const canAdjustStock = can('stock.adjust');
   const [rows, setRows] = useState([]);
+  const [branches, setBranches] = useState([]);
+  const [summary, setSummary] = useState([]);
   const [form, setForm] = useState(null);
   const [stock, setStock] = useState(null);
+  const [transfer, setTransfer] = useState(null);
+  const [branchFilter, setBranchFilter] = useState('all');
   const [err, setErr] = useState('');
 
   async function load() {
     try {
-      const { data, error } = await applyProductScope(supabase.from('products').select('*, branches(name)'), getStoredSession()).order('name');
+      const session = getStoredSession();
+      const [{ data, error }, branchData, stockSummary] = await Promise.all([
+        applyProductScope(supabase.from('products').select('*, branches(name)'), session).order('name'),
+        loadBranches(),
+        loadBranchStockSummary()
+      ]);
       if (error) throw error;
       setRows((data || []).map(mapProduct));
+      setBranches(branchData || []);
+      setSummary(stockSummary || []);
     } catch (e) { setErr(e.message); }
   }
 
   useEffect(() => { load(); }, []);
 
+  const visibleRows = branchFilter === 'all'
+    ? rows
+    : rows.filter(p => String(p.branchId || '') === String(branchFilter));
+
+  const totalQty = visibleRows.reduce((s, p) => s + Number(p.quantite || 0), 0);
+  const stockValue = visibleRows.reduce((s, p) => s + Number(p.quantite || 0) * Number(p.prixAchat || 0), 0);
+  const lowStock = visibleRows.filter(p => Number(p.quantite || 0) <= Number(p.stockMin || 0)).length;
+
   async function save() {
     try {
+      requirePerm('products.write', 'Gestion produits');
+
       const payload = {
         ref: form.ref || '',
         name: form.nom || '',
@@ -1496,12 +1697,13 @@ function Products({ L }) {
         quantity: Number(form.quantite || 0),
         min_stock: Number(form.stockMin || 0),
         supplier_id: form.fournisseurId || null,
-        branch_id: isAdmin(getStoredSession()) ? (form.branch_id || branchId(getStoredSession())) : branchId(getStoredSession())
+        branch_id: isAdmin(getStoredSession()) ? (form.branchId || form.branch_id || currentBranchId()) : currentBranchId()
       };
 
       const q = form.id ? supabase.from('products').update(payload).eq('id', form.id) : supabase.from('products').insert(payload);
       const { error } = await q;
       if (error) throw error;
+      await auditLog('Produits', form.id ? 'UPDATE' : 'CREATE', payload.ref || payload.name, form.id ? 'Modification produit' : 'Création produit');
       setForm(null);
       load();
     } catch (e) { alert(e.message); }
@@ -1509,15 +1711,28 @@ function Products({ L }) {
 
   async function remove(id) {
     if (!confirm('Supprimer ?')) return;
-    const { error } = await supabase.from('products').delete().eq('id', id);
-    if (error) alert(error.message);
-    load();
+    try {
+      requirePerm('products.delete', 'Suppression produit');
+      const { error } = await supabase.from('products').delete().eq('id', id);
+      if (error) throw error;
+      await auditLog('Produits', 'DELETE', id, 'Suppression produit');
+      load();
+    } catch (e) { alert(e.message); }
   }
 
   async function adjustStock() {
     try {
-      await updateStock([{ produitId: stock.id, qte: Number(stock.qte) }], 1, stock.reason || L('stock'));
+      requirePerm('stock.adjust', 'Ajustement stock');
+      await updateStock([{ produitId: stock.id, qte: Number(stock.qte) }], 1, stock.reason || L('stock'), { docType: 'Ajustement', docNumber: 'ADJ-' + Date.now() });
       setStock(null);
+      load();
+    } catch (e) { alert(e.message); }
+  }
+
+  async function doTransfer() {
+    try {
+      await transferStock(transfer);
+      setTransfer(null);
       load();
     } catch (e) { alert(e.message); }
   }
@@ -1527,8 +1742,34 @@ function Products({ L }) {
   return (
     <>
       <Header title={L('products')}>
-        <button onClick={() => setForm({ ref: '', nom: '', categorie: 'Divers', unite: 'Pièce', prixAchat: 0, prixVente: 0, quantite: 0, stockMin: 0 })} className="btn bg-amber-500">{L('new')}</button>
+        {isAdmin(getStoredSession()) ? (
+          <select className="input max-w-xs" value={branchFilter} onChange={e => setBranchFilter(e.target.value)}>
+            <option value="all">Toutes drogueries</option>
+            {branches.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+          </select>
+        ) : null}
+        {canWriteProduct ? <button onClick={() => setForm({ ref: '', nom: '', categorie: 'Divers', unite: 'Pièce', prixAchat: 0, prixVente: 0, quantite: 0, stockMin: 0, branchId: currentBranchId() || branches[0]?.id || '' })} className="btn bg-amber-500">{L('new')}</button> : null}
       </Header>
+
+      <div className="grid md:grid-cols-4 gap-4 mb-4">
+        <div className="card p-4"><p className="text-xs text-slate-400">{L('products')}</p><p className="text-2xl font-black">{visibleRows.length}</p></div>
+        <div className="card p-4"><p className="text-xs text-slate-400">{L('quantity')}</p><p className="text-2xl font-black">{fmt(totalQty)}</p></div>
+        <div className="card p-4"><p className="text-xs text-slate-400">{L('stockValue')}</p><p className="text-2xl font-black">{dh(stockValue)}</p></div>
+        <div className="card p-4"><p className="text-xs text-slate-400">{L('lowStock')}</p><p className="text-2xl font-black text-red-600">{lowStock}</p></div>
+      </div>
+
+      {isAdmin(getStoredSession()) ? (
+        <div className="grid md:grid-cols-3 gap-3 mb-4">
+          {summary.map(s => (
+            <div key={s.branchId} className="card p-4">
+              <div className="font-bold">{s.branchName}</div>
+              <div className="text-xs text-slate-500">{s.products} produits · {fmt(s.qty)} unités</div>
+              <div className="mt-2 font-mono font-black">{dh(s.value)}</div>
+              <div className="text-xs text-red-500">{s.lowStock} alertes stock</div>
+            </div>
+          ))}
+        </div>
+      ) : null}
 
       <Table>
         <thead><tr>
@@ -1543,7 +1784,7 @@ function Products({ L }) {
           <th>{L('actions')}</th>
         </tr></thead>
         <tbody>
-          {rows.map(p => (
+          {visibleRows.map(p => (
             <tr key={p.id}>
               <td className="font-mono text-xs">{p.ref}</td>
               <td>
@@ -1553,31 +1794,33 @@ function Products({ L }) {
               <td><Badge tone="slate">{p.categorie || '-'}</Badge></td>
               <td><Badge tone="blue">{p.branchName || '-'}</Badge></td>
               <td>
-                <div className={p.quantite <= p.stockMin ? 'text-red-600 font-bold' : 'font-bold'}>{p.quantite} {p.unite}</div>
-                <div className="text-xs text-slate-400">Min : {p.stockMin}</div>
+                <div className={p.quantite <= p.stockMin ? 'text-red-600 font-bold' : 'font-bold'}>{fmt(p.quantite)} {p.unite}</div>
+                <div className="text-xs text-slate-400">Min : {fmt(p.stockMin)}</div>
               </td>
               <td className="font-mono">{dh(p.prixAchat)}</td>
               <td className="font-mono font-bold">{dh(p.prixVente)}</td>
               <td>
                 <Badge tone={(p.prixVente - p.prixAchat) >= 0 ? 'green' : 'red'}>{dh(p.prixVente - p.prixAchat)}</Badge>
               </td>
-              <td className="flex gap-1">
-                {can('products.write') ? <button onClick={() => setForm(p)} className="btn bg-white border">{L('edit')}</button> : null}
-                <button onClick={() => setStock({ ...p, qte: 1, reason: L('stock') })} className="btn bg-white border">{L('stock')}</button>
-                {can('products.delete') ? <button onClick={() => remove(p.id)} className="btn bg-red-600 text-white">{L('del')}</button> : null}
+              <td className="flex gap-1 flex-wrap">
+                {canWriteProduct ? <button onClick={() => setForm(p)} className="btn bg-white border">{L('edit')}</button> : null}
+                {canAdjustStock ? <button onClick={() => setStock({ ...p, qte: 1, reason: L('adjustment') })} className="btn bg-white border">{L('stock')}</button> : null}
+                {canAdjustStock ? <button onClick={() => setTransfer({ productId: p.id, productName: p.nom, fromBranchId: p.branchId, toBranchId: branches.find(b => Number(b.id) !== Number(p.branchId))?.id || '', quantity: 1, reason: L('stockTransfer') })} className="btn bg-white border">{L('stockTransfer')}</button> : null}
+                {canDeleteProduct ? <button onClick={() => remove(p.id)} className="btn bg-red-600 text-white">{L('del')}</button> : null}
               </td>
             </tr>
           ))}
         </tbody>
       </Table>
 
-      {form ? <ProductModal L={L} form={form} setForm={setForm} save={save} close={() => setForm(null)} /> : null}
+      {form ? <ProductModal L={L} form={form} setForm={setForm} save={save} close={() => setForm(null)} branches={branches} /> : null}
       {stock ? <StockModal L={L} stock={stock} setStock={setStock} save={adjustStock} close={() => setStock(null)} /> : null}
+      {transfer ? <StockTransferModal L={L} transfer={transfer} setTransfer={setTransfer} branches={branches} save={doTransfer} close={() => setTransfer(null)} /> : null}
     </>
   );
 }
 
-function ProductModal({ L, form, setForm, save, close }) {
+function ProductModal({ L, form, setForm, save, close, branches = [] }) {
   const fields = [
     ['ref', L('ref')], ['nom', L('name')], ['nomAr', L('arabicName')], ['categorie', L('category')], ['unite', 'Unité'],
     ['prixAchat', 'Prix achat'], ['prixVente', 'Prix vente'], ['quantite', L('quantity')], ['stockMin', 'Seuil']
@@ -1591,6 +1834,15 @@ function ProductModal({ L, form, setForm, save, close }) {
             <input className="input mt-1" value={form[k] ?? ''} onChange={e => setForm({ ...form, [k]: ['prixAchat', 'prixVente', 'quantite', 'stockMin'].includes(k) ? Number(e.target.value) : e.target.value })} />
           </label>
         ))}
+        {isAdmin(getStoredSession()) ? (
+          <label className="text-xs text-slate-500">
+            {L('branch')}
+            <select className="input mt-1" value={form.branchId || form.branch_id || ''} onChange={e => setForm({ ...form, branchId: e.target.value ? Number(e.target.value) : null })}>
+              <option value="">--</option>
+              {branches.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+            </select>
+          </label>
+        ) : null}
       </div>
       <button onClick={save} className="btn bg-amber-500 mt-4">{L('save')}</button>
     </Modal>
@@ -1600,12 +1852,34 @@ function ProductModal({ L, form, setForm, save, close }) {
 function StockModal({ L, stock, setStock, save, close }) {
   return (
     <Modal title={L('stock')} onClose={close}>
-      <p className="font-semibold mb-3">{stock.nom}</p>
+      <p className="font-semibold mb-1">{stock.nom}</p>
+      <p className="text-xs text-slate-500 mb-3">{L('location')} : {stock.branchName || '-'}</p>
       <label className="text-xs text-slate-500">{L('quantity')} (+ / -)
         <input className="input mt-1 mb-2" type="number" value={stock.qte} onChange={e => setStock({ ...stock, qte: e.target.value })} />
       </label>
-      <label className="text-xs text-slate-500">Motif
+      <label className="text-xs text-slate-500">{L('reason')}
         <input className="input mt-1" value={stock.reason} onChange={e => setStock({ ...stock, reason: e.target.value })} />
+      </label>
+      <button onClick={save} className="btn bg-amber-500 mt-4">{L('save')}</button>
+    </Modal>
+  );
+}
+
+function StockTransferModal({ L, transfer, setTransfer, branches, save, close }) {
+  return (
+    <Modal title={L('stockTransfer')} onClose={close}>
+      <p className="font-semibold mb-3">{transfer.productName}</p>
+      <label className="text-xs text-slate-500">{L('toBranch')}
+        <select className="input mt-1 mb-2" value={transfer.toBranchId || ''} onChange={e => setTransfer({ ...transfer, toBranchId: e.target.value ? Number(e.target.value) : '' })}>
+          <option value="">--</option>
+          {branches.filter(b => Number(b.id) !== Number(transfer.fromBranchId)).map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+        </select>
+      </label>
+      <label className="text-xs text-slate-500">{L('quantity')}
+        <input className="input mt-1 mb-2" type="number" min="0" value={transfer.quantity} onChange={e => setTransfer({ ...transfer, quantity: e.target.value })} />
+      </label>
+      <label className="text-xs text-slate-500">{L('reason')}
+        <input className="input mt-1" value={transfer.reason} onChange={e => setTransfer({ ...transfer, reason: e.target.value })} />
       </label>
       <button onClick={save} className="btn bg-amber-500 mt-4">{L('save')}</button>
     </Modal>
@@ -2315,14 +2589,20 @@ function PartialModal({ L, isSales, partial, setPartial, save, close }) {
 function Parties({ L, type }) {
   const canWriteParty = can(type === 'clients' ? 'clients.write' : 'suppliers.write');
   const canDeleteParty = can(type === 'clients' ? 'clients.delete' : 'suppliers.delete');
+  const canAssignParty = can(type === 'clients' ? 'clients.assign' : 'suppliers.write');
   const [rows, setRows] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [branches, setBranches] = useState([]);
   const [form, setForm] = useState(null);
+  const [ownerFilter, setOwnerFilter] = useState('all');
   const [err, setErr] = useState('');
 
   async function load() {
     try {
-      const data = await loadParties(type);
+      const [data, usersData, branchesData] = await Promise.all([loadParties(type), loadUsers(), loadBranches()]);
       setRows(data);
+      setUsers(usersData);
+      setBranches(branchesData);
     } catch (e) { setErr(e.message); }
   }
 
@@ -2337,37 +2617,112 @@ function Parties({ L, type }) {
   }
 
   async function remove(id) {
+    if (!canDeleteParty) return alert('Suppression non autorisée');
     if (!confirm('Supprimer ?')) return;
-    await deleteParty(type, id);
-    load();
+    try {
+      await deleteParty(type, id);
+      load();
+    } catch (e) { alert(e.message); }
+  }
+
+  function newParty() {
+    if (!canWriteParty) return;
+    setForm({
+      name: '',
+      type: 'entreprise',
+      ice: '',
+      phone: '',
+      city: '',
+      address: '',
+      contact: '',
+      assigned_to: getStoredSession()?.user?.id || '',
+      branch_id: currentBranchId() || branches[0]?.id || ''
+    });
   }
 
   if (err) return <ErrorBox msg={err} />;
 
+  const filteredRows = ownerFilter === 'all'
+    ? rows
+    : rows.filter(x => String(x.assigned_to || '') === String(ownerFilter));
+
+  const uniqueOwners = users.filter(u => rows.some(x => String(x.assigned_to || '') === String(u.id)));
+
   return (
     <>
       <Header title={type === 'clients' ? L('clients') : L('suppliers')}>
-        {canWriteParty ? <button onClick={() => setForm({ name: '', type: 'entreprise', ice: '', phone: '', city: '', address: '', contact: '' })} className="btn bg-amber-500">{L('new')}</button> : null}
+        {type === 'clients' ? (
+          <select className="input max-w-xs" value={ownerFilter} onChange={e => setOwnerFilter(e.target.value)}>
+            <option value="all">Tous les comptes</option>
+            {uniqueOwners.map(u => <option key={u.id} value={u.id}>{u.full_name || u.username}</option>)}
+          </select>
+        ) : null}
+        {canWriteParty ? <button onClick={newParty} className="btn bg-amber-500">{L('new')}</button> : null}
       </Header>
 
-      <div className="grid md:grid-cols-3 gap-3">
-        {rows.map(x => (
-          <div key={x.id} className="card p-4">
-            <b>{x.name}</b>
-            <p className="text-sm text-slate-500">ICE: {x.ice || '-'}<br />Tél: {x.phone || '-'}<br />{x.city || ''}</p>
-            <div className="flex gap-1 mt-3">
-              <button onClick={() => setForm(x)} className="btn bg-white border">{L('edit')}</button>
-              <button onClick={() => remove(x.id)} className="btn bg-red-600 text-white">{L('del')}</button>
-            </div>
-          </div>
-        ))}
+      <div className="grid md:grid-cols-4 gap-3 mb-4">
+        <div className="card p-4"><p className="text-xs text-slate-400">Total</p><p className="text-2xl font-black">{filteredRows.length}</p></div>
+        <div className="card p-4"><p className="text-xs text-slate-400">{L('clientOwner')}</p><p className="text-2xl font-black">{uniqueOwners.length}</p></div>
+        <div className="card p-4"><p className="text-xs text-slate-400">{L('branch')}</p><p className="text-2xl font-black">{new Set(filteredRows.map(x => x.branch_id).filter(Boolean)).size}</p></div>
+        <div className="card p-4"><p className="text-xs text-slate-400">{L('createdBy')}</p><p className="text-2xl font-black">{new Set(filteredRows.map(x => x.created_by).filter(Boolean)).size}</p></div>
       </div>
+
+      <Table>
+        <thead>
+          <tr>
+            <th>{L('name')}</th>
+            <th>ICE / Contact</th>
+            <th>{L('phone')}</th>
+            <th>{L('city')}</th>
+            <th>{L('createdBy')}</th>
+            {type === 'clients' ? <th>{L('assignedTo')}</th> : null}
+            <th>{L('branch')}</th>
+            <th>{L('actions')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredRows.map(x => (
+            <tr key={x.id}>
+              <td className="font-semibold">{x.name}</td>
+              <td className="text-xs text-slate-500">{x.ice || x.contact || '-'}</td>
+              <td>{x.phone || '-'}</td>
+              <td>{x.city || '-'}</td>
+              <td>{x.createdByLabel || '-'}</td>
+              {type === 'clients' ? <td><Badge tone="blue">{x.assignedToLabel || '-'}</Badge></td> : null}
+              <td>{branches.find(b => Number(b.id) === Number(x.branch_id))?.name || '-'}</td>
+              <td className="flex gap-1 flex-wrap">
+                {canWriteParty ? <button onClick={() => setForm(x)} className="btn bg-white border">{L('edit')}</button> : null}
+                {canDeleteParty ? <button onClick={() => remove(x.id)} className="btn bg-red-600 text-white">{L('del')}</button> : null}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
 
       {form ? (
         <Modal title={type === 'clients' ? L('clients') : L('suppliers')} onClose={() => setForm(null)}>
           {['name', 'ice', 'phone', 'city', 'address'].map(k => (
             <input key={k} className="input mb-2" placeholder={k} value={form[k] || ''} onChange={e => setForm({ ...form, [k]: e.target.value })} />
           ))}
+
+          {type === 'clients' ? (
+            <label className="text-xs text-slate-500">{L('assignedTo')}
+              <select className="input mt-1 mb-2" value={form.assigned_to || ''} disabled={!canAssignParty} onChange={e => setForm({ ...form, assigned_to: e.target.value ? Number(e.target.value) : null })}>
+                <option value="">--</option>
+                {users.map(u => <option key={u.id} value={u.id}>{u.full_name || u.username}</option>)}
+              </select>
+            </label>
+          ) : null}
+
+          {isAdmin(getStoredSession()) ? (
+            <label className="text-xs text-slate-500">{L('branch')}
+              <select className="input mt-1 mb-2" value={form.branch_id || ''} onChange={e => setForm({ ...form, branch_id: e.target.value ? Number(e.target.value) : null })}>
+                <option value="">--</option>
+                {branches.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+              </select>
+            </label>
+          ) : null}
+
           <button onClick={save} className="btn bg-amber-500">{L('save')}</button>
         </Modal>
       ) : null}
@@ -2802,6 +3157,23 @@ function Permissions({ L }) {
     try {
       await setRolePermission(roleId, permissionId, value);
       await load();
+      alert('Droit mis à jour. L’utilisateur concerné doit cliquer sur Rafraîchir droits ou se reconnecter.');
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  async function applySellerTemplate() {
+    const seller = roles.find(r => String(r.name).toLowerCase().includes('vendeur'));
+    if (!seller) return alert('Profil vendeur introuvable');
+
+    const allowed = new Set(['dashboard.read', 'products.read', 'stock.read', 'clients.read', 'sales.read', 'sales.write', 'sales.pay', 'payments.read']);
+    try {
+      for (const p of permissions) {
+        await setRolePermission(seller.id, p.id, allowed.has(p.code));
+      }
+      await load();
+      alert('Profil vendeur corrigé : consultation clients uniquement.');
     } catch (e) {
       alert(e.message);
     }
@@ -2809,6 +3181,7 @@ function Permissions({ L }) {
 
   if (err) return <ErrorBox msg={err} />;
 
+  const order = ['Tableau de bord', 'Produits', 'Stock', 'Clients', 'Fournisseurs', 'Ventes', 'Achats', 'Paiements', 'Utilisateurs', 'Paramètres', 'Autorisations', 'Drogueries', 'Traçabilité', 'Divers'];
   const grouped = permissions.reduce((acc, p) => {
     const mod = p.module || 'Divers';
     if (!acc[mod]) acc[mod] = [];
@@ -2816,13 +3189,21 @@ function Permissions({ L }) {
     return acc;
   }, {});
 
+  const modules = Object.keys(grouped).sort((a, b) => order.indexOf(a) - order.indexOf(b));
+
   return (
     <>
       <Header title={L('permissions') || 'Autorisations'}>
+        <button onClick={applySellerTemplate} className="btn bg-amber-500">Corriger profil vendeur</button>
         <button onClick={load} className="btn bg-white border">↻</button>
       </Header>
 
-      <div className="card overflow-auto">
+      <div className="card p-4 mb-4 text-sm text-slate-600">
+        Les droits sont séparés par action : <b>consultation</b>, <b>création/modification</b>, <b>suppression</b>, <b>règlement</b>. 
+        Exemple : pour un vendeur qui consulte les clients seulement, cocher <b>clients.read</b> et décocher <b>clients.write</b> / <b>clients.delete</b>.
+      </div>
+
+      <div className="card overflow-auto permissions-pro">
         <table className="table w-full">
           <thead>
             <tr>
@@ -2832,13 +3213,13 @@ function Permissions({ L }) {
           </thead>
 
           <tbody>
-            {Object.entries(grouped).map(([mod, perms]) => (
+            {modules.map(mod => (
               <React.Fragment key={mod}>
                 <tr>
                   <td colSpan={roles.length + 1} className="bg-slate-100 font-bold">{mod}</td>
                 </tr>
 
-                {perms.map(p => (
+                {grouped[mod].map(p => (
                   <tr key={p.id}>
                     <td>
                       <div className="font-semibold">{p.label || p.code}</div>
