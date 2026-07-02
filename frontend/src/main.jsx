@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-console.log('DROGUERIEPRO V26 PARTIAL BY PRODUCT OK');
+console.log('DROGUERIEPRO V27 PARTIAL REMOVE LINES OK');
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -29,7 +29,7 @@ const TXT = {
     deliveries: 'Livraisons', receipts: 'Réceptions', invoices: 'Factures', remaining: 'Reste',
     paid: 'Réglée', unpaid: 'Non réglée', partial: 'Partielle', cashIn: 'Encaissements',
     cashOut: 'Décaissements', vat: 'TVA', theme: 'Thème', company: 'Société', address: 'Adresse', phone: 'Téléphone', ice: 'ICE', cashRegister: 'Caisse', receiptNo: 'N° reçu', chequeNo: 'N° chèque', bank: 'Banque', dueDate: 'Échéance', paymentStatus: 'Statut', transferRef: 'Réf. virement', valueDate: 'Date valeur', terminal: 'TPE', transactionNo: 'N° transaction', billNo: 'N° effet', note: 'Observation', quantity: 'Quantité', date: 'Date', customer: 'Client',
-    supplier: 'Fournisseur', product: 'Produit', base: 'Base', remainingQty: 'Qté restante', orderedQty: 'Qté commandée', deliveredQty: 'Qté livrée', receivedQty: 'Qté reçue', qtyToProcess: 'Qté à traiter', alreadyProcessed: 'Déjà traité', open: 'Ouvert', closed: 'Clôturé', preview: 'Aperçu', print: 'Imprimer', unitPrice: 'PU', totalHT: 'Total HT', totalVAT: 'TVA', totalTTC: 'Total TTC', cancelPayment: 'Annuler règlement', canceled: 'Annulé', subtotal: 'Sous-total', signature: 'Signature', preparedBy: 'Préparé par', printDate: 'Date impression', legalNote: 'Document généré par DrogueriePro', arabicName: 'Nom arabe', docType: 'Type document', purchasePrice: 'Prix achat', salePrice: 'Prix vente', margin: 'Marge', movement: 'Mouvement', object: 'Objet', detail: 'Détail', actor: 'Utilisateur'
+    supplier: 'Fournisseur', product: 'Produit', base: 'Base', remainingQty: 'Qté restante', orderedQty: 'Qté commandée', deliveredQty: 'Qté livrée', receivedQty: 'Qté reçue', qtyToProcess: 'Qté à traiter', alreadyProcessed: 'Déjà traité', includeLine: 'Inclure', removeLine: 'Retirer ligne', restoreLine: 'Restaurer ligne', open: 'Ouvert', closed: 'Clôturé', preview: 'Aperçu', print: 'Imprimer', unitPrice: 'PU', totalHT: 'Total HT', totalVAT: 'TVA', totalTTC: 'Total TTC', cancelPayment: 'Annuler règlement', canceled: 'Annulé', subtotal: 'Sous-total', signature: 'Signature', preparedBy: 'Préparé par', printDate: 'Date impression', legalNote: 'Document généré par DrogueriePro', arabicName: 'Nom arabe', docType: 'Type document', purchasePrice: 'Prix achat', salePrice: 'Prix vente', margin: 'Marge', movement: 'Mouvement', object: 'Objet', detail: 'Détail', actor: 'Utilisateur'
   },
   ar: {
     login: 'تسجيل الدخول', username: 'المستخدم', password: 'كلمة المرور', connect: 'دخول',
@@ -42,7 +42,7 @@ const TXT = {
     deliveries: 'التسليمات', receipts: 'الاستلامات', invoices: 'الفواتير', remaining: 'الباقي',
     paid: 'مؤداة', unpaid: 'غير مؤداة', partial: 'جزئية', cashIn: 'المداخيل',
     cashOut: 'المصاريف', vat: 'الضريبة', theme: 'المظهر', company: 'الشركة', address: 'العنوان', phone: 'الهاتف', ice: 'ICE', cashRegister: 'الصندوق', receiptNo: 'رقم الوصل', chequeNo: 'رقم الشيك', bank: 'البنك', dueDate: 'الاستحقاق', paymentStatus: 'الحالة', transferRef: 'مرجع التحويل', valueDate: 'تاريخ القيمة', terminal: 'جهاز الأداء', transactionNo: 'رقم العملية', billNo: 'رقم الكمبيالة', note: 'ملاحظة', quantity: 'الكمية', date: 'التاريخ', customer: 'الزبون',
-    supplier: 'المورد', product: 'المنتج', base: 'الأصل', remainingQty: 'الكمية المتبقية', orderedQty: 'الكمية المطلوبة', deliveredQty: 'الكمية المسلمة', receivedQty: 'الكمية المستلمة', qtyToProcess: 'الكمية المراد معالجتها', alreadyProcessed: 'تمت معالجته', open: 'مفتوح', closed: 'مغلق', preview: 'معاينة', print: 'طباعة', unitPrice: 'ثمن الوحدة', totalHT: 'المجموع بدون الضريبة', totalVAT: 'الضريبة', totalTTC: 'المجموع مع الضريبة', cancelPayment: 'إلغاء الأداء', canceled: 'ملغى', subtotal: 'المجموع الجزئي', signature: 'التوقيع', preparedBy: 'أنجز من طرف', printDate: 'تاريخ الطباعة', legalNote: 'وثيقة تم إنشاؤها بواسطة DrogueriePro', arabicName: 'الاسم بالعربية', docType: 'نوع الوثيقة', purchasePrice: 'ثمن الشراء', salePrice: 'ثمن البيع', margin: 'الهامش', movement: 'الحركة', object: 'العنصر', detail: 'التفاصيل', actor: 'المستخدم'
+    supplier: 'المورد', product: 'المنتج', base: 'الأصل', remainingQty: 'الكمية المتبقية', orderedQty: 'الكمية المطلوبة', deliveredQty: 'الكمية المسلمة', receivedQty: 'الكمية المستلمة', qtyToProcess: 'الكمية المراد معالجتها', alreadyProcessed: 'تمت معالجته', includeLine: 'تضمين', removeLine: 'حذف السطر', restoreLine: 'استرجاع السطر', open: 'مفتوح', closed: 'مغلق', preview: 'معاينة', print: 'طباعة', unitPrice: 'ثمن الوحدة', totalHT: 'المجموع بدون الضريبة', totalVAT: 'الضريبة', totalTTC: 'المجموع مع الضريبة', cancelPayment: 'إلغاء الأداء', canceled: 'ملغى', subtotal: 'المجموع الجزئي', signature: 'التوقيع', preparedBy: 'أنجز من طرف', printDate: 'تاريخ الطباعة', legalNote: 'وثيقة تم إنشاؤها بواسطة DrogueriePro', arabicName: 'الاسم بالعربية', docType: 'نوع الوثيقة', purchasePrice: 'ثمن الشراء', salePrice: 'ثمن البيع', margin: 'الهامش', movement: 'الحركة', object: 'العنصر', detail: 'التفاصيل', actor: 'المستخدم'
   }
 };
 
@@ -654,7 +654,11 @@ function selectedPartialLines(doc, linesInput) {
   const original = docRemainingLines(doc);
   const byKey = {};
   (linesInput || []).forEach(l => {
-    byKey[lineKey(l)] = Number(l.qteToProcess ?? l.qte ?? 0);
+    if (l.excluded) {
+      byKey[lineKey(l)] = 0;
+    } else {
+      byKey[lineKey(l)] = Number(l.qteToProcess ?? l.qte ?? 0);
+    }
   });
 
   const result = [];
@@ -1639,7 +1643,7 @@ function Docs({ L, type }) {
                   <button onClick={() => advance(d.id)} className="btn bg-slate-800 text-white">{L('advance')}</button>
                   <button onClick={() => setPreview(d)} className="btn bg-white border">{L('preview')}</button>
                   {paymentButtonVisible(d) ? <button onClick={() => setPay({ ...d, date: today(), mode: 'Espèces', montant: d.reste || d.totalTTC, cashRegister: '', receiptNo: '', chequeNo: '', bank: '', dueDate: '', paymentStatus: 'En portefeuille', transferRef: '', valueDate: '', terminal: '', transactionNo: '', billNo: '', note: '' })} className="btn bg-emerald-600 text-white">{L('pay')}</button> : null}
-                  {d.stage !== 'facture' && docRemainingQty(d) > 0 ? <button onClick={() => setPartial({ doc: d, date: today(), lignes: docRemainingLines(d).map(l => ({ ...l, qteToProcess: Number(l.remainingQty || 0) })) })} className="btn bg-white border">{isSales ? L('partialDelivery') : L('partialReceipt')}</button> : null}
+                  {d.stage !== 'facture' && docRemainingQty(d) > 0 ? <button onClick={() => setPartial({ doc: d, date: today(), lignes: docRemainingLines(d).map(l => ({ ...l, qteToProcess: Number(l.remainingQty || 0), excluded: false })) })} className="btn bg-white border">{isSales ? L('partialDelivery') : L('partialReceipt')}</button> : null}
                   <button onClick={() => setForm({ id: d.id, start: d.stage, date: d.date, partyId: isSales ? d.client_id : d.supplier_id, lignes: (d.lignes || []).map(l => ({ produitId: l.produitId, qte: l.qte, prixUnit: l.prixUnit })) })} className="btn bg-white border">{L('edit')}</button>
                   <button onClick={() => remove(d.id)} className="btn bg-red-600 text-white">{L('del')}</button>
                 </td>
@@ -1926,11 +1930,34 @@ function PartialModal({ L, isSales, partial, setPartial, save, close }) {
     let qty = Number(value || 0);
     if (qty < 0) qty = 0;
     if (qty > max) qty = max;
-    next[index] = { ...next[index], qteToProcess: qty };
+    next[index] = { ...next[index], qteToProcess: qty, excluded: false };
     setPartial({ ...partial, lignes: next });
   }
 
-  const totalToProcess = lines.reduce((s, l) => s + Number(l.qteToProcess || 0), 0);
+  function toggleExclude(index) {
+    const next = [...lines];
+    const current = next[index];
+    const excluded = !current.excluded;
+    next[index] = {
+      ...current,
+      excluded,
+      qteToProcess: excluded ? 0 : Number(current.remainingQty || 0)
+    };
+    setPartial({ ...partial, lignes: next });
+  }
+
+  function removeZeroLines() {
+    const next = lines.map(l => Number(l.qteToProcess || 0) <= 0 ? { ...l, excluded: true, qteToProcess: 0 } : l);
+    setPartial({ ...partial, lignes: next });
+  }
+
+  function restoreAll() {
+    const next = lines.map(l => ({ ...l, excluded: false, qteToProcess: Number(l.remainingQty || 0) }));
+    setPartial({ ...partial, lignes: next });
+  }
+
+  const includedLines = lines.filter(l => !l.excluded);
+  const totalToProcess = includedLines.reduce((s, l) => s + Number(l.qteToProcess || 0), 0);
 
   return (
     <Modal title={isSales ? L('partialDelivery') : L('partialReceipt')} onClose={close} wide>
@@ -1938,23 +1965,40 @@ function PartialModal({ L, isSales, partial, setPartial, save, close }) {
         <input className="input mt-1 mb-3" type="date" value={partial.date || today()} onChange={e => setPartial({ ...partial, date: e.target.value })} />
       </label>
 
+      <div className="flex gap-2 flex-wrap mb-3">
+        <button onClick={restoreAll} className="btn bg-white border">{L('restoreLine')}</button>
+        <button onClick={removeZeroLines} className="btn bg-white border">{L('removeLine')} qté 0</button>
+      </div>
+
       <div className="card overflow-auto mb-4">
         <table className="table w-full">
           <thead>
             <tr>
+              <th>{L('includeLine')}</th>
               <th>{L('ref')}</th>
               <th>{L('product')}</th>
               <th>{L('orderedQty')}</th>
               <th>{L('alreadyProcessed')}</th>
               <th>{L('remainingQty')}</th>
               <th>{L('qtyToProcess')}</th>
+              <th>{L('actions')}</th>
             </tr>
           </thead>
           <tbody>
             {lines.map((l, i) => (
-              <tr key={lineKey(l) || i}>
+              <tr key={lineKey(l) || i} className={l.excluded ? 'partial-line-excluded' : ''}>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={!l.excluded}
+                    onChange={() => toggleExclude(i)}
+                  />
+                </td>
                 <td className="font-mono text-xs">{l.ref || '-'}</td>
-                <td className="font-semibold">{l.nom || '-'}</td>
+                <td>
+                  <div className="font-semibold">{l.nom || '-'}</div>
+                  {l.excluded ? <div className="text-xs text-red-500">{L('removeLine')}</div> : null}
+                </td>
                 <td>{fmt(l.qte)}</td>
                 <td>{fmt(l.processedQty || 0)}</td>
                 <td className="font-bold">{fmt(l.remainingQty || 0)}</td>
@@ -1965,9 +2009,15 @@ function PartialModal({ L, isSales, partial, setPartial, save, close }) {
                     min="0"
                     max={Number(l.remainingQty || 0)}
                     step="0.01"
+                    disabled={!!l.excluded}
                     value={l.qteToProcess ?? 0}
                     onChange={e => updateLine(i, e.target.value)}
                   />
+                </td>
+                <td>
+                  <button onClick={() => toggleExclude(i)} className={l.excluded ? 'btn bg-emerald-600 text-white' : 'btn bg-red-600 text-white'}>
+                    {l.excluded ? L('restoreLine') : L('removeLine')}
+                  </button>
                 </td>
               </tr>
             ))}
@@ -1977,7 +2027,7 @@ function PartialModal({ L, isSales, partial, setPartial, save, close }) {
 
       <div className="flex justify-between items-center">
         <div className="text-sm text-slate-500">
-          {L('qtyToProcess')} : <b>{fmt(totalToProcess)}</b>
+          {L('qtyToProcess')} : <b>{fmt(totalToProcess)}</b> · {L('includeLine')} : <b>{includedLines.length}</b> / {lines.length}
         </div>
         <button disabled={totalToProcess <= 0} onClick={save} className="btn bg-amber-500 disabled:opacity-50">{L('save')}</button>
       </div>

@@ -402,3 +402,17 @@ body { margin: 0; background: #f8fafc; }
     grid-template-columns: 1fr !important;
   }
 }
+
+
+/* V27 partial delivery/receipt line exclusion */
+.partial-line-excluded {
+  background: #f8fafc;
+  color: #94a3b8;
+}
+.partial-line-excluded td {
+  text-decoration: none;
+}
+.partial-line-excluded input {
+  background: #f1f5f9;
+  color: #94a3b8;
+}
