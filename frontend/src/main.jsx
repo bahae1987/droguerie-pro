@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-console.log('DROGUERIEPRO V25 MOBILE PWA OK');
+console.log('DROGUERIEPRO V26 PARTIAL BY PRODUCT OK');
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -29,7 +29,7 @@ const TXT = {
     deliveries: 'Livraisons', receipts: 'Réceptions', invoices: 'Factures', remaining: 'Reste',
     paid: 'Réglée', unpaid: 'Non réglée', partial: 'Partielle', cashIn: 'Encaissements',
     cashOut: 'Décaissements', vat: 'TVA', theme: 'Thème', company: 'Société', address: 'Adresse', phone: 'Téléphone', ice: 'ICE', cashRegister: 'Caisse', receiptNo: 'N° reçu', chequeNo: 'N° chèque', bank: 'Banque', dueDate: 'Échéance', paymentStatus: 'Statut', transferRef: 'Réf. virement', valueDate: 'Date valeur', terminal: 'TPE', transactionNo: 'N° transaction', billNo: 'N° effet', note: 'Observation', quantity: 'Quantité', date: 'Date', customer: 'Client',
-    supplier: 'Fournisseur', product: 'Produit', base: 'Base', remainingQty: 'Qté restante', orderedQty: 'Qté commandée', deliveredQty: 'Qté livrée', receivedQty: 'Qté reçue', open: 'Ouvert', closed: 'Clôturé', preview: 'Aperçu', print: 'Imprimer', unitPrice: 'PU', totalHT: 'Total HT', totalVAT: 'TVA', totalTTC: 'Total TTC', cancelPayment: 'Annuler règlement', canceled: 'Annulé', subtotal: 'Sous-total', signature: 'Signature', preparedBy: 'Préparé par', printDate: 'Date impression', legalNote: 'Document généré par DrogueriePro', arabicName: 'Nom arabe', docType: 'Type document', purchasePrice: 'Prix achat', salePrice: 'Prix vente', margin: 'Marge', movement: 'Mouvement', object: 'Objet', detail: 'Détail', actor: 'Utilisateur'
+    supplier: 'Fournisseur', product: 'Produit', base: 'Base', remainingQty: 'Qté restante', orderedQty: 'Qté commandée', deliveredQty: 'Qté livrée', receivedQty: 'Qté reçue', qtyToProcess: 'Qté à traiter', alreadyProcessed: 'Déjà traité', open: 'Ouvert', closed: 'Clôturé', preview: 'Aperçu', print: 'Imprimer', unitPrice: 'PU', totalHT: 'Total HT', totalVAT: 'TVA', totalTTC: 'Total TTC', cancelPayment: 'Annuler règlement', canceled: 'Annulé', subtotal: 'Sous-total', signature: 'Signature', preparedBy: 'Préparé par', printDate: 'Date impression', legalNote: 'Document généré par DrogueriePro', arabicName: 'Nom arabe', docType: 'Type document', purchasePrice: 'Prix achat', salePrice: 'Prix vente', margin: 'Marge', movement: 'Mouvement', object: 'Objet', detail: 'Détail', actor: 'Utilisateur'
   },
   ar: {
     login: 'تسجيل الدخول', username: 'المستخدم', password: 'كلمة المرور', connect: 'دخول',
@@ -42,7 +42,7 @@ const TXT = {
     deliveries: 'التسليمات', receipts: 'الاستلامات', invoices: 'الفواتير', remaining: 'الباقي',
     paid: 'مؤداة', unpaid: 'غير مؤداة', partial: 'جزئية', cashIn: 'المداخيل',
     cashOut: 'المصاريف', vat: 'الضريبة', theme: 'المظهر', company: 'الشركة', address: 'العنوان', phone: 'الهاتف', ice: 'ICE', cashRegister: 'الصندوق', receiptNo: 'رقم الوصل', chequeNo: 'رقم الشيك', bank: 'البنك', dueDate: 'الاستحقاق', paymentStatus: 'الحالة', transferRef: 'مرجع التحويل', valueDate: 'تاريخ القيمة', terminal: 'جهاز الأداء', transactionNo: 'رقم العملية', billNo: 'رقم الكمبيالة', note: 'ملاحظة', quantity: 'الكمية', date: 'التاريخ', customer: 'الزبون',
-    supplier: 'المورد', product: 'المنتج', base: 'الأصل', remainingQty: 'الكمية المتبقية', orderedQty: 'الكمية المطلوبة', deliveredQty: 'الكمية المسلمة', receivedQty: 'الكمية المستلمة', open: 'مفتوح', closed: 'مغلق', preview: 'معاينة', print: 'طباعة', unitPrice: 'ثمن الوحدة', totalHT: 'المجموع بدون الضريبة', totalVAT: 'الضريبة', totalTTC: 'المجموع مع الضريبة', cancelPayment: 'إلغاء الأداء', canceled: 'ملغى', subtotal: 'المجموع الجزئي', signature: 'التوقيع', preparedBy: 'أنجز من طرف', printDate: 'تاريخ الطباعة', legalNote: 'وثيقة تم إنشاؤها بواسطة DrogueriePro', arabicName: 'الاسم بالعربية', docType: 'نوع الوثيقة', purchasePrice: 'ثمن الشراء', salePrice: 'ثمن البيع', margin: 'الهامش', movement: 'الحركة', object: 'العنصر', detail: 'التفاصيل', actor: 'المستخدم'
+    supplier: 'المورد', product: 'المنتج', base: 'الأصل', remainingQty: 'الكمية المتبقية', orderedQty: 'الكمية المطلوبة', deliveredQty: 'الكمية المسلمة', receivedQty: 'الكمية المستلمة', qtyToProcess: 'الكمية المراد معالجتها', alreadyProcessed: 'تمت معالجته', open: 'مفتوح', closed: 'مغلق', preview: 'معاينة', print: 'طباعة', unitPrice: 'ثمن الوحدة', totalHT: 'المجموع بدون الضريبة', totalVAT: 'الضريبة', totalTTC: 'المجموع مع الضريبة', cancelPayment: 'إلغاء الأداء', canceled: 'ملغى', subtotal: 'المجموع الجزئي', signature: 'التوقيع', preparedBy: 'أنجز من طرف', printDate: 'تاريخ الطباعة', legalNote: 'وثيقة تم إنشاؤها بواسطة DrogueriePro', arabicName: 'الاسم بالعربية', docType: 'نوع الوثيقة', purchasePrice: 'ثمن الشراء', salePrice: 'ثمن البيع', margin: 'الهامش', movement: 'الحركة', object: 'العنصر', detail: 'التفاصيل', actor: 'المستخدم'
   }
 };
 
@@ -541,6 +541,9 @@ function docQty(lines) {
 }
 
 function docRemainingQty(doc) {
+  if (doc && doc.processed_lines_json) {
+    return docRemainingQtyByLines(doc);
+  }
   const lines = jsonValue(doc.lines_json || doc.lignes, []);
   const total = docQty(lines);
   const done = Number(doc.qty_done || 0);
@@ -615,6 +618,77 @@ function normalizeLines(lines) {
     prixUnit: Number(l.prixUnit || l.unit_price || 0)
   })).filter(l => l.produitId && l.qte > 0);
 }
+
+
+function lineKey(line) {
+  return String(line.produitId || line.product_id || line.id || line.ref || line.nom || '');
+}
+
+function processedLines(doc) {
+  return jsonValue(doc.processed_lines_json, {});
+}
+
+function lineProcessedQty(doc, line) {
+  const processed = processedLines(doc);
+  return Number(processed[lineKey(line)] || 0);
+}
+
+function lineRemainingQty(doc, line) {
+  return Math.max(0, Number(line.qte || 0) - lineProcessedQty(doc, line));
+}
+
+function docRemainingLines(doc) {
+  const original = normalizeLines(jsonValue(doc.lines_json || doc.lignes, []));
+  return original.map(l => ({
+    ...l,
+    processedQty: lineProcessedQty(doc, l),
+    remainingQty: lineRemainingQty(doc, l)
+  }));
+}
+
+function docRemainingQtyByLines(doc) {
+  return docRemainingLines(doc).reduce((s, l) => s + Number(l.remainingQty || 0), 0);
+}
+
+function selectedPartialLines(doc, linesInput) {
+  const original = docRemainingLines(doc);
+  const byKey = {};
+  (linesInput || []).forEach(l => {
+    byKey[lineKey(l)] = Number(l.qteToProcess ?? l.qte ?? 0);
+  });
+
+  const result = [];
+  for (const line of original) {
+    const qty = Number(byKey[lineKey(line)] || 0);
+    if (qty <= 0) continue;
+    if (qty > Number(line.remainingQty || 0) + 0.0001) {
+      throw new Error('Quantité supérieure au reste pour le produit : ' + (line.nom || line.ref || line.produitId));
+    }
+    result.push({
+      ...line,
+      qte: qty,
+      processedQty: undefined,
+      remainingQty: undefined
+    });
+  }
+
+  if (!result.length) throw new Error('Veuillez saisir au moins une quantité à traiter');
+  return result;
+}
+
+function mergeProcessedLines(doc, linesProcessed) {
+  const processed = { ...processedLines(doc) };
+  normalizeLines(linesProcessed).forEach(l => {
+    const k = lineKey(l);
+    processed[k] = Number(processed[k] || 0) + Number(l.qte || 0);
+  });
+  return processed;
+}
+
+function processedTotal(processed) {
+  return Object.values(processed || {}).reduce((s, v) => s + Number(v || 0), 0);
+}
+
 
 function scaleLinesToQty(lines, qtyToProcess) {
   const total = docQty(lines);
@@ -717,6 +791,7 @@ async function createDoc(type, body) {
     total_ttc: t.totalTTC,
     delivered: ['livraison', 'facture'].includes(start),
     qty_done: movesStock ? qty : 0,
+    processed_lines_json: movesStock ? mergeProcessedLines({ processed_lines_json: {} }, lines) : {},
     doc_status: start === 'facture' ? 'closed' : (movesStock ? 'closed' : 'open'),
     created_by: session?.user?.id || null,
     base_doc_id: body.baseDocId || null,
@@ -735,6 +810,7 @@ async function createDoc(type, body) {
     total_ttc: t.totalTTC,
     received: ['reception', 'facture'].includes(start),
     qty_done: movesStock ? qty : 0,
+    processed_lines_json: movesStock ? mergeProcessedLines({ processed_lines_json: {} }, lines) : {},
     doc_status: start === 'facture' ? 'closed' : (movesStock ? 'closed' : 'open'),
     created_by: session?.user?.id || null,
     base_doc_id: body.baseDocId || null,
@@ -816,9 +892,8 @@ async function advanceDoc(type, id) {
   const next = nextStageAllowed(doc, type);
   if (!next) return;
 
-  const oldLines = normalizeLines(jsonValue(doc.lines_json, []));
-  const remaining = docRemainingQty(doc);
-  if ((next === 'livraison' || next === 'reception') && remaining <= 0) {
+  const remainingLines = docRemainingLines(doc).filter(l => Number(l.remainingQty || 0) > 0);
+  if ((next === 'livraison' || next === 'reception') && !remainingLines.length) {
     throw new Error('Aucune quantité restante à traiter');
   }
 
@@ -827,20 +902,23 @@ async function advanceDoc(type, id) {
   const nums = { ...jsonValue(doc.numbers_json, {}) };
   nums[key] = nums[key] || await nextNumber(prefix);
 
-  const totalQty = docQty(oldLines);
+  const totalQty = docQty(normalizeLines(jsonValue(doc.lines_json, [])));
   let newDone = Number(doc.qty_done || 0);
   let status = 'open';
+  let processed = processedLines(doc);
 
   if (isSales && next === 'livraison') {
-    const linesToMove = remaining < totalQty ? scaleLinesToQty(oldLines, remaining) : oldLines;
+    const linesToMove = remainingLines.map(l => ({ ...l, qte: Number(l.remainingQty || 0) }));
     await updateStock(linesToMove, -1, 'Livraison vente ' + nums[key], { docType: next, docNumber: nums[key] });
-    newDone = totalQty;
-    status = 'closed';
+    processed = mergeProcessedLines(doc, linesToMove);
+    newDone = processedTotal(processed);
+    status = newDone >= totalQty ? 'closed' : 'partial';
   } else if (!isSales && next === 'reception') {
-    const linesToMove = remaining < totalQty ? scaleLinesToQty(oldLines, remaining) : oldLines;
+    const linesToMove = remainingLines.map(l => ({ ...l, qte: Number(l.remainingQty || 0) }));
     await updateStock(linesToMove, 1, 'Réception achat ' + nums[key], { docType: next, docNumber: nums[key] });
-    newDone = totalQty;
-    status = 'closed';
+    processed = mergeProcessedLines(doc, linesToMove);
+    newDone = processedTotal(processed);
+    status = newDone >= totalQty ? 'closed' : 'partial';
   } else if (next === 'facture') {
     newDone = totalQty;
     status = 'closed';
@@ -851,12 +929,14 @@ async function advanceDoc(type, id) {
     numbers_json: nums,
     delivered: next === 'livraison' ? true : doc.delivered,
     qty_done: newDone,
+    processed_lines_json: processed,
     doc_status: status
   } : {
     stage: next,
     numbers_json: nums,
     received: next === 'reception' ? true : doc.received,
     qty_done: newDone,
+    processed_lines_json: processed,
     doc_status: status
   };
 
@@ -917,12 +997,7 @@ async function partialDoc(type, id, body) {
   if (isSales && !['commande', 'livraison'].includes(doc.stage)) throw new Error('La livraison partielle se fait depuis une commande');
   if (!isSales && !['commande', 'reception'].includes(doc.stage)) throw new Error('La réception partielle se fait depuis une commande achat');
 
-  const remaining = docRemainingQty(doc);
-  const reqQty = Number(body.qte || 0);
-  if (reqQty <= 0) throw new Error('Quantité invalide');
-  if (remaining > 0 && reqQty > remaining) throw new Error('Quantité supérieure au reste');
-
-  const lines = scaleLinesToQty(jsonValue(doc.lines_json, []), reqQty);
+  const lines = selectedPartialLines(doc, body.lignes || []);
   const vatRate = Number(doc.vat_rate || await getVatRate());
   const t = computeTotals(lines, vatRate, isSales);
   const stage = isSales ? 'livraison' : 'reception';
@@ -933,8 +1008,9 @@ async function partialDoc(type, id, body) {
   await updateStock(lines, isSales ? -1 : 1, (isSales ? 'Livraison partielle ' : 'Réception partielle ') + number, { docType: stage, docNumber: number });
 
   const session = getStoredSession();
-  const originalTotal = docQty(jsonValue(doc.lines_json, []));
-  const newDone = Number(doc.qty_done || 0) + docQty(lines);
+  const originalTotal = docQty(normalizeLines(jsonValue(doc.lines_json, [])));
+  const processed = mergeProcessedLines(doc, lines);
+  const newDone = processedTotal(processed);
   const parentStatus = newDone >= originalTotal ? 'closed' : 'partial';
 
   const payload = isSales ? {
@@ -951,6 +1027,7 @@ async function partialDoc(type, id, body) {
     total_ttc: t.totalTTC,
     delivered: true,
     qty_done: docQty(lines),
+    processed_lines_json: mergeProcessedLines({ processed_lines_json: {} }, lines),
     doc_status: 'closed',
     created_by: session?.user?.id || null,
     base_doc_id: doc.id,
@@ -969,6 +1046,7 @@ async function partialDoc(type, id, body) {
     total_ttc: t.totalTTC,
     received: true,
     qty_done: docQty(lines),
+    processed_lines_json: mergeProcessedLines({ processed_lines_json: {} }, lines),
     doc_status: 'closed',
     created_by: session?.user?.id || null,
     base_doc_id: doc.id,
@@ -980,13 +1058,14 @@ async function partialDoc(type, id, body) {
 
   const { error: e3 } = await supabase.from(type).update({
     qty_done: newDone,
+    processed_lines_json: processed,
     doc_status: parentStatus,
     delivered: isSales ? newDone >= originalTotal : doc.delivered,
     received: !isSales ? newDone >= originalTotal : doc.received
   }).eq('id', id);
   if (e3) throw new Error(e3.message);
 
-  await auditLog(isSales ? 'Ventes' : 'Achats', isSales ? 'PARTIAL_DELIVERY' : 'PARTIAL_RECEIPT', number, 'Quantité traitée : ' + docQty(lines));
+  await auditLog(isSales ? 'Ventes' : 'Achats', isSales ? 'PARTIAL_DELIVERY' : 'PARTIAL_RECEIPT', number, 'Traitement partiel par produit : ' + docQty(lines));
 }
 
 async function loadPayments() {
@@ -1560,7 +1639,7 @@ function Docs({ L, type }) {
                   <button onClick={() => advance(d.id)} className="btn bg-slate-800 text-white">{L('advance')}</button>
                   <button onClick={() => setPreview(d)} className="btn bg-white border">{L('preview')}</button>
                   {paymentButtonVisible(d) ? <button onClick={() => setPay({ ...d, date: today(), mode: 'Espèces', montant: d.reste || d.totalTTC, cashRegister: '', receiptNo: '', chequeNo: '', bank: '', dueDate: '', paymentStatus: 'En portefeuille', transferRef: '', valueDate: '', terminal: '', transactionNo: '', billNo: '', note: '' })} className="btn bg-emerald-600 text-white">{L('pay')}</button> : null}
-                  {d.stage !== 'facture' && docRemainingQty(d) > 0 ? <button onClick={() => setPartial({ doc: d, qte: docRemainingQty(d) || 1 })} className="btn bg-white border">{isSales ? L('partialDelivery') : L('partialReceipt')}</button> : null}
+                  {d.stage !== 'facture' && docRemainingQty(d) > 0 ? <button onClick={() => setPartial({ doc: d, date: today(), lignes: docRemainingLines(d).map(l => ({ ...l, qteToProcess: Number(l.remainingQty || 0) })) })} className="btn bg-white border">{isSales ? L('partialDelivery') : L('partialReceipt')}</button> : null}
                   <button onClick={() => setForm({ id: d.id, start: d.stage, date: d.date, partyId: isSales ? d.client_id : d.supplier_id, lignes: (d.lignes || []).map(l => ({ produitId: l.produitId, qte: l.qte, prixUnit: l.prixUnit })) })} className="btn bg-white border">{L('edit')}</button>
                   <button onClick={() => remove(d.id)} className="btn bg-red-600 text-white">{L('del')}</button>
                 </td>
@@ -1839,91 +1918,70 @@ function PaymentModal({ L, isSales, pay, setPay, save, close }) {
 }
 
 function PartialModal({ L, isSales, partial, setPartial, save, close }) {
+  const lines = partial.lignes || [];
+
+  function updateLine(index, value) {
+    const next = [...lines];
+    const max = Number(next[index].remainingQty || 0);
+    let qty = Number(value || 0);
+    if (qty < 0) qty = 0;
+    if (qty > max) qty = max;
+    next[index] = { ...next[index], qteToProcess: qty };
+    setPartial({ ...partial, lignes: next });
+  }
+
+  const totalToProcess = lines.reduce((s, l) => s + Number(l.qteToProcess || 0), 0);
+
   return (
-    <Modal title={isSales ? L('partialDelivery') : L('partialReceipt')} onClose={close}>
-      <p className="text-sm text-slate-500 mb-3">{L('base')} : #{partial.doc.id}</p>
-      <label className="text-xs text-slate-500">{L('quantity')}
-        <input type="number" className="input mt-1" value={partial.qte} onChange={e => setPartial({ ...partial, qte: e.target.value })} />
+    <Modal title={isSales ? L('partialDelivery') : L('partialReceipt')} onClose={close} wide>
+      <label className="text-xs text-slate-500">{L('date')}
+        <input className="input mt-1 mb-3" type="date" value={partial.date || today()} onChange={e => setPartial({ ...partial, date: e.target.value })} />
       </label>
-      <button onClick={save} className="btn bg-amber-500 mt-4">{L('save')}</button>
-    </Modal>
-  );
-}
 
-function Payments({ L }) {
-  const [rows, setRows] = useState([]);
-  const [tab, setTab] = useState('all');
-  const [err, setErr] = useState('');
-  const session = getStoredSession();
-
-  async function load() {
-    try {
-      const rows = await loadPayments();
-      setRows(rows);
-    } catch (e) { setErr(e.message); }
-  }
-
-  async function cancel(p) {
-    const reason = prompt('Motif annulation règlement ?', 'Erreur de saisie');
-    if (reason === null) return;
-    try {
-      await cancelPayment(p.sourceTable, p.docId, p.id, reason);
-      await load();
-    } catch (e) {
-      alert(e.message);
-    }
-  }
-
-  useEffect(() => { load(); }, []);
-
-  if (err) return <ErrorBox msg={err} />;
-
-  const filtered = tab === 'all' ? rows : rows.filter(x => x.type === tab);
-
-  return (
-    <>
-      <Header title={L('payments')}><button onClick={load} className="btn bg-white border">↻</button></Header>
-      <div className="flex gap-2 mb-4">
-        <button onClick={() => setTab('all')} className={'btn ' + (tab === 'all' ? 'bg-slate-800 text-white' : 'bg-white border')}>{L('all')}</button>
-        <button onClick={() => setTab('encaissement')} className={'btn ' + (tab === 'encaissement' ? 'bg-emerald-600 text-white' : 'bg-white border')}>{L('cashIn')}</button>
-        <button onClick={() => setTab('decaissement')} className={'btn ' + (tab === 'decaissement' ? 'bg-red-600 text-white' : 'bg-white border')}>{L('cashOut')}</button>
+      <div className="card overflow-auto mb-4">
+        <table className="table w-full">
+          <thead>
+            <tr>
+              <th>{L('ref')}</th>
+              <th>{L('product')}</th>
+              <th>{L('orderedQty')}</th>
+              <th>{L('alreadyProcessed')}</th>
+              <th>{L('remainingQty')}</th>
+              <th>{L('qtyToProcess')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {lines.map((l, i) => (
+              <tr key={lineKey(l) || i}>
+                <td className="font-mono text-xs">{l.ref || '-'}</td>
+                <td className="font-semibold">{l.nom || '-'}</td>
+                <td>{fmt(l.qte)}</td>
+                <td>{fmt(l.processedQty || 0)}</td>
+                <td className="font-bold">{fmt(l.remainingQty || 0)}</td>
+                <td>
+                  <input
+                    className="input max-w-xs"
+                    type="number"
+                    min="0"
+                    max={Number(l.remainingQty || 0)}
+                    step="0.01"
+                    value={l.qteToProcess ?? 0}
+                    onChange={e => updateLine(i, e.target.value)}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
-      <Table>
-        <thead>
-          <tr>
-            <th>{L('date')}</th><th>Type</th><th>Document</th><th>Tiers</th><th>Mode</th><th>Détails</th><th>Montant</th><th>Statut</th><th>{L('actions')}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filtered.map((p, i) => (
-            <tr key={i} className={p.canceled ? 'opacity-60' : ''}>
-              <td>{p.date}</td>
-              <td><Badge tone={p.type === 'encaissement' ? 'green' : 'red'}>{p.type === 'encaissement' ? L('cashIn') : L('cashOut')}</Badge></td>
-              <td>{p.docNumber || '#' + p.docId}</td>
-              <td>{p.tiers}</td>
-              <td>{p.mode}</td>
-              <td className="text-xs text-slate-500">
-                {p.chequeNo ? 'Chèque: ' + p.chequeNo + ' · ' : ''}
-                {p.billNo ? 'Effet: ' + p.billNo + ' · ' : ''}
-                {p.bank ? p.bank + ' · ' : ''}
-                {p.transferRef ? 'Vir: ' + p.transferRef + ' · ' : ''}
-                {p.transactionNo ? 'Tx: ' + p.transactionNo + ' · ' : ''}
-                {p.paymentStatus || p.receiptNo || p.cashRegister || p.note || '-'}
-                {p.canceled ? <div className="text-red-600">{L('canceled')} · {p.cancelReason || ''}</div> : null}
-              </td>
-              <td className="font-bold">{dh(p.montant)}</td>
-              <td>{p.canceled ? <Badge tone="red">{L('canceled')}</Badge> : <Badge tone="green">OK</Badge>}</td>
-              <td>
-                {!p.canceled && hasPerm(session, 'payments.cancel')
-                  ? <button onClick={() => cancel(p)} className="btn bg-red-600 text-white">{L('cancelPayment')}</button>
-                  : '-'}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-    </>
+      <div className="flex justify-between items-center">
+        <div className="text-sm text-slate-500">
+          {L('qtyToProcess')} : <b>{fmt(totalToProcess)}</b>
+        </div>
+        <button disabled={totalToProcess <= 0} onClick={save} className="btn bg-amber-500 disabled:opacity-50">{L('save')}</button>
+      </div>
+    </Modal>
   );
 }
 
