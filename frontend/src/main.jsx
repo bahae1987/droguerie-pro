@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-console.log('DROGUERIEPRO V32 DOCS_AR_STOCK_FIX OK');
+console.log('DROGUERIEPRO V33 MOBILE_NATIVE_PORTAL OK');
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -29,7 +29,7 @@ const TXT = {
     deliveries: 'Livraisons', receipts: 'Réceptions', invoices: 'Factures', remaining: 'Reste',
     paid: 'Réglée', unpaid: 'Non réglée', partial: 'Partielle', cashIn: 'Encaissements',
     cashOut: 'Décaissements', vat: 'TVA', theme: 'Thème', company: 'Société', address: 'Adresse', phone: 'Téléphone', ice: 'ICE', cashRegister: 'Caisse', receiptNo: 'N° reçu', chequeNo: 'N° chèque', bank: 'Banque', dueDate: 'Échéance', paymentStatus: 'Statut', transferRef: 'Réf. virement', valueDate: 'Date valeur', terminal: 'TPE', transactionNo: 'N° transaction', billNo: 'N° effet', note: 'Observation', quantity: 'Quantité', date: 'Date', customer: 'Client',
-    supplier: 'Fournisseur', product: 'Produit', base: 'Base', remainingQty: 'Qté restante', orderedQty: 'Qté commandée', deliveredQty: 'Qté livrée', receivedQty: 'Qté reçue', qtyToProcess: 'Qté à traiter', alreadyProcessed: 'Déjà traité', includeLine: 'Inclure', removeLine: 'Retirer ligne', restoreLine: 'Restaurer ligne', open: 'Ouvert', closed: 'Clôturé', preview: 'Aperçu', print: 'Imprimer', unitPrice: 'PU', totalHT: 'Total HT', totalVAT: 'TVA', totalTTC: 'Total TTC', cancelPayment: 'Annuler règlement', canceled: 'Annulé', subtotal: 'Sous-total', signature: 'Signature', preparedBy: 'Préparé par', printDate: 'Date impression', legalNote: 'Document généré par DrogueriePro', arabicName: 'Nom arabe', docType: 'Type document', purchasePrice: 'Prix achat', salePrice: 'Prix vente', margin: 'Marge', movement: 'Mouvement', object: 'Objet', detail: 'Détail', actor: 'Utilisateur', createdBy: 'Créé par', baseDocNo: 'N° doc. base', location: 'Emplacement', assignedTo: 'Affecté à', clientOwner: 'Compte', stockTransfer: 'Transfert stock', fromBranch: 'Droguerie source', toBranch: 'Droguerie destination', stockValue: 'Valeur stock', lowStock: 'Stock critique', stockByBranch: 'Stock par droguerie', adjustment: 'Ajustement', stockIn: 'Entrée stock', stockOut: 'Sortie stock', reason: 'Motif', category: 'Catégorie', ref: 'Référence', name: 'Nom', role: 'Profil', payment: 'Paiement', document: 'Document', form: 'Formulaire', select: 'Sélectionner', productRef: 'Réf. produit', unit: 'Unité', minStock: 'Stock min', threshold: 'Seuil', stockAdjustIn: 'Entrée stock', stockAdjustOut: 'Sortie stock', operationType: 'Type opération', unitPurchasePrice: 'Prix achat unitaire', unitSalePrice: 'Prix vente unitaire', customerForm: 'Fiche client', supplierForm: 'Fiche fournisseur', productForm: 'Fiche produit', documentLines: 'Lignes document', completed: 'Terminé', notAvailable: 'Non applicable'
+    supplier: 'Fournisseur', product: 'Produit', base: 'Base', remainingQty: 'Qté restante', orderedQty: 'Qté commandée', deliveredQty: 'Qté livrée', receivedQty: 'Qté reçue', qtyToProcess: 'Qté à traiter', alreadyProcessed: 'Déjà traité', includeLine: 'Inclure', removeLine: 'Retirer ligne', restoreLine: 'Restaurer ligne', open: 'Ouvert', closed: 'Clôturé', preview: 'Aperçu', print: 'Imprimer', unitPrice: 'PU', totalHT: 'Total HT', totalVAT: 'TVA', totalTTC: 'Total TTC', cancelPayment: 'Annuler règlement', canceled: 'Annulé', subtotal: 'Sous-total', signature: 'Signature', preparedBy: 'Préparé par', printDate: 'Date impression', legalNote: 'Document généré par DrogueriePro', arabicName: 'Nom arabe', docType: 'Type document', purchasePrice: 'Prix achat', salePrice: 'Prix vente', margin: 'Marge', movement: 'Mouvement', object: 'Objet', detail: 'Détail', actor: 'Utilisateur', createdBy: 'Créé par', baseDocNo: 'N° doc. base', location: 'Emplacement', assignedTo: 'Affecté à', clientOwner: 'Compte', stockTransfer: 'Transfert stock', fromBranch: 'Droguerie source', toBranch: 'Droguerie destination', stockValue: 'Valeur stock', lowStock: 'Stock critique', stockByBranch: 'Stock par droguerie', adjustment: 'Ajustement', stockIn: 'Entrée stock', stockOut: 'Sortie stock', reason: 'Motif', category: 'Catégorie', ref: 'Référence', name: 'Nom', role: 'Profil', payment: 'Paiement', document: 'Document', form: 'Formulaire', select: 'Sélectionner', productRef: 'Réf. produit', unit: 'Unité', minStock: 'Stock min', threshold: 'Seuil', stockAdjustIn: 'Entrée stock', stockAdjustOut: 'Sortie stock', operationType: 'Type opération', unitPurchasePrice: 'Prix achat unitaire', unitSalePrice: 'Prix vente unitaire', customerForm: 'Fiche client', supplierForm: 'Fiche fournisseur', productForm: 'Fiche produit', documentLines: 'Lignes document', completed: 'Terminé', notAvailable: 'Non applicable', mobileApp: 'Application mobile', androidApp: 'Application Android', iosApp: 'Application iOS', downloadAndroid: 'Télécharger APK Android', downloadIos: 'Télécharger iOS', installGuide: 'Guide installation', mobileAdminPortal: 'Portail mobile administrateur', appStoreNote: 'iOS nécessite App Store / TestFlight avec compte Apple Developer', androidNote: 'Android peut être installé via APK interne ou publié sur Play Store'
   },
   ar: {
     login: 'تسجيل الدخول', username: 'المستخدم', password: 'كلمة المرور', connect: 'دخول',
@@ -42,7 +42,7 @@ const TXT = {
     deliveries: 'التسليمات', receipts: 'الاستلامات', invoices: 'الفواتير', remaining: 'الباقي',
     paid: 'مؤداة', unpaid: 'غير مؤداة', partial: 'جزئية', cashIn: 'المداخيل',
     cashOut: 'المصاريف', vat: 'الضريبة', theme: 'المظهر', company: 'الشركة', address: 'العنوان', phone: 'الهاتف', ice: 'ICE', cashRegister: 'الصندوق', receiptNo: 'رقم الوصل', chequeNo: 'رقم الشيك', bank: 'البنك', dueDate: 'الاستحقاق', paymentStatus: 'الحالة', transferRef: 'مرجع التحويل', valueDate: 'تاريخ القيمة', terminal: 'جهاز الأداء', transactionNo: 'رقم العملية', billNo: 'رقم الكمبيالة', note: 'ملاحظة', quantity: 'الكمية', date: 'التاريخ', customer: 'الزبون',
-    supplier: 'المورد', product: 'المنتج', base: 'الأصل', remainingQty: 'الكمية المتبقية', orderedQty: 'الكمية المطلوبة', deliveredQty: 'الكمية المسلمة', receivedQty: 'الكمية المستلمة', qtyToProcess: 'الكمية المراد معالجتها', alreadyProcessed: 'تمت معالجته', includeLine: 'تضمين', removeLine: 'حذف السطر', restoreLine: 'استرجاع السطر', open: 'مفتوح', closed: 'مغلق', preview: 'معاينة', print: 'طباعة', unitPrice: 'ثمن الوحدة', totalHT: 'المجموع بدون الضريبة', totalVAT: 'الضريبة', totalTTC: 'المجموع مع الضريبة', cancelPayment: 'إلغاء الأداء', canceled: 'ملغى', subtotal: 'المجموع الجزئي', signature: 'التوقيع', preparedBy: 'أنجز من طرف', printDate: 'تاريخ الطباعة', legalNote: 'وثيقة تم إنشاؤها بواسطة DrogueriePro', arabicName: 'الاسم بالعربية', docType: 'نوع الوثيقة', purchasePrice: 'ثمن الشراء', salePrice: 'ثمن البيع', margin: 'الهامش', movement: 'الحركة', object: 'العنصر', detail: 'التفاصيل', actor: 'المستخدم', createdBy: 'أنشئ من طرف', baseDocNo: 'رقم الوثيقة الأصلية', location: 'الموقع', assignedTo: 'مكلف به', clientOwner: 'الحساب', stockTransfer: 'تحويل المخزون', fromBranch: 'الدروكري المصدر', toBranch: 'الدروكري الوجهة', stockValue: 'قيمة المخزون', lowStock: 'مخزون حرج', stockByBranch: 'المخزون حسب الدروكري', adjustment: 'تعديل المخزون', stockIn: 'دخول المخزون', stockOut: 'خروج المخزون', reason: 'السبب', category: 'الفئة', ref: 'المرجع', name: 'الاسم', role: 'الدور', payment: 'الأداء', document: 'الوثيقة', form: 'النموذج', select: 'اختيار', productRef: 'مرجع المنتج', unit: 'الوحدة', minStock: 'الحد الأدنى للمخزون', threshold: 'الحد الأدنى', stockAdjustIn: 'إدخال مخزون', stockAdjustOut: 'إخراج مخزون', operationType: 'نوع العملية', unitPurchasePrice: 'ثمن الشراء للوحدة', unitSalePrice: 'ثمن البيع للوحدة', customerForm: 'بطاقة الزبون', supplierForm: 'بطاقة المورد', productForm: 'بطاقة المنتج', documentLines: 'سطور الوثيقة', completed: 'منتهية', notAvailable: 'غير مطبق'
+    supplier: 'المورد', product: 'المنتج', base: 'الأصل', remainingQty: 'الكمية المتبقية', orderedQty: 'الكمية المطلوبة', deliveredQty: 'الكمية المسلمة', receivedQty: 'الكمية المستلمة', qtyToProcess: 'الكمية المراد معالجتها', alreadyProcessed: 'تمت معالجته', includeLine: 'تضمين', removeLine: 'حذف السطر', restoreLine: 'استرجاع السطر', open: 'مفتوح', closed: 'مغلق', preview: 'معاينة', print: 'طباعة', unitPrice: 'ثمن الوحدة', totalHT: 'المجموع بدون الضريبة', totalVAT: 'الضريبة', totalTTC: 'المجموع مع الضريبة', cancelPayment: 'إلغاء الأداء', canceled: 'ملغى', subtotal: 'المجموع الجزئي', signature: 'التوقيع', preparedBy: 'أنجز من طرف', printDate: 'تاريخ الطباعة', legalNote: 'وثيقة تم إنشاؤها بواسطة DrogueriePro', arabicName: 'الاسم بالعربية', docType: 'نوع الوثيقة', purchasePrice: 'ثمن الشراء', salePrice: 'ثمن البيع', margin: 'الهامش', movement: 'الحركة', object: 'العنصر', detail: 'التفاصيل', actor: 'المستخدم', createdBy: 'أنشئ من طرف', baseDocNo: 'رقم الوثيقة الأصلية', location: 'الموقع', assignedTo: 'مكلف به', clientOwner: 'الحساب', stockTransfer: 'تحويل المخزون', fromBranch: 'الدروكري المصدر', toBranch: 'الدروكري الوجهة', stockValue: 'قيمة المخزون', lowStock: 'مخزون حرج', stockByBranch: 'المخزون حسب الدروكري', adjustment: 'تعديل المخزون', stockIn: 'دخول المخزون', stockOut: 'خروج المخزون', reason: 'السبب', category: 'الفئة', ref: 'المرجع', name: 'الاسم', role: 'الدور', payment: 'الأداء', document: 'الوثيقة', form: 'النموذج', select: 'اختيار', productRef: 'مرجع المنتج', unit: 'الوحدة', minStock: 'الحد الأدنى للمخزون', threshold: 'الحد الأدنى', stockAdjustIn: 'إدخال مخزون', stockAdjustOut: 'إخراج مخزون', operationType: 'نوع العملية', unitPurchasePrice: 'ثمن الشراء للوحدة', unitSalePrice: 'ثمن البيع للوحدة', customerForm: 'بطاقة الزبون', supplierForm: 'بطاقة المورد', productForm: 'بطاقة المنتج', documentLines: 'سطور الوثيقة', completed: 'منتهية', notAvailable: 'غير مطبق', mobileApp: 'تطبيق الهاتف', androidApp: 'تطبيق أندرويد', iosApp: 'تطبيق iOS', downloadAndroid: 'تحميل APK أندرويد', downloadIos: 'تحميل iOS', installGuide: 'دليل التثبيت', mobileAdminPortal: 'بوابة إدارة التطبيق المحمول', appStoreNote: 'يتطلب iOS النشر عبر App Store أو TestFlight وحساب Apple Developer', androidNote: 'يمكن تثبيت أندرويد عبر APK داخلي أو نشره على Play Store'
   }
 };
 
@@ -52,7 +52,7 @@ const PERMS = [
   'suppliers.read', 'suppliers.write', 'suppliers.delete',
   'sales.read', 'sales.write', 'sales.delete',
   'purchases.read', 'purchases.write', 'purchases.delete',
-  'users.read', 'users.write', 'stock.read', 'stock.adjust', 'stock.transfer', 'audit.read', 'payments.read', 'payments.cancel', 'sales.pay', 'purchases.pay'
+  'users.read', 'users.write', 'stock.read', 'stock.adjust', 'stock.transfer', 'audit.read', 'payments.read', 'payments.cancel', 'mobile.manage', 'sales.pay', 'purchases.pay'
 ];
 
 
@@ -1506,6 +1506,7 @@ function Layout({ L, lang, toggleLang, session, setSession }) {
     ['settings', L('settings'), 'settings.manage'],
     ['permissions', L('permissions'), 'permissions.manage'],
     ['branches', L('branches'), 'branches.manage'],
+    ['mobileApp', L('mobileApp'), 'mobile.manage'],
     ['clients', L('clients'), 'clients.read'],
     ['suppliers', L('suppliers'), 'suppliers.read'],
     ['users', L('users'), 'users.read']
@@ -1555,6 +1556,7 @@ function Layout({ L, lang, toggleLang, session, setSession }) {
           {page === 'settings' ? <Settings L={L} /> : null}
           {page === 'permissions' ? <Permissions L={L} /> : null}
           {page === 'branches' ? <Branches L={L} /> : null}
+          {page === 'mobileApp' ? <MobileAppAdmin L={L} /> : null}
           {page === 'clients' ? <Parties L={L} type="clients" /> : null}
           {page === 'suppliers' ? <Parties L={L} type="suppliers" /> : null}
           {page === 'users' ? <Users L={L} /> : null}
@@ -3081,6 +3083,77 @@ function AuditLog({ L }) {
     </>
   );
 }
+
+
+function MobileAppAdmin({ L }) {
+  const baseUrl = window.location.origin;
+  const links = [
+    {
+      title: L('androidApp'),
+      desc: L('androidNote'),
+      href: '/mobile/drogueriepro-android.apk',
+      action: L('downloadAndroid'),
+      badge: 'APK'
+    },
+    {
+      title: L('iosApp'),
+      desc: L('appStoreNote'),
+      href: '/mobile/drogueriepro-ios-install.html',
+      action: L('downloadIos'),
+      badge: 'iOS'
+    },
+    {
+      title: L('installGuide'),
+      desc: 'Guide rapide pour installer l’application mobile sur Android et iPhone.',
+      href: '/mobile/README_MOBILE.html',
+      action: L('installGuide'),
+      badge: 'Guide'
+    }
+  ];
+
+  return (
+    <>
+      <Header title={L('mobileAdminPortal')}>
+        <a className="btn bg-white border" href={baseUrl + '/manifest.webmanifest'} target="_blank" rel="noreferrer">Manifest</a>
+      </Header>
+
+      <div className="grid md:grid-cols-3 gap-4 mb-5">
+        {links.map(x => (
+          <div key={x.title} className="card p-5 mobile-app-card">
+            <div className="flex justify-between items-start gap-3">
+              <div>
+                <div className="text-xs text-slate-400">{x.badge}</div>
+                <h2 className="text-lg font-black">{x.title}</h2>
+              </div>
+              <Badge tone={x.badge === 'APK' ? 'green' : x.badge === 'iOS' ? 'blue' : 'amber'}>{x.badge}</Badge>
+            </div>
+            <p className="text-sm text-slate-500 mt-3 min-h-[64px]">{x.desc}</p>
+            <a className="btn bg-amber-500 w-full mt-4" href={x.href} download>{x.action}</a>
+          </div>
+        ))}
+      </div>
+
+      <div className="card p-5">
+        <h2 className="font-bold mb-2">Publication native</h2>
+        <p className="text-sm text-slate-600">
+          Le portail fournit les liens de téléchargement. Pour générer les fichiers réels :
+          Android = APK/AAB via Android Studio. iOS = Archive Xcode puis TestFlight/App Store.
+        </p>
+        <div className="grid md:grid-cols-2 gap-3 mt-4">
+          <div className="bg-slate-50 rounded-xl p-4">
+            <b>Android</b>
+            <p className="text-xs text-slate-500 mt-1">Générer un APK signé et le placer dans <span className="font-mono">frontend/public/mobile/drogueriepro-android.apk</span>.</p>
+          </div>
+          <div className="bg-slate-50 rounded-xl p-4">
+            <b>iOS</b>
+            <p className="text-xs text-slate-500 mt-1">Publier via TestFlight/App Store puis mettre le lien dans <span className="font-mono">drogueriepro-ios-install.html</span>.</p>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
 
 function Settings({ L }) {
   const [settings, setSettings] = useState(null);
