@@ -450,3 +450,23 @@ body { margin: 0; background: #f8fafc; }
   font-size: 12px;
   font-weight: 700;
 }
+
+/* V32 Arabic professional + docs/stock fixes */
+.rtl .doc-header,
+.rtl .doc-info-grid,
+.rtl .doc-bottom,
+.rtl .doc-footer {
+  direction: rtl;
+}
+.rtl input,
+.rtl select,
+.rtl textarea {
+  text-align: right;
+}
+.rtl .font-mono {
+  direction: ltr;
+  unicode-bidi: embed;
+}
+.docs-pro-payment-hidden {
+  color: #94a3b8;
+}

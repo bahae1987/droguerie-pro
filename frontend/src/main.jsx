@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-console.log('DROGUERIEPRO V31 STOCK AUTH CLIENTS PRO OK');
+console.log('DROGUERIEPRO V32 DOCS_AR_STOCK_FIX OK');
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -29,7 +29,7 @@ const TXT = {
     deliveries: 'Livraisons', receipts: 'Réceptions', invoices: 'Factures', remaining: 'Reste',
     paid: 'Réglée', unpaid: 'Non réglée', partial: 'Partielle', cashIn: 'Encaissements',
     cashOut: 'Décaissements', vat: 'TVA', theme: 'Thème', company: 'Société', address: 'Adresse', phone: 'Téléphone', ice: 'ICE', cashRegister: 'Caisse', receiptNo: 'N° reçu', chequeNo: 'N° chèque', bank: 'Banque', dueDate: 'Échéance', paymentStatus: 'Statut', transferRef: 'Réf. virement', valueDate: 'Date valeur', terminal: 'TPE', transactionNo: 'N° transaction', billNo: 'N° effet', note: 'Observation', quantity: 'Quantité', date: 'Date', customer: 'Client',
-    supplier: 'Fournisseur', product: 'Produit', base: 'Base', remainingQty: 'Qté restante', orderedQty: 'Qté commandée', deliveredQty: 'Qté livrée', receivedQty: 'Qté reçue', qtyToProcess: 'Qté à traiter', alreadyProcessed: 'Déjà traité', includeLine: 'Inclure', removeLine: 'Retirer ligne', restoreLine: 'Restaurer ligne', open: 'Ouvert', closed: 'Clôturé', preview: 'Aperçu', print: 'Imprimer', unitPrice: 'PU', totalHT: 'Total HT', totalVAT: 'TVA', totalTTC: 'Total TTC', cancelPayment: 'Annuler règlement', canceled: 'Annulé', subtotal: 'Sous-total', signature: 'Signature', preparedBy: 'Préparé par', printDate: 'Date impression', legalNote: 'Document généré par DrogueriePro', arabicName: 'Nom arabe', docType: 'Type document', purchasePrice: 'Prix achat', salePrice: 'Prix vente', margin: 'Marge', movement: 'Mouvement', object: 'Objet', detail: 'Détail', actor: 'Utilisateur', createdBy: 'Créé par', baseDocNo: 'N° doc. base', location: 'Emplacement', assignedTo: 'Affecté à', clientOwner: 'Compte', stockTransfer: 'Transfert stock', fromBranch: 'Droguerie source', toBranch: 'Droguerie destination', stockValue: 'Valeur stock', lowStock: 'Stock critique', stockByBranch: 'Stock par droguerie', adjustment: 'Ajustement', stockIn: 'Entrée stock', stockOut: 'Sortie stock', reason: 'Motif', category: 'Catégorie', ref: 'Référence', name: 'Nom', role: 'Profil'
+    supplier: 'Fournisseur', product: 'Produit', base: 'Base', remainingQty: 'Qté restante', orderedQty: 'Qté commandée', deliveredQty: 'Qté livrée', receivedQty: 'Qté reçue', qtyToProcess: 'Qté à traiter', alreadyProcessed: 'Déjà traité', includeLine: 'Inclure', removeLine: 'Retirer ligne', restoreLine: 'Restaurer ligne', open: 'Ouvert', closed: 'Clôturé', preview: 'Aperçu', print: 'Imprimer', unitPrice: 'PU', totalHT: 'Total HT', totalVAT: 'TVA', totalTTC: 'Total TTC', cancelPayment: 'Annuler règlement', canceled: 'Annulé', subtotal: 'Sous-total', signature: 'Signature', preparedBy: 'Préparé par', printDate: 'Date impression', legalNote: 'Document généré par DrogueriePro', arabicName: 'Nom arabe', docType: 'Type document', purchasePrice: 'Prix achat', salePrice: 'Prix vente', margin: 'Marge', movement: 'Mouvement', object: 'Objet', detail: 'Détail', actor: 'Utilisateur', createdBy: 'Créé par', baseDocNo: 'N° doc. base', location: 'Emplacement', assignedTo: 'Affecté à', clientOwner: 'Compte', stockTransfer: 'Transfert stock', fromBranch: 'Droguerie source', toBranch: 'Droguerie destination', stockValue: 'Valeur stock', lowStock: 'Stock critique', stockByBranch: 'Stock par droguerie', adjustment: 'Ajustement', stockIn: 'Entrée stock', stockOut: 'Sortie stock', reason: 'Motif', category: 'Catégorie', ref: 'Référence', name: 'Nom', role: 'Profil', payment: 'Paiement', document: 'Document', form: 'Formulaire', select: 'Sélectionner', productRef: 'Réf. produit', unit: 'Unité', minStock: 'Stock min', threshold: 'Seuil', stockAdjustIn: 'Entrée stock', stockAdjustOut: 'Sortie stock', operationType: 'Type opération', unitPurchasePrice: 'Prix achat unitaire', unitSalePrice: 'Prix vente unitaire', customerForm: 'Fiche client', supplierForm: 'Fiche fournisseur', productForm: 'Fiche produit', documentLines: 'Lignes document', completed: 'Terminé', notAvailable: 'Non applicable'
   },
   ar: {
     login: 'تسجيل الدخول', username: 'المستخدم', password: 'كلمة المرور', connect: 'دخول',
@@ -42,7 +42,7 @@ const TXT = {
     deliveries: 'التسليمات', receipts: 'الاستلامات', invoices: 'الفواتير', remaining: 'الباقي',
     paid: 'مؤداة', unpaid: 'غير مؤداة', partial: 'جزئية', cashIn: 'المداخيل',
     cashOut: 'المصاريف', vat: 'الضريبة', theme: 'المظهر', company: 'الشركة', address: 'العنوان', phone: 'الهاتف', ice: 'ICE', cashRegister: 'الصندوق', receiptNo: 'رقم الوصل', chequeNo: 'رقم الشيك', bank: 'البنك', dueDate: 'الاستحقاق', paymentStatus: 'الحالة', transferRef: 'مرجع التحويل', valueDate: 'تاريخ القيمة', terminal: 'جهاز الأداء', transactionNo: 'رقم العملية', billNo: 'رقم الكمبيالة', note: 'ملاحظة', quantity: 'الكمية', date: 'التاريخ', customer: 'الزبون',
-    supplier: 'المورد', product: 'المنتج', base: 'الأصل', remainingQty: 'الكمية المتبقية', orderedQty: 'الكمية المطلوبة', deliveredQty: 'الكمية المسلمة', receivedQty: 'الكمية المستلمة', qtyToProcess: 'الكمية المراد معالجتها', alreadyProcessed: 'تمت معالجته', includeLine: 'تضمين', removeLine: 'حذف السطر', restoreLine: 'استرجاع السطر', open: 'مفتوح', closed: 'مغلق', preview: 'معاينة', print: 'طباعة', unitPrice: 'ثمن الوحدة', totalHT: 'المجموع بدون الضريبة', totalVAT: 'الضريبة', totalTTC: 'المجموع مع الضريبة', cancelPayment: 'إلغاء الأداء', canceled: 'ملغى', subtotal: 'المجموع الجزئي', signature: 'التوقيع', preparedBy: 'أنجز من طرف', printDate: 'تاريخ الطباعة', legalNote: 'وثيقة تم إنشاؤها بواسطة DrogueriePro', arabicName: 'الاسم بالعربية', docType: 'نوع الوثيقة', purchasePrice: 'ثمن الشراء', salePrice: 'ثمن البيع', margin: 'الهامش', movement: 'الحركة', object: 'العنصر', detail: 'التفاصيل', actor: 'المستخدم', createdBy: 'أنشئ من طرف', baseDocNo: 'رقم الوثيقة الأصلية', location: 'الموقع', assignedTo: 'مكلف به', clientOwner: 'الحساب', stockTransfer: 'تحويل المخزون', fromBranch: 'الدروكري المصدر', toBranch: 'الدروكري الوجهة', stockValue: 'قيمة المخزون', lowStock: 'مخزون حرج', stockByBranch: 'المخزون حسب الدروكري', adjustment: 'تعديل المخزون', stockIn: 'دخول المخزون', stockOut: 'خروج المخزون', reason: 'السبب', category: 'الفئة', ref: 'المرجع', name: 'الاسم', role: 'الدور'
+    supplier: 'المورد', product: 'المنتج', base: 'الأصل', remainingQty: 'الكمية المتبقية', orderedQty: 'الكمية المطلوبة', deliveredQty: 'الكمية المسلمة', receivedQty: 'الكمية المستلمة', qtyToProcess: 'الكمية المراد معالجتها', alreadyProcessed: 'تمت معالجته', includeLine: 'تضمين', removeLine: 'حذف السطر', restoreLine: 'استرجاع السطر', open: 'مفتوح', closed: 'مغلق', preview: 'معاينة', print: 'طباعة', unitPrice: 'ثمن الوحدة', totalHT: 'المجموع بدون الضريبة', totalVAT: 'الضريبة', totalTTC: 'المجموع مع الضريبة', cancelPayment: 'إلغاء الأداء', canceled: 'ملغى', subtotal: 'المجموع الجزئي', signature: 'التوقيع', preparedBy: 'أنجز من طرف', printDate: 'تاريخ الطباعة', legalNote: 'وثيقة تم إنشاؤها بواسطة DrogueriePro', arabicName: 'الاسم بالعربية', docType: 'نوع الوثيقة', purchasePrice: 'ثمن الشراء', salePrice: 'ثمن البيع', margin: 'الهامش', movement: 'الحركة', object: 'العنصر', detail: 'التفاصيل', actor: 'المستخدم', createdBy: 'أنشئ من طرف', baseDocNo: 'رقم الوثيقة الأصلية', location: 'الموقع', assignedTo: 'مكلف به', clientOwner: 'الحساب', stockTransfer: 'تحويل المخزون', fromBranch: 'الدروكري المصدر', toBranch: 'الدروكري الوجهة', stockValue: 'قيمة المخزون', lowStock: 'مخزون حرج', stockByBranch: 'المخزون حسب الدروكري', adjustment: 'تعديل المخزون', stockIn: 'دخول المخزون', stockOut: 'خروج المخزون', reason: 'السبب', category: 'الفئة', ref: 'المرجع', name: 'الاسم', role: 'الدور', payment: 'الأداء', document: 'الوثيقة', form: 'النموذج', select: 'اختيار', productRef: 'مرجع المنتج', unit: 'الوحدة', minStock: 'الحد الأدنى للمخزون', threshold: 'الحد الأدنى', stockAdjustIn: 'إدخال مخزون', stockAdjustOut: 'إخراج مخزون', operationType: 'نوع العملية', unitPurchasePrice: 'ثمن الشراء للوحدة', unitSalePrice: 'ثمن البيع للوحدة', customerForm: 'بطاقة الزبون', supplierForm: 'بطاقة المورد', productForm: 'بطاقة المنتج', documentLines: 'سطور الوثيقة', completed: 'منتهية', notAvailable: 'غير مطبق'
   }
 };
 
@@ -368,9 +368,17 @@ async function nextNumber(prefix) {
 
 async function updateStock(lines, sign, reason, meta = {}) {
   const session = getStoredSession();
-  for (const line of normalizeLines(lines)) {
+  const stockLines = (lines || []).map(l => ({
+    ...l,
+    produitId: Number(l.produitId || l.product_id || l.id),
+    qte: Number(l.qte ?? l.quantity ?? 0)
+  })).filter(l => l.produitId && Number(l.qte || 0) !== 0);
+
+  for (const line of stockLines) {
     const productId = Number(line.produitId || line.product_id || line.id);
-    const qty = Number(line.qte || line.quantity || 0);
+    const rawQty = Number(line.qte || line.quantity || 0);
+    const movementQty = rawQty * sign;
+    const qty = Math.abs(movementQty);
     if (!productId || !qty) continue;
 
     const { data: product, error: readError } = await supabase
@@ -385,14 +393,17 @@ async function updateStock(lines, sign, reason, meta = {}) {
       throw new Error('Mouvement stock refusé : produit hors droguerie utilisateur');
     }
 
-    const newQty = Number(product.quantity || 0) + qty * sign;
+    const newQty = Number(product.quantity || 0) + movementQty;
+    if (newQty < 0) {
+      throw new Error('Stock insuffisant pour le produit');
+    }
 
     const { error: updateError } = await supabase.from('products').update({ quantity: newQty }).eq('id', productId);
     if (updateError) throw new Error(updateError.message);
 
     const movement = {
       product_id: productId,
-      quantity: qty * sign,
+      quantity: movementQty,
       reason,
       branch_id: product.branch_id || branchId(session) || null,
       created_at: new Date().toISOString()
@@ -975,15 +986,15 @@ function docTypeLabel(doc, type, L) {
   if (type === 'sales' || doc?.client_id || doc?.client_name) {
     return {
       devis: L('quotes'),
-      commande: 'Commande client',
-      livraison: 'Bon de livraison',
-      facture: 'Facture client'
+      commande: L('orders'),
+      livraison: L('deliveries'),
+      facture: L('invoices')
     }[stage] || L('sales');
   }
   return {
-    commande: 'Commande fournisseur',
-    reception: 'Bon de réception',
-    facture: 'Facture fournisseur'
+    commande: L('orders'),
+    reception: L('receipts'),
+    facture: L('invoices')
   }[stage] || L('purchases');
 }
 
@@ -1723,7 +1734,7 @@ function Products({ L }) {
   async function adjustStock() {
     try {
       requirePerm('stock.adjust', 'Ajustement stock');
-      await updateStock([{ produitId: stock.id, qte: Number(stock.qte) }], 1, stock.reason || L('stock'), { docType: 'Ajustement', docNumber: 'ADJ-' + Date.now() });
+      await updateStock([{ produitId: stock.id, qte: Math.abs(Number(stock.qte || 0)) }], Number(stock.sign || 1), stock.reason || L('adjustment'), { docType: L('adjustment'), docNumber: 'ADJ-' + Date.now() });
       setStock(null);
       load();
     } catch (e) { alert(e.message); }
@@ -1744,7 +1755,7 @@ function Products({ L }) {
       <Header title={L('products')}>
         {isAdmin(getStoredSession()) ? (
           <select className="input max-w-xs" value={branchFilter} onChange={e => setBranchFilter(e.target.value)}>
-            <option value="all">Toutes drogueries</option>
+            <option value="all">{L('all')} - {L('branches')}</option>
             {branches.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
           </select>
         ) : null}
@@ -1795,7 +1806,7 @@ function Products({ L }) {
               <td><Badge tone="blue">{p.branchName || '-'}</Badge></td>
               <td>
                 <div className={p.quantite <= p.stockMin ? 'text-red-600 font-bold' : 'font-bold'}>{fmt(p.quantite)} {p.unite}</div>
-                <div className="text-xs text-slate-400">Min : {fmt(p.stockMin)}</div>
+                <div className="text-xs text-slate-400">{L('minStock')} : {fmt(p.stockMin)}</div>
               </td>
               <td className="font-mono">{dh(p.prixAchat)}</td>
               <td className="font-mono font-bold">{dh(p.prixVente)}</td>
@@ -1804,7 +1815,7 @@ function Products({ L }) {
               </td>
               <td className="flex gap-1 flex-wrap">
                 {canWriteProduct ? <button onClick={() => setForm(p)} className="btn bg-white border">{L('edit')}</button> : null}
-                {canAdjustStock ? <button onClick={() => setStock({ ...p, qte: 1, reason: L('adjustment') })} className="btn bg-white border">{L('stock')}</button> : null}
+                {canAdjustStock ? <button onClick={() => setStock({ ...p, qte: 1, sign: 1, reason: L('stockAdjustIn') })} className="btn bg-white border">{L('stock')}</button> : null}
                 {canAdjustStock ? <button onClick={() => setTransfer({ productId: p.id, productName: p.nom, fromBranchId: p.branchId, toBranchId: branches.find(b => Number(b.id) !== Number(p.branchId))?.id || '', quantity: 1, reason: L('stockTransfer') })} className="btn bg-white border">{L('stockTransfer')}</button> : null}
                 {canDeleteProduct ? <button onClick={() => remove(p.id)} className="btn bg-red-600 text-white">{L('del')}</button> : null}
               </td>
@@ -1822,8 +1833,8 @@ function Products({ L }) {
 
 function ProductModal({ L, form, setForm, save, close, branches = [] }) {
   const fields = [
-    ['ref', L('ref')], ['nom', L('name')], ['nomAr', L('arabicName')], ['categorie', L('category')], ['unite', 'Unité'],
-    ['prixAchat', 'Prix achat'], ['prixVente', 'Prix vente'], ['quantite', L('quantity')], ['stockMin', 'Seuil']
+    ['ref', L('ref')], ['nom', L('name')], ['nomAr', L('arabicName')], ['categorie', L('category')], ['unite', L('unit')],
+    ['prixAchat', L('purchasePrice')], ['prixVente', L('salePrice')], ['quantite', L('quantity')], ['stockMin', L('threshold')]
   ];
   return (
     <Modal title={L('products')} onClose={close}>
@@ -1851,15 +1862,25 @@ function ProductModal({ L, form, setForm, save, close, branches = [] }) {
 
 function StockModal({ L, stock, setStock, save, close }) {
   return (
-    <Modal title={L('stock')} onClose={close}>
+    <Modal title={L('adjustment')} onClose={close}>
       <p className="font-semibold mb-1">{stock.nom}</p>
       <p className="text-xs text-slate-500 mb-3">{L('location')} : {stock.branchName || '-'}</p>
-      <label className="text-xs text-slate-500">{L('quantity')} (+ / -)
-        <input className="input mt-1 mb-2" type="number" value={stock.qte} onChange={e => setStock({ ...stock, qte: e.target.value })} />
+
+      <label className="text-xs text-slate-500">{L('operationType')}
+        <select className="input mt-1 mb-2" value={stock.sign || 1} onChange={e => setStock({ ...stock, sign: Number(e.target.value), reason: Number(e.target.value) === 1 ? L('stockAdjustIn') : L('stockAdjustOut') })}>
+          <option value={1}>{L('stockAdjustIn')}</option>
+          <option value={-1}>{L('stockAdjustOut')}</option>
+        </select>
       </label>
+
+      <label className="text-xs text-slate-500">{L('quantity')}
+        <input className="input mt-1 mb-2" type="number" min="0" value={stock.qte} onChange={e => setStock({ ...stock, qte: e.target.value })} />
+      </label>
+
       <label className="text-xs text-slate-500">{L('reason')}
         <input className="input mt-1" value={stock.reason} onChange={e => setStock({ ...stock, reason: e.target.value })} />
       </label>
+
       <button onClick={save} className="btn bg-amber-500 mt-4">{L('save')}</button>
     </Modal>
   );
@@ -1928,7 +1949,12 @@ function Docs({ L, type }) {
     ? [['all', L('all')], ['devis', L('quotes')], ['commande', L('orders')], ['livraison', L('deliveries')], ['facture', L('invoices')]]
     : [['all', L('all')], ['commande', L('orders')], ['reception', L('receipts')], ['facture', L('invoices')]];
 
-  const filtered = tab === 'all' ? rows : rows.filter(x => x.stage === tab);
+  const filtered = (tab === 'all' ? rows : rows.filter(x => x.stage === tab)).filter(x => {
+    if (tab === 'commande' && docStatus(x) === 'closed') return false;
+    if (tab === 'reception' && docStatus(x) === 'closed') return false;
+    if (tab === 'livraison' && docStatus(x) === 'closed' && x.stage === 'commande') return false;
+    return true;
+  });
 
   function create(start) {
     setForm({ start, date: today(), partyId: parties[0]?.id || '', lignes: [{ produitId: products[0]?.id || '', qte: 1 }] });
@@ -2024,7 +2050,7 @@ function Docs({ L, type }) {
             <th>{L('status')}</th>
             <th>{L('quantity')}</th>
             <th>{L('totalTTC')}</th>
-            <th>{L('payment')}</th>
+            {tab === 'facture' ? <th>{L('payment')}</th> : null}
             <th>{L('actions')}</th>
           </tr>
         </thead>
@@ -2052,7 +2078,7 @@ function Docs({ L, type }) {
                   <div>{L('remainingQty')}: <b>{docRemainingQty(d)}</b></div>
                 </td>
                 <td className="font-mono font-bold">{dh(d.totalTTC)}</td>
-                <td><Badge tone={tone}>{status}{d.reste > 0 ? ' · ' + L('remaining') + ' ' + dh(d.reste) : ''}</Badge></td>
+                {tab === 'facture' ? <td><Badge tone={tone}>{status}{d.reste > 0 ? ' · ' + L('remaining') + ' ' + dh(d.reste) : ''}</Badge></td> : null}
                 <td className="flex gap-1 flex-wrap">
                   {canWriteDoc ? <button onClick={() => advance(d.id)} className="btn bg-slate-800 text-white">{L('advance')}</button> : null}
                   <button onClick={() => setPreview(d)} className="btn bg-white border">{L('preview')}</button>
@@ -2653,7 +2679,7 @@ function Parties({ L, type }) {
       <Header title={type === 'clients' ? L('clients') : L('suppliers')}>
         {type === 'clients' ? (
           <select className="input max-w-xs" value={ownerFilter} onChange={e => setOwnerFilter(e.target.value)}>
-            <option value="all">Tous les comptes</option>
+            <option value="all">{L('all')} - {L('clientOwner')}</option>
             {uniqueOwners.map(u => <option key={u.id} value={u.id}>{u.full_name || u.username}</option>)}
           </select>
         ) : null}
@@ -2661,7 +2687,7 @@ function Parties({ L, type }) {
       </Header>
 
       <div className="grid md:grid-cols-4 gap-3 mb-4">
-        <div className="card p-4"><p className="text-xs text-slate-400">Total</p><p className="text-2xl font-black">{filteredRows.length}</p></div>
+        <div className="card p-4"><p className="text-xs text-slate-400">{L('all')}</p><p className="text-2xl font-black">{filteredRows.length}</p></div>
         <div className="card p-4"><p className="text-xs text-slate-400">{L('clientOwner')}</p><p className="text-2xl font-black">{uniqueOwners.length}</p></div>
         <div className="card p-4"><p className="text-xs text-slate-400">{L('branch')}</p><p className="text-2xl font-black">{new Set(filteredRows.map(x => x.branch_id).filter(Boolean)).size}</p></div>
         <div className="card p-4"><p className="text-xs text-slate-400">{L('createdBy')}</p><p className="text-2xl font-black">{new Set(filteredRows.map(x => x.created_by).filter(Boolean)).size}</p></div>
