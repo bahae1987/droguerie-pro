@@ -425,3 +425,9 @@ body { margin: 0; background: #f8fafc; }
 .payment-canceled td {
   text-decoration: line-through;
 }
+
+/* V30 doc trace / stock location */
+.doc-trace-muted {
+  color: #64748b;
+  font-size: 12px;
+}

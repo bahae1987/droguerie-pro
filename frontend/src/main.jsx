@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-console.log('DROGUERIEPRO V29 AUTH STOCK BRANCH OK');
+console.log('DROGUERIEPRO V30 DOC TRACE STOCK UI OK');
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -29,7 +29,7 @@ const TXT = {
     deliveries: 'Livraisons', receipts: 'Réceptions', invoices: 'Factures', remaining: 'Reste',
     paid: 'Réglée', unpaid: 'Non réglée', partial: 'Partielle', cashIn: 'Encaissements',
     cashOut: 'Décaissements', vat: 'TVA', theme: 'Thème', company: 'Société', address: 'Adresse', phone: 'Téléphone', ice: 'ICE', cashRegister: 'Caisse', receiptNo: 'N° reçu', chequeNo: 'N° chèque', bank: 'Banque', dueDate: 'Échéance', paymentStatus: 'Statut', transferRef: 'Réf. virement', valueDate: 'Date valeur', terminal: 'TPE', transactionNo: 'N° transaction', billNo: 'N° effet', note: 'Observation', quantity: 'Quantité', date: 'Date', customer: 'Client',
-    supplier: 'Fournisseur', product: 'Produit', base: 'Base', remainingQty: 'Qté restante', orderedQty: 'Qté commandée', deliveredQty: 'Qté livrée', receivedQty: 'Qté reçue', qtyToProcess: 'Qté à traiter', alreadyProcessed: 'Déjà traité', includeLine: 'Inclure', removeLine: 'Retirer ligne', restoreLine: 'Restaurer ligne', open: 'Ouvert', closed: 'Clôturé', preview: 'Aperçu', print: 'Imprimer', unitPrice: 'PU', totalHT: 'Total HT', totalVAT: 'TVA', totalTTC: 'Total TTC', cancelPayment: 'Annuler règlement', canceled: 'Annulé', subtotal: 'Sous-total', signature: 'Signature', preparedBy: 'Préparé par', printDate: 'Date impression', legalNote: 'Document généré par DrogueriePro', arabicName: 'Nom arabe', docType: 'Type document', purchasePrice: 'Prix achat', salePrice: 'Prix vente', margin: 'Marge', movement: 'Mouvement', object: 'Objet', detail: 'Détail', actor: 'Utilisateur'
+    supplier: 'Fournisseur', product: 'Produit', base: 'Base', remainingQty: 'Qté restante', orderedQty: 'Qté commandée', deliveredQty: 'Qté livrée', receivedQty: 'Qté reçue', qtyToProcess: 'Qté à traiter', alreadyProcessed: 'Déjà traité', includeLine: 'Inclure', removeLine: 'Retirer ligne', restoreLine: 'Restaurer ligne', open: 'Ouvert', closed: 'Clôturé', preview: 'Aperçu', print: 'Imprimer', unitPrice: 'PU', totalHT: 'Total HT', totalVAT: 'TVA', totalTTC: 'Total TTC', cancelPayment: 'Annuler règlement', canceled: 'Annulé', subtotal: 'Sous-total', signature: 'Signature', preparedBy: 'Préparé par', printDate: 'Date impression', legalNote: 'Document généré par DrogueriePro', arabicName: 'Nom arabe', docType: 'Type document', purchasePrice: 'Prix achat', salePrice: 'Prix vente', margin: 'Marge', movement: 'Mouvement', object: 'Objet', detail: 'Détail', actor: 'Utilisateur', createdBy: 'Créé par', baseDocNo: 'N° doc. base', location: 'Emplacement'
   },
   ar: {
     login: 'تسجيل الدخول', username: 'المستخدم', password: 'كلمة المرور', connect: 'دخول',
@@ -42,7 +42,7 @@ const TXT = {
     deliveries: 'التسليمات', receipts: 'الاستلامات', invoices: 'الفواتير', remaining: 'الباقي',
     paid: 'مؤداة', unpaid: 'غير مؤداة', partial: 'جزئية', cashIn: 'المداخيل',
     cashOut: 'المصاريف', vat: 'الضريبة', theme: 'المظهر', company: 'الشركة', address: 'العنوان', phone: 'الهاتف', ice: 'ICE', cashRegister: 'الصندوق', receiptNo: 'رقم الوصل', chequeNo: 'رقم الشيك', bank: 'البنك', dueDate: 'الاستحقاق', paymentStatus: 'الحالة', transferRef: 'مرجع التحويل', valueDate: 'تاريخ القيمة', terminal: 'جهاز الأداء', transactionNo: 'رقم العملية', billNo: 'رقم الكمبيالة', note: 'ملاحظة', quantity: 'الكمية', date: 'التاريخ', customer: 'الزبون',
-    supplier: 'المورد', product: 'المنتج', base: 'الأصل', remainingQty: 'الكمية المتبقية', orderedQty: 'الكمية المطلوبة', deliveredQty: 'الكمية المسلمة', receivedQty: 'الكمية المستلمة', qtyToProcess: 'الكمية المراد معالجتها', alreadyProcessed: 'تمت معالجته', includeLine: 'تضمين', removeLine: 'حذف السطر', restoreLine: 'استرجاع السطر', open: 'مفتوح', closed: 'مغلق', preview: 'معاينة', print: 'طباعة', unitPrice: 'ثمن الوحدة', totalHT: 'المجموع بدون الضريبة', totalVAT: 'الضريبة', totalTTC: 'المجموع مع الضريبة', cancelPayment: 'إلغاء الأداء', canceled: 'ملغى', subtotal: 'المجموع الجزئي', signature: 'التوقيع', preparedBy: 'أنجز من طرف', printDate: 'تاريخ الطباعة', legalNote: 'وثيقة تم إنشاؤها بواسطة DrogueriePro', arabicName: 'الاسم بالعربية', docType: 'نوع الوثيقة', purchasePrice: 'ثمن الشراء', salePrice: 'ثمن البيع', margin: 'الهامش', movement: 'الحركة', object: 'العنصر', detail: 'التفاصيل', actor: 'المستخدم'
+    supplier: 'المورد', product: 'المنتج', base: 'الأصل', remainingQty: 'الكمية المتبقية', orderedQty: 'الكمية المطلوبة', deliveredQty: 'الكمية المسلمة', receivedQty: 'الكمية المستلمة', qtyToProcess: 'الكمية المراد معالجتها', alreadyProcessed: 'تمت معالجته', includeLine: 'تضمين', removeLine: 'حذف السطر', restoreLine: 'استرجاع السطر', open: 'مفتوح', closed: 'مغلق', preview: 'معاينة', print: 'طباعة', unitPrice: 'ثمن الوحدة', totalHT: 'المجموع بدون الضريبة', totalVAT: 'الضريبة', totalTTC: 'المجموع مع الضريبة', cancelPayment: 'إلغاء الأداء', canceled: 'ملغى', subtotal: 'المجموع الجزئي', signature: 'التوقيع', preparedBy: 'أنجز من طرف', printDate: 'تاريخ الطباعة', legalNote: 'وثيقة تم إنشاؤها بواسطة DrogueriePro', arabicName: 'الاسم بالعربية', docType: 'نوع الوثيقة', purchasePrice: 'ثمن الشراء', salePrice: 'ثمن البيع', margin: 'الهامش', movement: 'الحركة', object: 'العنصر', detail: 'التفاصيل', actor: 'المستخدم', createdBy: 'أنشئ من طرف', baseDocNo: 'رقم الوثيقة الأصلية', location: 'الموقع'
   }
 };
 
@@ -412,6 +412,32 @@ async function assignUserBranch(userId, branchId) {
 
 
 
+
+async function loadUserLabels() {
+  const { data, error } = await supabase.from('users').select('id, username, full_name');
+  if (error) return {};
+  const map = {};
+  (data || []).forEach(u => {
+    map[u.id] = u.full_name || u.username || ('User #' + u.id);
+  });
+  return map;
+}
+
+function enrichDocs(docs, userLabels = {}) {
+  const mapped = (docs || []).map(mapDoc);
+  const byId = {};
+  mapped.forEach(d => { byId[d.id] = d; });
+
+  return mapped.map(d => {
+    const base = d.baseDocId ? byId[d.baseDocId] : null;
+    return {
+      ...d,
+      createdByLabel: userLabels[d.created_by] || d.created_by_label || d.user_label || (d.created_by ? ('User #' + d.created_by) : '-'),
+      baseDocNumber: base ? docNo(base) : (d.base_doc_number || '')
+    };
+  });
+}
+
 function currentUserLabel() {
   const s = getStoredSession();
   return s?.user?.full_name || s?.user?.username || 'system';
@@ -437,10 +463,20 @@ async function auditLog(moduleName, action, objectLabel, detail) {
 
 async function loadAuditLogs() {
   const session = getStoredSession();
-  let q = supabase.from('audit_logs').select('*').order('created_at', { ascending: false }).limit(500);
+  let q = supabase
+    .from('audit_logs')
+    .select('id, module, action, object_label, detail, user_id, user_label, branch_id, created_at, branches(name)')
+    .order('created_at', { ascending: false })
+    .limit(500);
+
   if (!isAdmin(session) && branchId(session)) q = q.eq('branch_id', branchId(session));
+
   const { data, error } = await q;
-  if (error) throw new Error(error.message);
+  if (error) {
+    console.warn('Audit load error:', error.message);
+    return [];
+  }
+
   return data || [];
 }
 
@@ -1279,7 +1315,6 @@ function Layout({ L, lang, toggleLang, session, setSession }) {
     ['purchases', L('purchases'), 'purchases.read'],
     ['payments', L('payments'), 'payments.read'],
     ['stockMoves', L('stockMoves'), 'stock.read'],
-    ['audit', L('audit'), 'audit.read'],
     ['settings', L('settings'), 'settings.manage'],
     ['permissions', L('permissions'), 'permissions.manage'],
     ['branches', L('branches'), 'branches.manage'],
@@ -1329,7 +1364,6 @@ function Layout({ L, lang, toggleLang, session, setSession }) {
           {page === 'purchases' ? <Docs L={L} type="purchases" /> : null}
           {page === 'payments' ? <Payments L={L} /> : null}
           {page === 'stockMoves' ? <StockMovements L={L} /> : null}
-          {page === 'audit' ? <AuditLog L={L} /> : null}
           {page === 'settings' ? <Settings L={L} /> : null}
           {page === 'permissions' ? <Permissions L={L} /> : null}
           {page === 'branches' ? <Branches L={L} /> : null}
@@ -1501,6 +1535,7 @@ function Products({ L }) {
           <th>{L('ref')}</th>
           <th>{L('product')}</th>
           <th>{L('category')}</th>
+          <th>{L('location')}</th>
           <th>{L('stock')}</th>
           <th>{L('purchasePrice')}</th>
           <th>{L('salePrice')}</th>
@@ -1516,6 +1551,7 @@ function Products({ L }) {
                 {p.nomAr ? <div className="text-xs text-slate-400">{p.nomAr}</div> : null}
               </td>
               <td><Badge tone="slate">{p.categorie || '-'}</Badge></td>
+              <td><Badge tone="blue">{p.branchName || '-'}</Badge></td>
               <td>
                 <div className={p.quantite <= p.stockMin ? 'text-red-600 font-bold' : 'font-bold'}>{p.quantite} {p.unite}</div>
                 <div className="text-xs text-slate-400">Min : {p.stockMin}</div>
@@ -1593,15 +1629,20 @@ function Docs({ L, type }) {
 
   async function load() {
     try {
-      const [{ data: docs, error: dErr }, { data: prod, error: pErr }, { data: party, error: tErr }] = await Promise.all([
-        applyDocScope(supabase.from(type).select('*'), type, getStoredSession()).order('id', { ascending: false }),
-        applyProductScope(supabase.from('products').select('*, branches(name)'), getStoredSession()).order('name'),
-        supabase.from(isSales ? 'clients' : 'suppliers').select('*').order('name')
+      const session = getStoredSession();
+      const partiesQueryBase = supabase.from(isSales ? 'clients' : 'suppliers').select('*').order('name');
+      const partiesQuery = (!isAdmin(session) && branchId(session)) ? partiesQueryBase.eq('branch_id', branchId(session)) : partiesQueryBase;
+
+      const [{ data: docs, error: dErr }, { data: prod, error: pErr }, { data: party, error: tErr }, userLabels] = await Promise.all([
+        applyDocScope(supabase.from(type).select('*'), type, session).order('id', { ascending: false }),
+        applyProductScope(supabase.from('products').select('*, branches(name)'), session).order('name'),
+        partiesQuery,
+        loadUserLabels()
       ]);
       if (dErr) throw dErr;
       if (pErr) throw pErr;
       if (tErr) throw tErr;
-      setRows((docs || []).map(mapDoc));
+      setRows(enrichDocs(docs || [], userLabels));
       setProducts((prod || []).map(mapProduct));
       setParties(party || []);
     } catch (e) { setErr(e.message); }
@@ -1702,7 +1743,8 @@ function Docs({ L, type }) {
           <tr>
             <th>{L('docType')}</th>
             <th>N°</th>
-            <th>{L('base')}</th>
+            <th>{L('baseDocNo')}</th>
+            <th>{L('createdBy')}</th>
             <th>{L('date')}</th>
             <th>{isSales ? L('customer') : L('supplier')}</th>
             <th>{L('status')}</th>
@@ -1720,7 +1762,11 @@ function Docs({ L, type }) {
               <tr key={d.id}>
                 <td><Badge tone="blue">{docTypeLabel(d, type, L)}</Badge></td>
                 <td className="font-mono text-xs font-bold">{docNo(d)}</td>
-                <td>{d.baseDocId ? <Badge tone="slate">#{d.baseDocId}</Badge> : '-'}</td>
+                <td>{d.baseDocId ? <Badge tone="slate">{d.baseDocNumber || ('#' + d.baseDocId)}</Badge> : '-'}</td>
+                <td>
+                  <div className="font-semibold">{d.createdByLabel || '-'}</div>
+                  <div className="text-xs text-slate-400">{L('createdBy')}</div>
+                </td>
                 <td>{d.date}</td>
                 <td>
                   <div className="font-semibold">{d.client_name || d.supplier_name || d.clientNom || d.fournisseurNom}</div>
@@ -1738,7 +1784,7 @@ function Docs({ L, type }) {
                   <button onClick={() => setPreview(d)} className="btn bg-white border">{L('preview')}</button>
                   {canPayDoc && paymentButtonVisible(d) ? <button onClick={() => setPay({ ...d, date: today(), mode: 'Espèces', montant: d.reste || d.totalTTC, cashRegister: '', receiptNo: '', chequeNo: '', bank: '', dueDate: '', paymentStatus: 'En portefeuille', transferRef: '', valueDate: '', terminal: '', transactionNo: '', billNo: '', note: '' })} className="btn bg-emerald-600 text-white">{L('pay')}</button> : null}
                   {d.stage !== 'facture' && docRemainingQty(d) > 0 ? <button onClick={() => setPartial({ doc: d, date: today(), lignes: docRemainingLines(d).map(l => ({ ...l, qteToProcess: Number(l.remainingQty || 0), excluded: false })) })} className="btn bg-white border">{isSales ? L('partialDelivery') : L('partialReceipt')}</button> : null}
-                  <button onClick={() => setForm({ id: d.id, start: d.stage, date: d.date, partyId: isSales ? d.client_id : d.supplier_id, lignes: (d.lignes || []).map(l => ({ produitId: l.produitId, qte: l.qte, prixUnit: l.prixUnit })) })} className="btn bg-white border">{L('edit')}</button>
+                  {canWriteDoc ? <button onClick={() => setForm({ id: d.id, start: d.stage, date: d.date, partyId: isSales ? d.client_id : d.supplier_id, lignes: (d.lignes || []).map(l => ({ produitId: l.produitId, qte: l.qte, prixUnit: l.prixUnit })) })} className="btn bg-white border">{L('edit')}</button> : null}
                   {canDeleteDoc ? <button onClick={() => remove(d.id)} className="btn bg-red-600 text-white">{L('del')}</button> : null}
                 </td>
               </tr>
@@ -2527,6 +2573,7 @@ function StockMovements({ L }) {
             <th>{L('date')}</th>
             <th>{L('ref')}</th>
             <th>{L('product')}</th>
+            <th>{L('location')}</th>
             <th>{L('quantity')}</th>
             <th>{L('docType')}</th>
             <th>N° Doc</th>
@@ -2540,6 +2587,7 @@ function StockMovements({ L }) {
               <td>{m.date ? new Date(m.date).toLocaleString('fr-FR') : '-'}</td>
               <td className="font-mono text-xs">{m.ref || '-'}</td>
               <td className="font-semibold">{m.productName || '-'}</td>
+              <td><Badge tone="blue">{m.branchName || '-'}</Badge></td>
               <td><Badge tone={m.quantity >= 0 ? 'green' : 'red'}>{m.quantity >= 0 ? '+' : ''}{fmt(m.quantity)}</Badge></td>
               <td>{m.docType || '-'}</td>
               <td className="font-mono text-xs">{m.docNumber || '-'}</td>
