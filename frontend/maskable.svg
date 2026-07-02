@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="96" fill="#0f172a"/>
-  <rect x="72" y="72" width="368" height="368" rx="68" fill="#f59e0b"/>
-  <text x="256" y="292" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="150" fill="#0f172a">DP</text>
-  <text x="256" y="350" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="34" fill="#0f172a">PRO</text>
-</svg>
