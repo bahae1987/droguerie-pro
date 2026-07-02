@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-console.log('DROGUERIEPRO V27 PARTIAL REMOVE LINES OK');
+console.log('DROGUERIEPRO V28 PARTIAL PAYMENTS FIX OK');
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -652,31 +652,50 @@ function docRemainingQtyByLines(doc) {
 
 function selectedPartialLines(doc, linesInput) {
   const original = docRemainingLines(doc);
+  const input = Array.isArray(linesInput) ? linesInput : [];
   const byKey = {};
-  (linesInput || []).forEach(l => {
-    if (l.excluded) {
-      byKey[lineKey(l)] = 0;
-    } else {
-      byKey[lineKey(l)] = Number(l.qteToProcess ?? l.qte ?? 0);
-    }
+
+  input.forEach(l => {
+    const key = lineKey(l);
+    if (!key) return;
+    byKey[key] = {
+      excluded: !!l.excluded,
+      qty: Number(l.qteToProcess ?? l.qte ?? 0)
+    };
   });
 
   const result = [];
   for (const line of original) {
-    const qty = Number(byKey[lineKey(line)] || 0);
+    const key = lineKey(line);
+    const inputLine = byKey[key];
+
+    // Si la ligne n'existe pas dans le modal, on ne la traite pas.
+    if (!inputLine) continue;
+
+    // Ligne retirée volontairement : aucun mouvement.
+    if (inputLine.excluded) continue;
+
+    const qty = Number(inputLine.qty || 0);
     if (qty <= 0) continue;
+
     if (qty > Number(line.remainingQty || 0) + 0.0001) {
       throw new Error('Quantité supérieure au reste pour le produit : ' + (line.nom || line.ref || line.produitId));
     }
+
     result.push({
       ...line,
       qte: qty,
       processedQty: undefined,
-      remainingQty: undefined
+      remainingQty: undefined,
+      excluded: undefined,
+      qteToProcess: undefined
     });
   }
 
-  if (!result.length) throw new Error('Veuillez saisir au moins une quantité à traiter');
+  if (!result.length) {
+    throw new Error('Veuillez saisir au moins une quantité à traiter sur une ligne non retirée');
+  }
+
   return result;
 }
 
@@ -1584,7 +1603,10 @@ function Docs({ L, type }) {
 
   async function doPartial() {
     try {
-      await partialDoc(type, partial.doc.id, { qte: Number(partial.qte) });
+      await partialDoc(type, partial.doc.id, {
+        date: partial.date || today(),
+        lignes: partial.lignes || []
+      });
       setPartial(null);
       load();
     } catch (e) { alert(e.message); }
@@ -1892,6 +1914,143 @@ function DocumentPreview({ L, isSales, doc, close }) {
     </Modal>
   );
 }
+
+
+function Payments({ L }) {
+  const [rows, setRows] = useState([]);
+  const [err, setErr] = useState('');
+  const [filter, setFilter] = useState('all');
+
+  async function load() {
+    try {
+      setErr('');
+      const data = await loadPayments();
+      setRows(data || []);
+    } catch (e) {
+      setErr(e.message);
+    }
+  }
+
+  useEffect(() => { load(); }, []);
+
+  const filtered = rows.filter(p => {
+    if (filter === 'all') return true;
+    if (filter === 'active') return !p.canceled;
+    if (filter === 'canceled') return !!p.canceled;
+    return p.type === filter;
+  });
+
+  async function cancel(p) {
+    if (!hasPerm(getStoredSession(), 'payments.cancel')) {
+      alert('Autorisation insuffisante : payments.cancel');
+      return;
+    }
+
+    const reason = prompt('Motif d’annulation du règlement ?', 'Annulation règlement');
+    if (reason === null) return;
+
+    try {
+      await cancelPayment(p.sourceTable, p.docId, p.id, reason);
+      await load();
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  if (err) return <ErrorBox msg={err} />;
+
+  const activeTotal = filtered
+    .filter(p => !p.canceled)
+    .reduce((s, p) => s + Number(p.montant || 0), 0);
+
+  const canceledTotal = filtered
+    .filter(p => p.canceled)
+    .reduce((s, p) => s + Number(p.montant || 0), 0);
+
+  return (
+    <>
+      <Header title={L('payments')}>
+        <select className="input max-w-xs" value={filter} onChange={e => setFilter(e.target.value)}>
+          <option value="all">{L('all')}</option>
+          <option value="active">Actifs</option>
+          <option value="canceled">{L('canceled')}</option>
+          <option value="encaissement">{L('cashIn')}</option>
+          <option value="decaissement">{L('cashOut')}</option>
+        </select>
+        <button onClick={load} className="btn bg-white border">↻</button>
+      </Header>
+
+      <div className="grid md:grid-cols-3 gap-4 mb-5">
+        <div className="card p-4">
+          <p className="text-xs text-slate-400">Total actif</p>
+          <p className="text-xl font-black font-mono">{dh(activeTotal)}</p>
+        </div>
+        <div className="card p-4">
+          <p className="text-xs text-slate-400">{L('canceled')}</p>
+          <p className="text-xl font-black font-mono">{dh(canceledTotal)}</p>
+        </div>
+        <div className="card p-4">
+          <p className="text-xs text-slate-400">Nombre</p>
+          <p className="text-xl font-black font-mono">{filtered.length}</p>
+        </div>
+      </div>
+
+      <Table>
+        <thead>
+          <tr>
+            <th>{L('date')}</th>
+            <th>Type</th>
+            <th>{L('docType')}</th>
+            <th>Document</th>
+            <th>Tiers</th>
+            <th>Mode</th>
+            <th>Détails</th>
+            <th>Montant</th>
+            <th>{L('status')}</th>
+            <th>{L('actions')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filtered.map((p, i) => (
+            <tr key={(p.docId || '') + '-' + (p.id || i)} className={p.canceled ? 'payment-canceled' : ''}>
+              <td>{p.date || '-'}</td>
+              <td>
+                <Badge tone={p.type === 'encaissement' ? 'green' : 'amber'}>
+                  {p.type === 'encaissement' ? L('cashIn') : L('cashOut')}
+                </Badge>
+              </td>
+              <td>{p.docType || '-'}</td>
+              <td className="font-mono text-xs">{p.docNumber || '-'}</td>
+              <td>{p.tiers || '-'}</td>
+              <td>{p.mode || '-'}</td>
+              <td className="text-xs text-slate-500">
+                {p.chequeNo ? 'Chèque: ' + p.chequeNo + ' · ' : ''}
+                {p.billNo ? 'Effet: ' + p.billNo + ' · ' : ''}
+                {p.bank ? p.bank + ' · ' : ''}
+                {p.transferRef ? 'Vir: ' + p.transferRef + ' · ' : ''}
+                {p.transactionNo ? 'Tx: ' + p.transactionNo + ' · ' : ''}
+                {p.paymentStatus || p.receiptNo || p.cashRegister || p.note || '-'}
+              </td>
+              <td className="font-bold">{dh(p.montant || 0)}</td>
+              <td>
+                {p.canceled ? <Badge tone="red">{L('canceled')}</Badge> : <Badge tone="green">Actif</Badge>}
+                {p.canceled ? <div className="text-xs text-slate-400 mt-1">{p.cancelReason || ''}</div> : null}
+              </td>
+              <td>
+                {!p.canceled ? (
+                  <button onClick={() => cancel(p)} className="btn bg-red-600 text-white">
+                    {L('cancelPayment')}
+                  </button>
+                ) : '-'}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </>
+  );
+}
+
 
 function PaymentModal({ L, isSales, pay, setPay, save, close }) {
   const mode = pay.mode || 'Espèces';
