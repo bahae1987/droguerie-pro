@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-console.log('DROGUERIEPRO V23 PRO UI DELETE AUDIT OK');
+console.log('DROGUERIEPRO V24 RICH DASHBOARD OK');
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -1168,56 +1168,357 @@ function ErrorBox({ msg }) {
   return <div className="bg-red-50 text-red-700 border border-red-200 p-4 rounded-xl"><b>Erreur :</b> {msg}</div>;
 }
 
-function Dashboard({ L }) {
+functfunction Dashboard({ L }) {
   const [data, setData] = useState(null);
   const [err, setErr] = useState('');
+  const [period, setPeriod] = useState('month');
+
+  function activePayments(doc) {
+    return jsonValue(doc.payments_json, []).filter(p => !p.canceled);
+  }
+
+  function paymentSum(doc) {
+    return activePayments(doc).reduce((s, p) => s + Number(p.montant || 0), 0);
+  }
+
+  function monthKey(dateValue) {
+    const d = String(dateValue || '').slice(0, 7);
+    return d || 'N/A';
+  }
+
+  function docDateMatch(doc) {
+    if (period === 'all') return true;
+    const d = new Date(doc.date || doc.created_at || today());
+    const now = new Date();
+    if (period === 'today') return d.toISOString().slice(0, 10) === today();
+    if (period === 'week') {
+      const diff = (now - d) / (1000 * 60 * 60 * 24);
+      return diff >= 0 && diff <= 7;
+    }
+    return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+  }
+
+  function addToMap(map, key, amount) {
+    const k = key || 'Non défini';
+    map[k] = (map[k] || 0) + Number(amount || 0);
+  }
+
+  function topEntries(map, limit = 5) {
+    return Object.entries(map).sort((a, b) => b[1] - a[1]).slice(0, limit);
+  }
 
   async function load() {
     try {
       setErr('');
-      const [{ data: products }, { data: sales }, { data: purchases }] = await Promise.all([
-        applyProductScope(supabase.from('products').select('*'), getStoredSession()),
-        applyDocScope(supabase.from('sales').select('*'), 'sales', getStoredSession()),
-        applyDocScope(supabase.from('purchases').select('*'), 'purchases', getStoredSession())
+      const session = getStoredSession();
+      const [{ data: products, error: pErr }, { data: sales, error: sErr }, { data: purchases, error: aErr }, { data: moves, error: mErr }] = await Promise.all([
+        applyProductScope(supabase.from('products').select('*'), session),
+        applyDocScope(supabase.from('sales').select('*'), 'sales', session),
+        applyDocScope(supabase.from('purchases').select('*'), 'purchases', session),
+        supabase.from('stock_movements').select('id, quantity, reason, created_at, products(ref, name, branch_id)').order('created_at', { ascending: false }).limit(20)
       ]);
 
-      const factures = (sales || []).filter(x => x.stage === 'facture');
-      const factAch = (purchases || []).filter(x => x.stage === 'facture');
+      if (pErr) throw pErr;
+      if (sErr) throw sErr;
+      if (aErr) throw aErr;
+      if (mErr) throw mErr;
+
+      const allProducts = products || [];
+      const allSales = sales || [];
+      const allPurchases = purchases || [];
+
+      const scopedMoves = (moves || []).filter(m => isAdmin(session) || !branchId(session) || Number(m.products?.branch_id || 0) === Number(branchId(session)));
+
+      const salesDocs = allSales.filter(docDateMatch);
+      const purchaseDocs = allPurchases.filter(docDateMatch);
+      const salesInvoices = salesDocs.filter(x => x.stage === 'facture');
+      const purchaseInvoices = purchaseDocs.filter(x => x.stage === 'facture');
+
+      const revenue = salesInvoices.reduce((s, x) => s + Number(x.total_ttc || 0), 0);
+      const purchasesTotal = purchaseInvoices.reduce((s, x) => s + Number(x.total_ttc || 0), 0);
+      const cashIn = salesInvoices.reduce((s, x) => s + paymentSum(x), 0);
+      const cashOut = purchaseInvoices.reduce((s, x) => s + paymentSum(x), 0);
+      const receivables = salesInvoices.reduce((s, x) => s + paymentInfo(x).rest, 0);
+      const debts = purchaseInvoices.reduce((s, x) => s + paymentInfo(x).rest, 0);
+
+      const stockValue = allProducts.reduce((s, p) => s + Number(p.quantity || 0) * Number(p.purchase_price || 0), 0);
+      const saleStockValue = allProducts.reduce((s, p) => s + Number(p.quantity || 0) * Number(p.sale_price || 0), 0);
+      const lowStock = allProducts.filter(p => Number(p.quantity || 0) <= Number(p.min_stock || 0));
+      const negativeStock = allProducts.filter(p => Number(p.quantity || 0) < 0);
+
+      const salesByMonth = {};
+      const purchasesByMonth = {};
+      salesInvoices.forEach(d => addToMap(salesByMonth, monthKey(d.date), Number(d.total_ttc || 0)));
+      purchaseInvoices.forEach(d => addToMap(purchasesByMonth, monthKey(d.date), Number(d.total_ttc || 0)));
+
+      const topProducts = {};
+      const topClients = {};
+      salesInvoices.forEach(d => {
+        addToMap(topClients, d.client_name, Number(d.total_ttc || 0));
+        jsonValue(d.lines_json, []).forEach(l => addToMap(topProducts, l.nom || l.ref, Number(l.prixUnit || 0) * Number(l.qte || 0)));
+      });
+
+      const topSuppliers = {};
+      purchaseInvoices.forEach(d => addToMap(topSuppliers, d.supplier_name, Number(d.total_ttc || 0)));
+
+      const openSales = salesDocs.filter(d => d.stage !== 'facture' || paymentInfo(d).status !== 'paid');
+      const openPurchases = purchaseDocs.filter(d => d.stage !== 'facture' || paymentInfo(d).status !== 'paid');
+
+      const recentDocs = [
+        ...salesDocs.map(d => ({ kind: 'Vente', number: docNo(d), third: d.client_name, date: d.date, total: Number(d.total_ttc || 0), stage: d.stage, payment: paymentInfo(d).status })),
+        ...purchaseDocs.map(d => ({ kind: 'Achat', number: docNo(d), third: d.supplier_name, date: d.date, total: Number(d.total_ttc || 0), stage: d.stage, payment: paymentInfo(d).status }))
+      ].sort((a, b) => String(b.date || '').localeCompare(String(a.date || ''))).slice(0, 8);
 
       setData({
-        products: products?.length || 0,
-        lowStock: products?.filter(p => Number(p.quantity) <= Number(p.min_stock)).length || 0,
-        stockValue: products?.reduce((s, p) => s + Number(p.quantity || 0) * Number(p.purchase_price || 0), 0) || 0,
-        ca: factures.reduce((s, x) => s + Number(x.total_ttc || 0), 0),
-        dettes: factAch.reduce((s, x) => s + paymentInfo(x).rest, 0)
+        products: allProducts.length,
+        revenue,
+        purchasesTotal,
+        grossMargin: revenue - purchasesTotal,
+        cashIn,
+        cashOut,
+        netCash: cashIn - cashOut,
+        receivables,
+        debts,
+        stockValue,
+        saleStockValue,
+        stockPotentialMargin: saleStockValue - stockValue,
+        lowStock,
+        negativeStock,
+        salesCount: salesDocs.length,
+        purchaseCount: purchaseDocs.length,
+        openSales: openSales.length,
+        openPurchases: openPurchases.length,
+        salesByMonth: topEntries(salesByMonth, 6).reverse(),
+        purchasesByMonth: purchasesByMonth,
+        topProducts: topEntries(topProducts, 5),
+        topClients: topEntries(topClients, 5),
+        topSuppliers: topEntries(topSuppliers, 5),
+        recentDocs,
+        recentMoves: scopedMoves.slice(0, 8)
       });
-    } catch (e) { setErr(e.message); }
+    } catch (e) {
+      setErr(e.message);
+    }
   }
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(); }, [period]);
 
   if (err) return <ErrorBox msg={err} />;
   if (!data) return <p>Chargement...</p>;
 
-  const cards = [
-    [L('sales'), dh(data.ca)],
-    [L('stock'), dh(data.stockValue)],
-    [L('products'), data.products],
-    ['Alertes', data.lowStock],
-    ['Dettes', dh(data.dettes)]
-  ];
+  const maxMonthly = Math.max(1, ...data.salesByMonth.map(x => x[1]), ...Object.values(data.purchasesByMonth || {}));
+  const maxProduct = Math.max(1, ...data.topProducts.map(x => x[1]));
+  const maxClient = Math.max(1, ...data.topClients.map(x => x[1]));
+
+  function kpi(title, value, sub, tone = 'slate') {
+    return (
+      <div className={'dash-kpi dash-kpi-' + tone}>
+        <div className="dash-kpi-label">{title}</div>
+        <div className="dash-kpi-value">{value}</div>
+        <div className="dash-kpi-sub">{sub}</div>
+      </div>
+    );
+  }
+
+  function paymentTone(status) {
+    if (status === 'paid') return 'green';
+    if (status === 'partial') return 'amber';
+    return 'red';
+  }
+
+  function periodButton(key, label) {
+    return <button onClick={() => setPeriod(key)} className={'btn ' + (period === key ? 'bg-slate-900 text-white' : 'bg-white border')}>{label}</button>;
+  }
 
   return (
-    <>
-      <Header title={L('dashboard')}><button onClick={load} className="btn bg-white border">↻</button></Header>
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        {cards.map(c => <div key={c[0]} className="card p-5"><p className="text-xs text-slate-400">{c[0]}</p><p className="text-2xl font-black mt-2 font-mono">{c[1]}</p></div>)}
+    <div className="dashboard-pro">
+      <div className="dash-hero">
+        <div>
+          <p className="dash-eyebrow">DrogueriePro Analytics</p>
+          <h1>Tableau de bord exécutif</h1>
+          <p className="dash-hero-sub">Vue consolidée des ventes, achats, stock, encaissements et alertes opérationnelles.</p>
+        </div>
+        <div className="dash-actions">
+          {periodButton('today', 'Aujourd’hui')}
+          {periodButton('week', '7 jours')}
+          {periodButton('month', 'Mois')}
+          {periodButton('all', 'Tous')}
+          <button onClick={load} className="btn bg-amber-500">↻ Actualiser</button>
+        </div>
       </div>
-    </>
-  );
-}
 
-function Products({ L }) {
+      <div className="dash-kpi-grid">
+        {kpi('Chiffre d’affaires', dh(data.revenue), data.salesCount + ' documents vente', 'green')}
+        {kpi('Achats facturés', dh(data.purchasesTotal), data.purchaseCount + ' documents achat', 'amber')}
+        {kpi('Marge brute estimée', dh(data.grossMargin), 'Ventes - achats facturés', data.grossMargin >= 0 ? 'blue' : 'red')}
+        {kpi('Trésorerie nette', dh(data.netCash), 'Encaissements - décaissements', data.netCash >= 0 ? 'green' : 'red')}
+        {kpi('Valeur stock achat', dh(data.stockValue), data.products + ' produits suivis', 'slate')}
+        {kpi('Créances clients', dh(data.receivables), 'Reste à encaisser', data.receivables > 0 ? 'amber' : 'green')}
+        {kpi('Dettes fournisseurs', dh(data.debts), 'Reste à décaisser', data.debts > 0 ? 'red' : 'green')}
+        {kpi('Alertes stock', data.lowStock.length, data.negativeStock.length + ' stocks négatifs', data.lowStock.length ? 'red' : 'green')}
+      </div>
+
+      <div className="dash-grid-2">
+        <div className="dash-panel">
+          <div className="dash-panel-head">
+            <div>
+              <h2>Évolution ventes / achats</h2>
+              <p>Comparatif mensuel des factures</p>
+            </div>
+          </div>
+          <div className="dash-bars">
+            {data.salesByMonth.length ? data.salesByMonth.map(([month, value]) => {
+              const purchase = Number((data.purchasesByMonth || {})[month] || 0);
+              return (
+                <div key={month} className="dash-bar-row">
+                  <div className="dash-bar-label">{month}</div>
+                  <div className="dash-bar-track">
+                    <div className="dash-bar-fill sales" style={{ width: Math.max(4, value * 100 / maxMonthly) + '%' }}></div>
+                  </div>
+                  <div className="dash-bar-value">{dh(value)}</div>
+                  <div className="dash-bar-track small">
+                    <div className="dash-bar-fill purchases" style={{ width: Math.max(4, purchase * 100 / maxMonthly) + '%' }}></div>
+                  </div>
+                </div>
+              );
+            }) : <p className="text-sm text-slate-400">Aucune facture sur la période.</p>}
+          </div>
+          <div className="dash-legend">
+            <span><i className="legend-sales"></i>Ventes</span>
+            <span><i className="legend-purchases"></i>Achats</span>
+          </div>
+        </div>
+
+        <div className="dash-panel">
+          <div className="dash-panel-head">
+            <div>
+              <h2>Performance stock</h2>
+              <p>Valorisation et potentiel commercial</p>
+            </div>
+          </div>
+          <div className="dash-stock-grid">
+            <div>
+              <span>Valeur achat</span>
+              <b>{dh(data.stockValue)}</b>
+            </div>
+            <div>
+              <span>Valeur vente potentielle</span>
+              <b>{dh(data.saleStockValue)}</b>
+            </div>
+            <div>
+              <span>Marge potentielle stock</span>
+              <b>{dh(data.stockPotentialMargin)}</b>
+            </div>
+            <div>
+              <span>Produits en alerte</span>
+              <b>{data.lowStock.length}</b>
+            </div>
+          </div>
+          <div className="dash-alert-list">
+            {data.lowStock.slice(0, 6).map(p => (
+              <div key={p.id} className="dash-alert-item">
+                <div>
+                  <b>{p.name}</b>
+                  <span>{p.ref || '-'} · seuil {p.min_stock || 0}</span>
+                </div>
+                <Badge tone={Number(p.quantity || 0) < 0 ? 'red' : 'amber'}>{Number(p.quantity || 0)} {p.unit || ''}</Badge>
+              </div>
+            ))}
+            {!data.lowStock.length ? <p className="text-sm text-slate-400">Aucune alerte stock.</p> : null}
+          </div>
+        </div>
+      </div>
+
+      <div className="dash-grid-3">
+        <div className="dash-panel">
+          <h2>Top produits vendus</h2>
+          <div className="dash-ranking">
+            {data.topProducts.map(([name, amount], i) => (
+              <div key={name} className="dash-rank-row">
+                <span>{i + 1}</span>
+                <div>
+                  <b>{name}</b>
+                  <div className="dash-mini-track"><i style={{ width: Math.max(5, amount * 100 / maxProduct) + '%' }}></i></div>
+                </div>
+                <strong>{dh(amount)}</strong>
+              </div>
+            ))}
+            {!data.topProducts.length ? <p className="text-sm text-slate-400">Aucune vente.</p> : null}
+          </div>
+        </div>
+
+        <div className="dash-panel">
+          <h2>Top clients</h2>
+          <div className="dash-ranking">
+            {data.topClients.map(([name, amount], i) => (
+              <div key={name} className="dash-rank-row">
+                <span>{i + 1}</span>
+                <div>
+                  <b>{name}</b>
+                  <div className="dash-mini-track"><i style={{ width: Math.max(5, amount * 100 / maxClient) + '%' }}></i></div>
+                </div>
+                <strong>{dh(amount)}</strong>
+              </div>
+            ))}
+            {!data.topClients.length ? <p className="text-sm text-slate-400">Aucun client facturé.</p> : null}
+          </div>
+        </div>
+
+        <div className="dash-panel">
+          <h2>Documents ouverts</h2>
+          <div className="dash-open-box">
+            <div><span>Ventes ouvertes</span><b>{data.openSales}</b></div>
+            <div><span>Achats ouverts</span><b>{data.openPurchases}</b></div>
+            <div><span>Encaissements</span><b>{dh(data.cashIn)}</b></div>
+            <div><span>Décaissements</span><b>{dh(data.cashOut)}</b></div>
+          </div>
+        </div>
+      </div>
+
+      <div className="dash-grid-2">
+        <div className="dash-panel">
+          <h2>Derniers documents</h2>
+          <div className="dash-table-wrap">
+            <table className="dash-table">
+              <thead><tr><th>Type</th><th>N°</th><th>Tiers</th><th>Étape</th><th>Total</th><th>Paiement</th></tr></thead>
+              <tbody>
+                {data.recentDocs.map((d, i) => (
+                  <tr key={i}>
+                    <td>{d.kind}</td>
+                    <td className="font-mono text-xs">{d.number}</td>
+                    <td>{d.third || '-'}</td>
+                    <td><Badge tone="blue">{d.stage}</Badge></td>
+                    <td>{dh(d.total)}</td>
+                    <td><Badge tone={paymentTone(d.payment)}>{d.payment}</Badge></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="dash-panel">
+          <h2>Derniers mouvements stock</h2>
+          <div className="dash-table-wrap">
+            <table className="dash-table">
+              <thead><tr><th>Date</th><th>Produit</th><th>Qté</th><th>Motif</th></tr></thead>
+              <tbody>
+                {data.recentMoves.map(m => (
+                  <tr key={m.id}>
+                    <td>{m.created_at ? new Date(m.created_at).toLocaleDateString('fr-FR') : '-'}</td>
+                    <td>{m.products?.name || '-'}</td>
+                    <td><Badge tone={Number(m.quantity) >= 0 ? 'green' : 'red'}>{Number(m.quantity) >= 0 ? '+' : ''}{fmt(m.quantity)}</Badge></td>
+                    <td>{m.reason || '-'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}tion Products({ L }) {
   const [rows, setRows] = useState([]);
   const [form, setForm] = useState(null);
   const [stock, setStock] = useState(null);
