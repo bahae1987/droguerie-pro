@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-console.log('DROGUERIEPRO V42 SUPERADMIN_FIXES OK');
+console.log('DROGUERIEPRO V42 BUILD FIX OK');
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -601,6 +601,25 @@ function isPlatformPage(page) {
 
 function isBusinessPage(page) {
   return ['dashboard', 'profit', 'reporting', 'tools', 'products', 'sales', 'purchases', 'payments', 'stockMoves', 'clients', 'suppliers'].includes(page);
+}
+
+
+function canSeeRoleColumn(role, session = getStoredSession()) {
+  if (isSuperAdmin(session)) return true;
+  return !['SuperAdmin', 'Super Administrateur'].includes(role?.name);
+}
+
+function canSeePermissionRow(permission, session = getStoredSession()) {
+  if (isSuperAdmin(session)) return true;
+  return !isSaasPermission(permission?.code);
+}
+
+function isSaasPermission(code) {
+  return ['superadmin.manage', 'modules.manage', 'database.manage', 'tenants.manage'].includes(code || '')
+    || String(code || '').startsWith('superadmin.')
+    || String(code || '').startsWith('modules.')
+    || String(code || '').startsWith('database.')
+    || String(code || '').startsWith('tenants.');
 }
 
 function visibleMenuItem(item, session, disabledModules = getDisabledModulesCache()) {
@@ -1832,10 +1851,11 @@ function Layout({ L, lang, toggleLang, session, setSession }) {
   const [disabledModules, setDisabledModules] = useState(getDisabledModulesCache());
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const menu = [
-    ['dashboard', L('dashboard'), 'dashboard.read'],
+  const items = [
+['dashboard', L('dashboard'), 'dashboard.read'],
     ['saas', L('saasCenter'), 'superadmin.manage'],
     ['profit', L('profitCenter'), 'dashboard.read'],
+    ['reporting', L('reporting'), 'reporting.read'],
     ['tools', L('tools'), 'dashboard.read'],
     ['products', L('products'), 'products.read'],
     ['sales', L('sales'), 'sales.read'],
@@ -1849,7 +1869,23 @@ function Layout({ L, lang, toggleLang, session, setSession }) {
     ['clients', L('clients'), 'clients.read'],
     ['suppliers', L('suppliers'), 'suppliers.read'],
     ['users', L('users'), 'users.read']
-  ].filter(item => hasPerm(session, item[2]));
+  ];
+
+  useEffect(() => {
+    refreshSaasModulesCache().then(setDisabledModules);
+    const handler = e => setDisabledModules(e.detail || getDisabledModulesCache());
+    window.addEventListener('droguerie_modules_changed', handler);
+    return () => window.removeEventListener('droguerie_modules_changed', handler);
+  }, []);
+
+  useEffect(() => {
+    const visible = items.filter(item => visibleMenuItem(item, session, disabledModules));
+    if (!visible.some(x => x[0] === page)) {
+      setPage(visible[0]?.[0] || (isSuperAdmin(session) ? 'saas' : 'dashboard'));
+    }
+  }, [disabledModules, session, page]);
+
+  const visibleItems = items.filter(item => visibleMenuItem(item, session, disabledModules));
 
   return (
     <div className={lang === 'ar' ? 'rtl' : ''}>
@@ -1861,31 +1897,29 @@ function Layout({ L, lang, toggleLang, session, setSession }) {
       {mobileMenuOpen ? <div className="mobile-backdrop" onClick={() => setMobileMenuOpen(false)} /> : null}
       <div className="min-h-screen flex app-shell">
         <aside className={'w-64 bg-slate-900 text-slate-300 flex flex-col app-sidebar ' + (mobileMenuOpen ? 'open' : '')}>
-          <div className="p-5 border-b border-slate-800">
-            <div className="font-bold text-white text-xl">Droguerie<span className="text-amber-500">Pro</span></div>
-            <div className="text-xs text-slate-500">{session.user?.full_name} · {session.user?.role}</div>
+          <div className="p-6 border-b border-slate-800">
+            <div className="text-xl font-black text-white">Droguerie<span className="text-amber-500">Pro</span></div>
+            <div className="text-xs text-slate-400 mt-1">{session.user.full_name || session.user.username} · {session.user.role}</div>
           </div>
-
-          <nav className="p-3 flex-1 space-y-1">
-            {menu.map(item => (
+          <nav className="flex-1 p-4 space-y-1 overflow-auto">
+            {visibleItems.map(item => (
               <button
                 key={item[0]}
                 onClick={() => { setPage(item[0]); setMobileMenuOpen(false); }}
-                className={'w-full text-left px-3 py-2.5 rounded-lg text-sm ' + (page === item[0] ? 'bg-amber-500 text-slate-900 font-bold' : 'hover:bg-slate-800')}
+                className={'w-full text-left px-3 py-2 rounded-lg ' + (page === item[0] ? 'bg-amber-500 text-slate-900 font-bold' : 'hover:bg-slate-800 text-white')}
               >
                 {item[1]}
               </button>
             ))}
           </nav>
-
-          <div className="p-3 border-t border-slate-800 space-y-2">
-            <button onClick={toggleLang} className="btn bg-slate-800 w-full">{L('lang')}</button>
-            <button onClick={() => refreshCurrentSession(setSession)} className="btn bg-slate-800 w-full">Rafraîchir droits</button>
-            <button onClick={() => { clearStoredSession(); setSession(null); }} className="btn bg-slate-800 w-full">{L('logout')}</button>
+          <div className="p-4 border-t border-slate-800 space-y-2">
+            <button className="btn bg-white text-slate-900 w-full" onClick={toggleLang}>{L('lang')}</button>
+            <button className="btn bg-slate-800 text-white w-full" onClick={async () => { await refreshCurrentSession(setSession); alert('Droits actualisés'); }}>Rafraîchir droits</button>
+            <button className="btn bg-red-600 text-white w-full" onClick={() => { clearStoredSession(); setSession(null); }}>{L('logout')}</button>
           </div>
         </aside>
-
         <main className="flex-1 p-6 max-w-[1500px] mx-auto w-full app-main pro-main">
+
           {page === 'dashboard' ? <Dashboard L={L} /> : null}
           {page === 'saas' ? <SuperAdminCenter L={L} /> : null}
           {page === 'profit' ? <ProfitCenter L={L} /> : null}
@@ -1902,11 +1936,13 @@ function Layout({ L, lang, toggleLang, session, setSession }) {
           {page === 'clients' ? <Parties L={L} type="clients" /> : null}
           {page === 'suppliers' ? <Parties L={L} type="suppliers" /> : null}
           {page === 'users' ? <Users L={L} /> : null}
+        
         </main>
       </div>
     </div>
   );
 }
+
 
 function Header({ title, children }) {
   return (
