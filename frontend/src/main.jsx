@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-console.log('DROGUERIEPRO V33 MOBILE_NATIVE_PORTAL OK');
+console.log('DROGUERIEPRO V34 PRO_DESIGN_FEATURES OK');
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -29,7 +29,7 @@ const TXT = {
     deliveries: 'Livraisons', receipts: 'Réceptions', invoices: 'Factures', remaining: 'Reste',
     paid: 'Réglée', unpaid: 'Non réglée', partial: 'Partielle', cashIn: 'Encaissements',
     cashOut: 'Décaissements', vat: 'TVA', theme: 'Thème', company: 'Société', address: 'Adresse', phone: 'Téléphone', ice: 'ICE', cashRegister: 'Caisse', receiptNo: 'N° reçu', chequeNo: 'N° chèque', bank: 'Banque', dueDate: 'Échéance', paymentStatus: 'Statut', transferRef: 'Réf. virement', valueDate: 'Date valeur', terminal: 'TPE', transactionNo: 'N° transaction', billNo: 'N° effet', note: 'Observation', quantity: 'Quantité', date: 'Date', customer: 'Client',
-    supplier: 'Fournisseur', product: 'Produit', base: 'Base', remainingQty: 'Qté restante', orderedQty: 'Qté commandée', deliveredQty: 'Qté livrée', receivedQty: 'Qté reçue', qtyToProcess: 'Qté à traiter', alreadyProcessed: 'Déjà traité', includeLine: 'Inclure', removeLine: 'Retirer ligne', restoreLine: 'Restaurer ligne', open: 'Ouvert', closed: 'Clôturé', preview: 'Aperçu', print: 'Imprimer', unitPrice: 'PU', totalHT: 'Total HT', totalVAT: 'TVA', totalTTC: 'Total TTC', cancelPayment: 'Annuler règlement', canceled: 'Annulé', subtotal: 'Sous-total', signature: 'Signature', preparedBy: 'Préparé par', printDate: 'Date impression', legalNote: 'Document généré par DrogueriePro', arabicName: 'Nom arabe', docType: 'Type document', purchasePrice: 'Prix achat', salePrice: 'Prix vente', margin: 'Marge', movement: 'Mouvement', object: 'Objet', detail: 'Détail', actor: 'Utilisateur', createdBy: 'Créé par', baseDocNo: 'N° doc. base', location: 'Emplacement', assignedTo: 'Affecté à', clientOwner: 'Compte', stockTransfer: 'Transfert stock', fromBranch: 'Droguerie source', toBranch: 'Droguerie destination', stockValue: 'Valeur stock', lowStock: 'Stock critique', stockByBranch: 'Stock par droguerie', adjustment: 'Ajustement', stockIn: 'Entrée stock', stockOut: 'Sortie stock', reason: 'Motif', category: 'Catégorie', ref: 'Référence', name: 'Nom', role: 'Profil', payment: 'Paiement', document: 'Document', form: 'Formulaire', select: 'Sélectionner', productRef: 'Réf. produit', unit: 'Unité', minStock: 'Stock min', threshold: 'Seuil', stockAdjustIn: 'Entrée stock', stockAdjustOut: 'Sortie stock', operationType: 'Type opération', unitPurchasePrice: 'Prix achat unitaire', unitSalePrice: 'Prix vente unitaire', customerForm: 'Fiche client', supplierForm: 'Fiche fournisseur', productForm: 'Fiche produit', documentLines: 'Lignes document', completed: 'Terminé', notAvailable: 'Non applicable', mobileApp: 'Application mobile', androidApp: 'Application Android', iosApp: 'Application iOS', downloadAndroid: 'Télécharger APK Android', downloadIos: 'Télécharger iOS', installGuide: 'Guide installation', mobileAdminPortal: 'Portail mobile administrateur', appStoreNote: 'iOS nécessite App Store / TestFlight avec compte Apple Developer', androidNote: 'Android peut être installé via APK interne ou publié sur Play Store'
+    supplier: 'Fournisseur', product: 'Produit', base: 'Base', remainingQty: 'Qté restante', orderedQty: 'Qté commandée', deliveredQty: 'Qté livrée', receivedQty: 'Qté reçue', qtyToProcess: 'Qté à traiter', alreadyProcessed: 'Déjà traité', includeLine: 'Inclure', removeLine: 'Retirer ligne', restoreLine: 'Restaurer ligne', open: 'Ouvert', closed: 'Clôturé', preview: 'Aperçu', print: 'Imprimer', unitPrice: 'PU', totalHT: 'Total HT', totalVAT: 'TVA', totalTTC: 'Total TTC', cancelPayment: 'Annuler règlement', canceled: 'Annulé', subtotal: 'Sous-total', signature: 'Signature', preparedBy: 'Préparé par', printDate: 'Date impression', legalNote: 'Document généré par DrogueriePro', arabicName: 'Nom arabe', docType: 'Type document', purchasePrice: 'Prix achat', salePrice: 'Prix vente', margin: 'Marge', movement: 'Mouvement', object: 'Objet', detail: 'Détail', actor: 'Utilisateur', createdBy: 'Créé par', baseDocNo: 'N° doc. base', location: 'Emplacement', assignedTo: 'Affecté à', clientOwner: 'Compte', stockTransfer: 'Transfert stock', fromBranch: 'Droguerie source', toBranch: 'Droguerie destination', stockValue: 'Valeur stock', lowStock: 'Stock critique', stockByBranch: 'Stock par droguerie', adjustment: 'Ajustement', stockIn: 'Entrée stock', stockOut: 'Sortie stock', reason: 'Motif', category: 'Catégorie', ref: 'Référence', name: 'Nom', role: 'Profil', payment: 'Paiement', document: 'Document', form: 'Formulaire', select: 'Sélectionner', productRef: 'Réf. produit', unit: 'Unité', minStock: 'Stock min', threshold: 'Seuil', stockAdjustIn: 'Entrée stock', stockAdjustOut: 'Sortie stock', operationType: 'Type opération', unitPurchasePrice: 'Prix achat unitaire', unitSalePrice: 'Prix vente unitaire', customerForm: 'Fiche client', supplierForm: 'Fiche fournisseur', productForm: 'Fiche produit', documentLines: 'Lignes document', completed: 'Terminé', notAvailable: 'Non applicable', mobileApp: 'Application mobile', androidApp: 'Application Android', iosApp: 'Application iOS', downloadAndroid: 'Télécharger APK Android', downloadIos: 'Télécharger iOS', installGuide: 'Guide installation', mobileAdminPortal: 'Portail mobile administrateur', appStoreNote: 'iOS nécessite App Store / TestFlight avec compte Apple Developer', androidNote: 'Android peut être installé via APK interne ou publié sur Play Store', quickActions: 'Actions rapides', businessHealth: 'Santé activité', alerts: 'Alertes', recentActivity: 'Activité récente', topProducts: 'Top produits', todaySales: 'Ventes du jour', unpaidInvoices: 'Factures non réglées', stockAlerts: 'Alertes stock', customersCount: 'Nombre clients', suppliersCount: 'Nombre fournisseurs', adminCenter: 'Centre administrateur', proMode: 'Mode Pro', search: 'Rechercher', exportCsv: 'Exporter CSV', printList: 'Imprimer liste', risk: 'Risque', healthy: 'Sain', warning: 'Attention', critical: 'Critique', noData: 'Aucune donnée', performance: 'Performance'
   },
   ar: {
     login: 'تسجيل الدخول', username: 'المستخدم', password: 'كلمة المرور', connect: 'دخول',
@@ -42,7 +42,7 @@ const TXT = {
     deliveries: 'التسليمات', receipts: 'الاستلامات', invoices: 'الفواتير', remaining: 'الباقي',
     paid: 'مؤداة', unpaid: 'غير مؤداة', partial: 'جزئية', cashIn: 'المداخيل',
     cashOut: 'المصاريف', vat: 'الضريبة', theme: 'المظهر', company: 'الشركة', address: 'العنوان', phone: 'الهاتف', ice: 'ICE', cashRegister: 'الصندوق', receiptNo: 'رقم الوصل', chequeNo: 'رقم الشيك', bank: 'البنك', dueDate: 'الاستحقاق', paymentStatus: 'الحالة', transferRef: 'مرجع التحويل', valueDate: 'تاريخ القيمة', terminal: 'جهاز الأداء', transactionNo: 'رقم العملية', billNo: 'رقم الكمبيالة', note: 'ملاحظة', quantity: 'الكمية', date: 'التاريخ', customer: 'الزبون',
-    supplier: 'المورد', product: 'المنتج', base: 'الأصل', remainingQty: 'الكمية المتبقية', orderedQty: 'الكمية المطلوبة', deliveredQty: 'الكمية المسلمة', receivedQty: 'الكمية المستلمة', qtyToProcess: 'الكمية المراد معالجتها', alreadyProcessed: 'تمت معالجته', includeLine: 'تضمين', removeLine: 'حذف السطر', restoreLine: 'استرجاع السطر', open: 'مفتوح', closed: 'مغلق', preview: 'معاينة', print: 'طباعة', unitPrice: 'ثمن الوحدة', totalHT: 'المجموع بدون الضريبة', totalVAT: 'الضريبة', totalTTC: 'المجموع مع الضريبة', cancelPayment: 'إلغاء الأداء', canceled: 'ملغى', subtotal: 'المجموع الجزئي', signature: 'التوقيع', preparedBy: 'أنجز من طرف', printDate: 'تاريخ الطباعة', legalNote: 'وثيقة تم إنشاؤها بواسطة DrogueriePro', arabicName: 'الاسم بالعربية', docType: 'نوع الوثيقة', purchasePrice: 'ثمن الشراء', salePrice: 'ثمن البيع', margin: 'الهامش', movement: 'الحركة', object: 'العنصر', detail: 'التفاصيل', actor: 'المستخدم', createdBy: 'أنشئ من طرف', baseDocNo: 'رقم الوثيقة الأصلية', location: 'الموقع', assignedTo: 'مكلف به', clientOwner: 'الحساب', stockTransfer: 'تحويل المخزون', fromBranch: 'الدروكري المصدر', toBranch: 'الدروكري الوجهة', stockValue: 'قيمة المخزون', lowStock: 'مخزون حرج', stockByBranch: 'المخزون حسب الدروكري', adjustment: 'تعديل المخزون', stockIn: 'دخول المخزون', stockOut: 'خروج المخزون', reason: 'السبب', category: 'الفئة', ref: 'المرجع', name: 'الاسم', role: 'الدور', payment: 'الأداء', document: 'الوثيقة', form: 'النموذج', select: 'اختيار', productRef: 'مرجع المنتج', unit: 'الوحدة', minStock: 'الحد الأدنى للمخزون', threshold: 'الحد الأدنى', stockAdjustIn: 'إدخال مخزون', stockAdjustOut: 'إخراج مخزون', operationType: 'نوع العملية', unitPurchasePrice: 'ثمن الشراء للوحدة', unitSalePrice: 'ثمن البيع للوحدة', customerForm: 'بطاقة الزبون', supplierForm: 'بطاقة المورد', productForm: 'بطاقة المنتج', documentLines: 'سطور الوثيقة', completed: 'منتهية', notAvailable: 'غير مطبق', mobileApp: 'تطبيق الهاتف', androidApp: 'تطبيق أندرويد', iosApp: 'تطبيق iOS', downloadAndroid: 'تحميل APK أندرويد', downloadIos: 'تحميل iOS', installGuide: 'دليل التثبيت', mobileAdminPortal: 'بوابة إدارة التطبيق المحمول', appStoreNote: 'يتطلب iOS النشر عبر App Store أو TestFlight وحساب Apple Developer', androidNote: 'يمكن تثبيت أندرويد عبر APK داخلي أو نشره على Play Store'
+    supplier: 'المورد', product: 'المنتج', base: 'الأصل', remainingQty: 'الكمية المتبقية', orderedQty: 'الكمية المطلوبة', deliveredQty: 'الكمية المسلمة', receivedQty: 'الكمية المستلمة', qtyToProcess: 'الكمية المراد معالجتها', alreadyProcessed: 'تمت معالجته', includeLine: 'تضمين', removeLine: 'حذف السطر', restoreLine: 'استرجاع السطر', open: 'مفتوح', closed: 'مغلق', preview: 'معاينة', print: 'طباعة', unitPrice: 'ثمن الوحدة', totalHT: 'المجموع بدون الضريبة', totalVAT: 'الضريبة', totalTTC: 'المجموع مع الضريبة', cancelPayment: 'إلغاء الأداء', canceled: 'ملغى', subtotal: 'المجموع الجزئي', signature: 'التوقيع', preparedBy: 'أنجز من طرف', printDate: 'تاريخ الطباعة', legalNote: 'وثيقة تم إنشاؤها بواسطة DrogueriePro', arabicName: 'الاسم بالعربية', docType: 'نوع الوثيقة', purchasePrice: 'ثمن الشراء', salePrice: 'ثمن البيع', margin: 'الهامش', movement: 'الحركة', object: 'العنصر', detail: 'التفاصيل', actor: 'المستخدم', createdBy: 'أنشئ من طرف', baseDocNo: 'رقم الوثيقة الأصلية', location: 'الموقع', assignedTo: 'مكلف به', clientOwner: 'الحساب', stockTransfer: 'تحويل المخزون', fromBranch: 'الدروكري المصدر', toBranch: 'الدروكري الوجهة', stockValue: 'قيمة المخزون', lowStock: 'مخزون حرج', stockByBranch: 'المخزون حسب الدروكري', adjustment: 'تعديل المخزون', stockIn: 'دخول المخزون', stockOut: 'خروج المخزون', reason: 'السبب', category: 'الفئة', ref: 'المرجع', name: 'الاسم', role: 'الدور', payment: 'الأداء', document: 'الوثيقة', form: 'النموذج', select: 'اختيار', productRef: 'مرجع المنتج', unit: 'الوحدة', minStock: 'الحد الأدنى للمخزون', threshold: 'الحد الأدنى', stockAdjustIn: 'إدخال مخزون', stockAdjustOut: 'إخراج مخزون', operationType: 'نوع العملية', unitPurchasePrice: 'ثمن الشراء للوحدة', unitSalePrice: 'ثمن البيع للوحدة', customerForm: 'بطاقة الزبون', supplierForm: 'بطاقة المورد', productForm: 'بطاقة المنتج', documentLines: 'سطور الوثيقة', completed: 'منتهية', notAvailable: 'غير مطبق', mobileApp: 'تطبيق الهاتف', androidApp: 'تطبيق أندرويد', iosApp: 'تطبيق iOS', downloadAndroid: 'تحميل APK أندرويد', downloadIos: 'تحميل iOS', installGuide: 'دليل التثبيت', mobileAdminPortal: 'بوابة إدارة التطبيق المحمول', appStoreNote: 'يتطلب iOS النشر عبر App Store أو TestFlight وحساب Apple Developer', androidNote: 'يمكن تثبيت أندرويد عبر APK داخلي أو نشره على Play Store', quickActions: 'إجراءات سريعة', businessHealth: 'صحة النشاط', alerts: 'تنبيهات', recentActivity: 'آخر النشاطات', topProducts: 'أفضل المنتجات', todaySales: 'مبيعات اليوم', unpaidInvoices: 'فواتير غير مؤداة', stockAlerts: 'تنبيهات المخزون', customersCount: 'عدد الزبناء', suppliersCount: 'عدد الموردين', adminCenter: 'مركز الإدارة', proMode: 'الوضع الاحترافي', search: 'بحث', exportCsv: 'تصدير CSV', printList: 'طباعة اللائحة', risk: 'خطر', healthy: 'جيد', warning: 'تنبيه', critical: 'حرج', noData: 'لا توجد بيانات', performance: 'الأداء'
   }
 };
 
@@ -290,6 +290,75 @@ async function transferStock({ productId, toBranchId, quantity, reason }) {
 
   await auditLog('Stock', 'TRANSFER', docNumber, 'Transfert stock vers droguerie #' + toBranchId + ' quantité ' + qty);
 }
+
+
+function downloadCsv(filename, rows) {
+  const list = Array.isArray(rows) ? rows : [];
+  if (!list.length) {
+    alert('Aucune donnée à exporter');
+    return;
+  }
+  const headers = Object.keys(list[0]);
+  const csv = [
+    headers.join(';'),
+    ...list.map(row => headers.map(h => `"${String(row[h] ?? '').replaceAll('"', '""')}"`).join(';'))
+  ].join('\n');
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+async function loadProDashboardData() {
+  const session = getStoredSession();
+  const [
+    { data: products },
+    { data: sales },
+    { data: purchases },
+    { data: clients },
+    { data: suppliers },
+    movements
+  ] = await Promise.all([
+    applyProductScope(supabase.from('products').select('*, branches(name)'), session),
+    applyDocScope(supabase.from('sales').select('*'), 'sales', session),
+    applyDocScope(supabase.from('purchases').select('*'), 'purchases', session),
+    supabase.from('clients').select('*'),
+    supabase.from('suppliers').select('*'),
+    loadStockMovements().catch(() => [])
+  ]);
+
+  const prod = (products || []).map(mapProduct);
+  const docsSales = (sales || []).map(mapDoc);
+  const docsPurchases = (purchases || []).map(mapDoc);
+  const todayKey = today();
+
+  const todaySales = docsSales.filter(d => d.date === todayKey).reduce((s, d) => s + Number(d.totalTTC || 0), 0);
+  const unpaidInvoices = [...docsSales, ...docsPurchases].filter(d => d.stage === 'facture' && d.statutPaiement !== 'paid').length;
+  const stockAlerts = prod.filter(p => Number(p.quantite || 0) <= Number(p.stockMin || 0)).length;
+  const stockValue = prod.reduce((s, p) => s + Number(p.quantite || 0) * Number(p.prixAchat || 0), 0);
+
+  return {
+    products: prod,
+    sales: docsSales,
+    purchases: docsPurchases,
+    clients: clients || [],
+    suppliers: suppliers || [],
+    movements: movements || [],
+    kpis: {
+      todaySales,
+      unpaidInvoices,
+      stockAlerts,
+      stockValue,
+      clientsCount: (clients || []).length,
+      suppliersCount: (suppliers || []).length
+    }
+  };
+}
+
 
 function jsonValue(v, fallback) {
   if (!v) return fallback;
@@ -1546,7 +1615,7 @@ function Layout({ L, lang, toggleLang, session, setSession }) {
           </div>
         </aside>
 
-        <main className="flex-1 p-6 max-w-[1500px] mx-auto w-full app-main">
+        <main className="flex-1 p-6 max-w-[1500px] mx-auto w-full app-main pro-main">
           {page === 'dashboard' ? <Dashboard L={L} /> : null}
           {page === 'products' ? <Products L={L} /> : null}
           {page === 'sales' ? <Docs L={L} type="sales" /> : null}
@@ -1615,23 +1684,10 @@ function Dashboard({ L }) {
   async function load() {
     try {
       setErr('');
-      const [{ data: products }, { data: sales }, { data: purchases }] = await Promise.all([
-        applyProductScope(supabase.from('products').select('*'), getStoredSession()),
-        applyDocScope(supabase.from('sales').select('*'), 'sales', getStoredSession()),
-        applyDocScope(supabase.from('purchases').select('*'), 'purchases', getStoredSession())
-      ]);
-
-      const factures = (sales || []).filter(x => x.stage === 'facture');
-      const factAch = (purchases || []).filter(x => x.stage === 'facture');
-
-      setData({
-        products: products?.length || 0,
-        lowStock: products?.filter(p => Number(p.quantity) <= Number(p.min_stock)).length || 0,
-        stockValue: products?.reduce((s, p) => s + Number(p.quantity || 0) * Number(p.purchase_price || 0), 0) || 0,
-        ca: factures.reduce((s, x) => s + Number(x.total_ttc || 0), 0),
-        dettes: factAch.reduce((s, x) => s + paymentInfo(x).rest, 0)
-      });
-    } catch (e) { setErr(e.message); }
+      setData(await loadProDashboardData());
+    } catch (e) {
+      setErr(e.message);
+    }
   }
 
   useEffect(() => { load(); }, []);
@@ -1639,19 +1695,73 @@ function Dashboard({ L }) {
   if (err) return <ErrorBox msg={err} />;
   if (!data) return <p>Chargement...</p>;
 
-  const cards = [
-    [L('sales'), dh(data.ca)],
-    [L('stock'), dh(data.stockValue)],
-    [L('products'), data.products],
-    ['Alertes', data.lowStock],
-    ['Dettes', dh(data.dettes)]
-  ];
+  const k = data.kpis;
+  const recent = data.movements.slice(0, 6);
+  const lowProducts = data.products.filter(p => Number(p.quantite || 0) <= Number(p.stockMin || 0)).slice(0, 6);
+  const topProducts = [...data.products]
+    .sort((a, b) => Number(b.quantite || 0) * Number(b.prixVente || 0) - Number(a.quantite || 0) * Number(a.prixVente || 0))
+    .slice(0, 5);
 
   return (
     <>
-      <Header title={L('dashboard')}><button onClick={load} className="btn bg-white border">↻</button></Header>
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        {cards.map(c => <div key={c[0]} className="card p-5"><p className="text-xs text-slate-400">{c[0]}</p><p className="text-2xl font-black mt-2 font-mono">{c[1]}</p></div>)}
+      <Header title={L('dashboard')}>
+        <button onClick={load} className="btn bg-white border">↻</button>
+        <button onClick={() => downloadCsv('drogueriepro-produits.csv', data.products.map(p => ({ ref: p.ref, nom: p.nom, stock: p.quantite, prix_achat: p.prixAchat, prix_vente: p.prixVente, droguerie: p.branchName })))} className="btn bg-slate-900 text-white">
+          {L('exportCsv')}
+        </button>
+      </Header>
+
+      <div className="pro-hero mb-6">
+        <div>
+          <div className="pro-eyebrow">DrogueriePro · {L('proMode')}</div>
+          <h1>{L('businessHealth')}</h1>
+          <p>{L('performance')} stock, ventes, achats, paiements et alertes opérationnelles.</p>
+        </div>
+        <div className="pro-hero-score">
+          <span>{k.stockAlerts > 0 || k.unpaidInvoices > 0 ? L('warning') : L('healthy')}</span>
+          <b>{k.stockAlerts + k.unpaidInvoices}</b>
+        </div>
+      </div>
+
+      <div className="pro-kpi-grid mb-6">
+        <div className="pro-kpi-card"><span>{L('todaySales')}</span><b>{dh(k.todaySales)}</b><small>{L('sales')}</small></div>
+        <div className="pro-kpi-card"><span>{L('stockValue')}</span><b>{dh(k.stockValue)}</b><small>{L('products')}</small></div>
+        <div className="pro-kpi-card"><span>{L('unpaidInvoices')}</span><b>{k.unpaidInvoices}</b><small>{L('risk')}</small></div>
+        <div className="pro-kpi-card"><span>{L('stockAlerts')}</span><b>{k.stockAlerts}</b><small>{L('critical')}</small></div>
+        <div className="pro-kpi-card"><span>{L('customersCount')}</span><b>{k.clientsCount}</b><small>{L('clients')}</small></div>
+        <div className="pro-kpi-card"><span>{L('suppliersCount')}</span><b>{k.suppliersCount}</b><small>{L('suppliers')}</small></div>
+      </div>
+
+      <div className="grid md:grid-cols-3 gap-5">
+        <div className="card pro-panel p-5">
+          <h2>{L('alerts')}</h2>
+          {lowProducts.length ? lowProducts.map(p => (
+            <div key={p.id} className="pro-alert-row">
+              <div><b>{p.nom}</b><p>{p.ref} · {p.branchName || '-'}</p></div>
+              <Badge tone="red">{fmt(p.quantite)} / {fmt(p.stockMin)}</Badge>
+            </div>
+          )) : <p className="text-sm text-slate-500">{L('noData')}</p>}
+        </div>
+
+        <div className="card pro-panel p-5">
+          <h2>{L('recentActivity')}</h2>
+          {recent.length ? recent.map(m => (
+            <div key={m.id} className="pro-activity-row">
+              <span className={Number(m.quantity) >= 0 ? 'pro-dot-in' : 'pro-dot-out'} />
+              <div><b>{m.productName || '-'}</b><p>{m.reason || '-'} · {fmt(m.quantity)}</p></div>
+            </div>
+          )) : <p className="text-sm text-slate-500">{L('noData')}</p>}
+        </div>
+
+        <div className="card pro-panel p-5">
+          <h2>{L('topProducts')}</h2>
+          {topProducts.length ? topProducts.map(p => (
+            <div key={p.id} className="pro-top-row">
+              <div><b>{p.nom}</b><p>{p.ref} · {fmt(p.quantite)} {p.unite}</p></div>
+              <strong>{dh(Number(p.quantite || 0) * Number(p.prixVente || 0))}</strong>
+            </div>
+          )) : <p className="text-sm text-slate-500">{L('noData')}</p>}
+        </div>
       </div>
     </>
   );
@@ -1668,6 +1778,7 @@ function Products({ L }) {
   const [stock, setStock] = useState(null);
   const [transfer, setTransfer] = useState(null);
   const [branchFilter, setBranchFilter] = useState('all');
+  const [search, setSearch] = useState('');
   const [err, setErr] = useState('');
 
   async function load() {
@@ -1687,9 +1798,10 @@ function Products({ L }) {
 
   useEffect(() => { load(); }, []);
 
-  const visibleRows = branchFilter === 'all'
+  const visibleRows = (branchFilter === 'all'
     ? rows
-    : rows.filter(p => String(p.branchId || '') === String(branchFilter));
+    : rows.filter(p => String(p.branchId || '') === String(branchFilter)))
+    .filter(p => !search || [p.ref, p.nom, p.nomAr, p.categorie, p.branchName].join(' ').toLowerCase().includes(search.toLowerCase()));
 
   const totalQty = visibleRows.reduce((s, p) => s + Number(p.quantite || 0), 0);
   const stockValue = visibleRows.reduce((s, p) => s + Number(p.quantite || 0) * Number(p.prixAchat || 0), 0);
@@ -1755,6 +1867,8 @@ function Products({ L }) {
   return (
     <>
       <Header title={L('products')}>
+        <input className="input max-w-xs" placeholder={L('search')} value={search} onChange={e => setSearch(e.target.value)} />
+        <button onClick={() => downloadCsv('produits.csv', visibleRows.map(p => ({ ref: p.ref, nom: p.nom, categorie: p.categorie, stock: p.quantite, prix_achat: p.prixAchat, prix_vente: p.prixVente, droguerie: p.branchName })))} className="btn bg-white border">{L('exportCsv')}</button>
         {isAdmin(getStoredSession()) ? (
           <select className="input max-w-xs" value={branchFilter} onChange={e => setBranchFilter(e.target.value)}>
             <option value="all">{L('all')} - {L('branches')}</option>
@@ -2623,6 +2737,7 @@ function Parties({ L, type }) {
   const [branches, setBranches] = useState([]);
   const [form, setForm] = useState(null);
   const [ownerFilter, setOwnerFilter] = useState('all');
+  const [search, setSearch] = useState('');
   const [err, setErr] = useState('');
 
   async function load() {
@@ -2670,15 +2785,18 @@ function Parties({ L, type }) {
 
   if (err) return <ErrorBox msg={err} />;
 
-  const filteredRows = ownerFilter === 'all'
+  const filteredRows = (ownerFilter === 'all'
     ? rows
-    : rows.filter(x => String(x.assigned_to || '') === String(ownerFilter));
+    : rows.filter(x => String(x.assigned_to || '') === String(ownerFilter)))
+    .filter(x => !search || [x.name, x.ice, x.phone, x.city, x.assignedToLabel].join(' ').toLowerCase().includes(search.toLowerCase()));
 
   const uniqueOwners = users.filter(u => rows.some(x => String(x.assigned_to || '') === String(u.id)));
 
   return (
     <>
       <Header title={type === 'clients' ? L('clients') : L('suppliers')}>
+        <input className="input max-w-xs" placeholder={L('search')} value={search} onChange={e => setSearch(e.target.value)} />
+        <button onClick={() => downloadCsv((type === 'clients' ? 'clients.csv' : 'fournisseurs.csv'), filteredRows.map(x => ({ nom: x.name, ice: x.ice, telephone: x.phone, ville: x.city, cree_par: x.createdByLabel, affecte_a: x.assignedToLabel })))} className="btn bg-white border">{L('exportCsv')}</button>
         {type === 'clients' ? (
           <select className="input max-w-xs" value={ownerFilter} onChange={e => setOwnerFilter(e.target.value)}>
             <option value="all">{L('all')} - {L('clientOwner')}</option>
