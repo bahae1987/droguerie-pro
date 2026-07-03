@@ -1046,3 +1046,9 @@ body {
   background: #fffbeb;
   border-color: #f59e0b;
 }
+
+/* V46 Backup center */
+.backup-table-ok {
+  color: #047857;
+  font-weight: 800;
+}
