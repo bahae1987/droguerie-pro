@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-console.log('DROGUERIEPRO V43 STABLE NO BLANK OK');
+console.log('DROGUERIEPRO V44 BRANCH_FILTER_ALL_MODULES OK');
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -29,7 +29,7 @@ const TXT = {
     deliveries: 'Livraisons', receipts: 'Réceptions', invoices: 'Factures', remaining: 'Reste',
     paid: 'Réglée', unpaid: 'Non réglée', partial: 'Partielle', cashIn: 'Encaissements',
     cashOut: 'Décaissements', vat: 'TVA', theme: 'Thème', company: 'Société', address: 'Adresse', phone: 'Téléphone', ice: 'ICE', cashRegister: 'Caisse', receiptNo: 'N° reçu', chequeNo: 'N° chèque', bank: 'Banque', dueDate: 'Échéance', paymentStatus: 'Statut', transferRef: 'Réf. virement', valueDate: 'Date valeur', terminal: 'TPE', transactionNo: 'N° transaction', billNo: 'N° effet', note: 'Observation', quantity: 'Quantité', date: 'Date', customer: 'Client',
-    supplier: 'Fournisseur', product: 'Produit', base: 'Base', remainingQty: 'Qté restante', orderedQty: 'Qté commandée', deliveredQty: 'Qté livrée', receivedQty: 'Qté reçue', qtyToProcess: 'Qté à traiter', alreadyProcessed: 'Déjà traité', includeLine: 'Inclure', removeLine: 'Retirer ligne', restoreLine: 'Restaurer ligne', open: 'Ouvert', closed: 'Clôturé', preview: 'Aperçu', print: 'Imprimer', unitPrice: 'PU', totalHT: 'Total HT', totalVAT: 'TVA', totalTTC: 'Total TTC', cancelPayment: 'Annuler règlement', canceled: 'Annulé', subtotal: 'Sous-total', signature: 'Signature', preparedBy: 'Préparé par', printDate: 'Date impression', legalNote: 'Document généré par DrogueriePro', arabicName: 'Nom arabe', docType: 'Type document', purchasePrice: 'Prix achat', salePrice: 'Prix vente', margin: 'Marge', movement: 'Mouvement', object: 'Objet', detail: 'Détail', actor: 'Utilisateur', createdBy: 'Créé par', baseDocNo: 'N° doc. base', location: 'Emplacement', assignedTo: 'Affecté à', clientOwner: 'Compte', stockTransfer: 'Transfert stock', fromBranch: 'Droguerie source', toBranch: 'Droguerie destination', stockValue: 'Valeur stock', lowStock: 'Stock critique', stockByBranch: 'Stock par droguerie', adjustment: 'Ajustement', stockIn: 'Entrée stock', stockOut: 'Sortie stock', reason: 'Motif', category: 'Catégorie', ref: 'Référence', name: 'Nom', role: 'Profil', payment: 'Paiement', document: 'Document', form: 'Formulaire', select: 'Sélectionner', productRef: 'Réf. produit', unit: 'Unité', minStock: 'Stock min', threshold: 'Seuil', stockAdjustIn: 'Entrée stock', stockAdjustOut: 'Sortie stock', operationType: 'Type opération', unitPurchasePrice: 'Prix achat unitaire', unitSalePrice: 'Prix vente unitaire', customerForm: 'Fiche client', supplierForm: 'Fiche fournisseur', productForm: 'Fiche produit', documentLines: 'Lignes document', completed: 'Terminé', notAvailable: 'Non applicable', mobileApp: 'Application mobile', androidApp: 'Application Android', iosApp: 'Application iOS', downloadAndroid: 'Télécharger APK Android', downloadIos: 'Télécharger iOS', installGuide: 'Guide installation', mobileAdminPortal: 'Portail mobile administrateur', appStoreNote: 'iOS nécessite App Store / TestFlight avec compte Apple Developer', androidNote: 'Android peut être installé via APK interne ou publié sur Play Store', quickActions: 'Actions rapides', businessHealth: 'Santé activité', alerts: 'Alertes', recentActivity: 'Activité récente', topProducts: 'Top produits', todaySales: 'Ventes du jour', unpaidInvoices: 'Factures non réglées', stockAlerts: 'Alertes stock', customersCount: 'Nombre clients', suppliersCount: 'Nombre fournisseurs', adminCenter: 'Centre administrateur', proMode: 'Mode Pro', search: 'Rechercher', exportCsv: 'Exporter CSV', printList: 'Imprimer liste', risk: 'Risque', healthy: 'Sain', warning: 'Attention', critical: 'Critique', noData: 'Aucune donnée', performance: 'Performance', customerInvoice: 'Facture client', supplierInvoice: 'Facture fournisseur', customerQuote: 'Devis client', customerOrder: 'Commande client', customerDelivery: 'Bon de livraison client', supplierOrder: 'Commande fournisseur', supplierReceipt: 'Bon de réception fournisseur', profitCenter: 'Centre rentabilité', profitability: 'Rentabilité', profitAlerts: 'Alertes rentabilité', priceSuggestion: 'Suggestion prix', minimumSalePrice: 'Prix minimum conseillé', targetMargin: 'Marge cible', marginRate: 'Taux marge', reorderProposal: 'Proposition réapprovisionnement', reorderQty: 'Qté à commander', deadStock: 'Stock dormant', fastMoving: 'Rotation rapide', slowMoving: 'Rotation lente', valuation: 'Valorisation', commercialTerms: 'Conditions commerciales', preparedFor: 'Établi pour', documentValidity: 'Validité document', deliveryAddress: 'Adresse livraison', tools: 'Outils', calculator: 'Calculatrice', marginCalculator: 'Calcul marge', salePriceFromMargin: 'Prix selon marge', purchaseCost: 'Coût achat', wantedMargin: 'Marge souhaitée', result: 'Résultat', clear: 'Effacer', simplePrint: 'Impression simple', kpiRevenue: 'Chiffre d’affaires', kpiPurchases: 'Volume achats', kpiCashIn: 'Total encaissé', kpiCashOut: 'Total décaissé', kpiStockQty: 'Quantité stock', kpiOpenDocs: 'Documents ouverts', kpiPaidRate: 'Taux factures réglées', kpiLowMargin: 'Produits faible marge', paymentList: 'Liste paiements', superAdmin: 'SuperAdmin', saasCenter: 'Centre SaaS', modulesCenter: 'Gestion modules', databaseCenter: 'Base de données', subscription: 'Abonnement', plan: 'Plan', enabled: 'Activé', disabled: 'Désactivé', moduleCode: 'Code module', moduleName: 'Nom module', modulePrice: 'Prix module', commercialPack: 'Pack commercial', tenant: 'Client / Tenant', tenants: 'Clients / Tenants', databaseStats: 'Statistiques base', tableName: 'Table', recordsCount: 'Enregistrements', fixStockTransfer: 'Correction transfert stock', moduleBilling: 'Facturation modules', monthlyPrice: 'Prix mensuel', yearlyPrice: 'Prix annuel', reporting: 'Reporting', customerDebts: 'Dettes clients', supplierDebts: 'Dettes fournisseurs', totalDebt: 'Total dette', businessModules: 'Modules métier', platformModules: 'Modules plateforme', protectedProfile: 'Profil protégé'
+    supplier: 'Fournisseur', product: 'Produit', base: 'Base', remainingQty: 'Qté restante', orderedQty: 'Qté commandée', deliveredQty: 'Qté livrée', receivedQty: 'Qté reçue', qtyToProcess: 'Qté à traiter', alreadyProcessed: 'Déjà traité', includeLine: 'Inclure', removeLine: 'Retirer ligne', restoreLine: 'Restaurer ligne', open: 'Ouvert', closed: 'Clôturé', preview: 'Aperçu', print: 'Imprimer', unitPrice: 'PU', totalHT: 'Total HT', totalVAT: 'TVA', totalTTC: 'Total TTC', cancelPayment: 'Annuler règlement', canceled: 'Annulé', subtotal: 'Sous-total', signature: 'Signature', preparedBy: 'Préparé par', printDate: 'Date impression', legalNote: 'Document généré par DrogueriePro', arabicName: 'Nom arabe', docType: 'Type document', purchasePrice: 'Prix achat', salePrice: 'Prix vente', margin: 'Marge', movement: 'Mouvement', object: 'Objet', detail: 'Détail', actor: 'Utilisateur', createdBy: 'Créé par', baseDocNo: 'N° doc. base', location: 'Emplacement', assignedTo: 'Affecté à', clientOwner: 'Compte', stockTransfer: 'Transfert stock', fromBranch: 'Droguerie source', toBranch: 'Droguerie destination', stockValue: 'Valeur stock', lowStock: 'Stock critique', stockByBranch: 'Stock par droguerie', adjustment: 'Ajustement', stockIn: 'Entrée stock', stockOut: 'Sortie stock', reason: 'Motif', category: 'Catégorie', ref: 'Référence', name: 'Nom', role: 'Profil', payment: 'Paiement', document: 'Document', form: 'Formulaire', select: 'Sélectionner', productRef: 'Réf. produit', unit: 'Unité', minStock: 'Stock min', threshold: 'Seuil', stockAdjustIn: 'Entrée stock', stockAdjustOut: 'Sortie stock', operationType: 'Type opération', unitPurchasePrice: 'Prix achat unitaire', unitSalePrice: 'Prix vente unitaire', customerForm: 'Fiche client', supplierForm: 'Fiche fournisseur', productForm: 'Fiche produit', documentLines: 'Lignes document', completed: 'Terminé', notAvailable: 'Non applicable', mobileApp: 'Application mobile', androidApp: 'Application Android', iosApp: 'Application iOS', downloadAndroid: 'Télécharger APK Android', downloadIos: 'Télécharger iOS', installGuide: 'Guide installation', mobileAdminPortal: 'Portail mobile administrateur', appStoreNote: 'iOS nécessite App Store / TestFlight avec compte Apple Developer', androidNote: 'Android peut être installé via APK interne ou publié sur Play Store', quickActions: 'Actions rapides', businessHealth: 'Santé activité', alerts: 'Alertes', recentActivity: 'Activité récente', topProducts: 'Top produits', todaySales: 'Ventes du jour', unpaidInvoices: 'Factures non réglées', stockAlerts: 'Alertes stock', customersCount: 'Nombre clients', suppliersCount: 'Nombre fournisseurs', adminCenter: 'Centre administrateur', proMode: 'Mode Pro', search: 'Rechercher', exportCsv: 'Exporter CSV', printList: 'Imprimer liste', risk: 'Risque', healthy: 'Sain', warning: 'Attention', critical: 'Critique', noData: 'Aucune donnée', performance: 'Performance', customerInvoice: 'Facture client', supplierInvoice: 'Facture fournisseur', customerQuote: 'Devis client', customerOrder: 'Commande client', customerDelivery: 'Bon de livraison client', supplierOrder: 'Commande fournisseur', supplierReceipt: 'Bon de réception fournisseur', profitCenter: 'Centre rentabilité', profitability: 'Rentabilité', profitAlerts: 'Alertes rentabilité', priceSuggestion: 'Suggestion prix', minimumSalePrice: 'Prix minimum conseillé', targetMargin: 'Marge cible', marginRate: 'Taux marge', reorderProposal: 'Proposition réapprovisionnement', reorderQty: 'Qté à commander', deadStock: 'Stock dormant', fastMoving: 'Rotation rapide', slowMoving: 'Rotation lente', valuation: 'Valorisation', commercialTerms: 'Conditions commerciales', preparedFor: 'Établi pour', documentValidity: 'Validité document', deliveryAddress: 'Adresse livraison', tools: 'Outils', calculator: 'Calculatrice', marginCalculator: 'Calcul marge', salePriceFromMargin: 'Prix selon marge', purchaseCost: 'Coût achat', wantedMargin: 'Marge souhaitée', result: 'Résultat', clear: 'Effacer', simplePrint: 'Impression simple', kpiRevenue: 'Chiffre d’affaires', kpiPurchases: 'Volume achats', kpiCashIn: 'Total encaissé', kpiCashOut: 'Total décaissé', kpiStockQty: 'Quantité stock', kpiOpenDocs: 'Documents ouverts', kpiPaidRate: 'Taux factures réglées', kpiLowMargin: 'Produits faible marge', paymentList: 'Liste paiements', superAdmin: 'SuperAdmin', saasCenter: 'Centre SaaS', modulesCenter: 'Gestion modules', databaseCenter: 'Base de données', subscription: 'Abonnement', plan: 'Plan', enabled: 'Activé', disabled: 'Désactivé', moduleCode: 'Code module', moduleName: 'Nom module', modulePrice: 'Prix module', commercialPack: 'Pack commercial', tenant: 'Client / Tenant', tenants: 'Clients / Tenants', databaseStats: 'Statistiques base', tableName: 'Table', recordsCount: 'Enregistrements', fixStockTransfer: 'Correction transfert stock', moduleBilling: 'Facturation modules', monthlyPrice: 'Prix mensuel', yearlyPrice: 'Prix annuel', branchFilter: 'Filtre droguerie', allBranches: 'Toutes drogueries', applyFilter: 'Appliquer filtre', filteredByBranch: 'Filtré par droguerie', reporting: 'Reporting', customerDebts: 'Dettes clients', supplierDebts: 'Dettes fournisseurs', totalDebt: 'Total dette', businessModules: 'Modules métier', platformModules: 'Modules plateforme', protectedProfile: 'Profil protégé'
   },
   ar: {
     login: 'تسجيل الدخول', username: 'اسم المستخدم', password: 'كلمة المرور', connect: 'الدخول إلى النظام',
@@ -43,7 +43,7 @@ const TXT = {
     paid: 'مدفوعة بالكامل', unpaid: 'غير مدفوعة', partial: 'مدفوعة جزئياً', cashIn: 'المقبوضات',
     cashOut: 'المدفوعات', vat: 'الضريبة على القيمة المضافة', theme: 'المظهر', company: 'الشركة', address: 'العنوان', phone: 'الهاتف', ice: 'المعرّف الموحد للمقاولة ICE', cashRegister: 'الصندوق', receiptNo: 'رقم الوصل', chequeNo: 'رقم الشيك', bank: 'البنك', dueDate: 'تاريخ الاستحقاق', paymentStatus: 'حالة الأداء', transferRef: 'مرجع التحويل البنكي', valueDate: 'تاريخ القيمة', terminal: 'جهاز الأداء الإلكتروني', transactionNo: 'رقم العملية', billNo: 'رقم الكمبيالة', note: 'ملاحظة', quantity: 'الكمية', date: 'التاريخ', customer: 'الزبون',
     supplier: 'المورد', product: 'المنتج', base: 'الوثيقة الأصلية', remainingQty: 'الكمية المتبقية', orderedQty: 'الكمية المطلوبة', deliveredQty: 'الكمية المسلمة', receivedQty: 'الكمية المستلمة', qtyToProcess: 'الكمية المراد معالجتها', alreadyProcessed: 'تمت معالجته سابقاً', includeLine: 'إدراج السطر', removeLine: 'استبعاد السطر', restoreLine: 'إرجاع السطر', open: 'مفتوح', closed: 'مغلق', preview: 'معاينة الوثيقة', print: 'طباعة', unitPrice: 'ثمن الوحدة', totalHT: 'المبلغ دون الضريبة', totalVAT: 'قيمة الضريبة', totalTTC: 'المبلغ الإجمالي مع الضريبة', cancelPayment: 'إلغاء الدفعة', canceled: 'ملغى', subtotal: 'المجموع الفرعي', signature: 'التوقيع والختم', preparedBy: 'أُعدت بواسطة', printDate: 'تاريخ الطباعة', legalNote: 'وثيقة صادرة عن نظام DrogueriePro', arabicName: 'الاسم بالعربية', docType: 'نوع الوثيقة', purchasePrice: 'ثمن الشراء', salePrice: 'ثمن البيع', margin: 'الهامش', movement: 'الحركة', object: 'الكيان', detail: 'التفاصيل', actor: 'الموظف', createdBy: 'تم الإنشاء بواسطة', baseDocNo: 'رقم الوثيقة الأصلية', location: 'الموقع / الفرع', assignedTo: 'مكلف به', clientOwner: 'الحساب التجاري', stockTransfer: 'تحويل المخزون', fromBranch: 'الفرع المصدر', toBranch: 'الفرع الوجهة', stockValue: 'القيمة المالية للمخزون', lowStock: 'مخزون منخفض', stockByBranch: 'المخزون حسب الفرع', adjustment: 'تعديل المخزون', stockIn: 'إضافة كمية للمخزون', stockOut: 'خصم كمية من المخزون', reason: 'السبب', category: 'الصنف', ref: 'المرجع', name: 'الاسم', role: 'الدور', payment: 'الأداء', document: 'الوثيقة', form: 'النموذج', select: 'اختيار', productRef: 'مرجع المنتج', unit: 'الوحدة', minStock: 'الحد الأدنى للمخزون', threshold: 'عتبة التنبيه', stockAdjustIn: 'إضافة للمخزون', stockAdjustOut: 'سحب من المخزون', operationType: 'نوع العملية', unitPurchasePrice: 'ثمن الشراء للوحدة', unitSalePrice: 'ثمن البيع للوحدة', customerForm: 'بطاقة الزبون', supplierForm: 'بطاقة المورد', productForm: 'بطاقة المنتج', documentLines: 'سطور الوثيقة', completed: 'منتهية', notAvailable: 'غير مطبق', mobileApp: 'تطبيق الهاتف', androidApp: 'تطبيق أندرويد', iosApp: 'تطبيق iOS', downloadAndroid: 'تحميل تطبيق أندرويد APK', downloadIos: 'تحميل تطبيق iOS', installGuide: 'دليل التثبيت', mobileAdminPortal: 'بوابة إدارة التطبيق المحمول', appStoreNote: 'يتطلب iOS النشر عبر App Store أو TestFlight وحساب Apple Developer', androidNote: 'يمكن تثبيت أندرويد عبر APK داخلي أو نشره على Play Store', quickActions: 'إجراءات سريعة', businessHealth: 'حالة النشاط التجاري', alerts: 'التنبيهات', recentActivity: 'آخر العمليات', topProducts: 'أفضل المنتجات', todaySales: 'إجمالي مبيعات اليوم', unpaidInvoices: 'الفواتير غير المحصلة', stockAlerts: 'تنبيهات نقص المخزون', customersCount: 'عدد الزبناء', suppliersCount: 'عدد الموردين', adminCenter: 'مركز الإدارة', proMode: 'الوضع الإداري', search: 'البحث', exportCsv: 'تصدير CSV', printList: 'طباعة اللائحة', risk: 'مخاطر', healthy: 'وضعية سليمة', warning: 'تحتاج للمتابعة', critical: 'حالة حرجة', noData: 'لا توجد بيانات', performance: 'الأداء', grossMargin: 'الهامش الخام', salesPipeline: 'مسار المبيعات', purchasePipeline: 'مسار المشتريات', cashPosition: 'وضعية السيولة', inventoryCoverage: 'تغطية المخزون', operationalRisks: 'المخاطر التشغيلية', branchRanking: 'ترتيب الفروع', monthlyTrend: 'التطور الشهري', conversionRate: 'نسبة التحويل', avgTicket: 'متوسط الفاتورة', documentsCount: 'عدد الوثائق', proReport: 'تقرير إداري', refresh: 'تحديث', executiveSummary: 'ملخص تنفيذي', salesToCollect: 'مبالغ في انتظار التحصيل', purchasesToPay: 'مبالغ في انتظار الأداء', netCash: 'الصافي المتوقع', bestBranch: 'أفضل فرع', quickCreateSale: 'إنشاء عملية بيع', quickCreatePurchase: 'إنشاء عملية شراء', quickCreateProduct: 'إضافة منتج', quickCreateClient: 'إضافة زبون',
-    fiscalId: 'المعرّف الجبائي', rc: 'السجل التجاري', patente: 'رسم المهني', cnss: 'رقم CNSS', ifNumber: 'المعرّف الضريبي IF', companyInfo: 'معلومات الشركة', clientInfo: 'معلومات الزبون', supplierInfo: 'معلومات المورد', paymentTerms: 'شروط الأداء', legalMoroccoNote: 'وثيقة تجارية صادرة وفق المعطيات المصرح بها من طرف الشركة. يرجى مراجعة المبالغ والضريبة على القيمة المضافة قبل الاعتماد النهائي.', stampAndSignature: 'الختم والتوقيع', commercialDocument: 'وثيقة تجارية', invoiceTitle: 'فاتورة', deliveryTitle: 'سند تسليم', receiptTitle: 'سند استلام', quoteTitle: 'عرض سعر', orderTitle: 'طلبية', amountInWords: 'المبلغ بالحروف', taxSummary: 'ملخص الضريبة', netToPay: 'الصافي للأداء', thankYou: 'شكراً لتعاملكم معنا', generatedBy: 'تم إنشاء الوثيقة بواسطة', customerInvoice: 'فاتورة زبون', supplierInvoice: 'فاتورة مورد', customerQuote: 'عرض سعر للزبون', customerOrder: 'طلبية زبون', customerDelivery: 'سند تسليم للزبون', supplierOrder: 'طلبية مورد', supplierReceipt: 'سند استلام من المورد', profitCenter: 'مركز الربحية', profitability: 'الربحية', profitAlerts: 'تنبيهات الربحية', priceSuggestion: 'اقتراح الثمن', minimumSalePrice: 'أدنى ثمن بيع مقترح', targetMargin: 'الهامش المستهدف', marginRate: 'نسبة الهامش', reorderProposal: 'اقتراح إعادة التزويد', reorderQty: 'الكمية المقترحة للطلب', deadStock: 'مخزون راكد', fastMoving: 'دوران سريع', slowMoving: 'دوران بطيء', valuation: 'التقييم المالي', commercialTerms: 'الشروط التجارية', preparedFor: 'موجه إلى', documentValidity: 'صلاحية الوثيقة', deliveryAddress: 'عنوان التسليم', tools: 'الأدوات', calculator: 'آلة حاسبة', marginCalculator: 'حاسبة الهامش', salePriceFromMargin: 'ثمن البيع حسب الهامش', purchaseCost: 'تكلفة الشراء', wantedMargin: 'الهامش المطلوب', result: 'النتيجة', clear: 'مسح', simplePrint: 'طباعة مبسطة', kpiRevenue: 'رقم المعاملات', kpiPurchases: 'حجم المشتريات', kpiCashIn: 'مجموع المقبوضات', kpiCashOut: 'مجموع المدفوعات', kpiStockQty: 'كمية المخزون', kpiOpenDocs: 'وثائق مفتوحة', kpiPaidRate: 'نسبة الفواتير المؤداة', kpiLowMargin: 'منتجات بهامش ضعيف', paymentList: 'لائحة المدفوعات', superAdmin: 'المدير العام للنظام', saasCenter: 'مركز SaaS', modulesCenter: 'إدارة الوحدات', databaseCenter: 'قاعدة البيانات', subscription: 'الاشتراك', plan: 'الباقة', enabled: 'مفعّل', disabled: 'غير مفعّل', moduleCode: 'رمز الوحدة', moduleName: 'اسم الوحدة', modulePrice: 'ثمن الوحدة', commercialPack: 'الباقة التجارية', tenant: 'الزبون / المستأجر', tenants: 'الزبناء / المستأجرون', databaseStats: 'إحصائيات قاعدة البيانات', tableName: 'الجدول', recordsCount: 'عدد السجلات', fixStockTransfer: 'تصحيح تحويل المخزون', moduleBilling: 'فوترة الوحدات', monthlyPrice: 'الثمن الشهري', yearlyPrice: 'الثمن السنوي', reporting: 'التقارير', customerDebts: 'ديون الزبناء', supplierDebts: 'ديون الموردين', totalDebt: 'إجمالي الدين', businessModules: 'وحدات العمل', platformModules: 'وحدات المنصة', protectedProfile: 'حساب محمي'
+    fiscalId: 'المعرّف الجبائي', rc: 'السجل التجاري', patente: 'رسم المهني', cnss: 'رقم CNSS', ifNumber: 'المعرّف الضريبي IF', companyInfo: 'معلومات الشركة', clientInfo: 'معلومات الزبون', supplierInfo: 'معلومات المورد', paymentTerms: 'شروط الأداء', legalMoroccoNote: 'وثيقة تجارية صادرة وفق المعطيات المصرح بها من طرف الشركة. يرجى مراجعة المبالغ والضريبة على القيمة المضافة قبل الاعتماد النهائي.', stampAndSignature: 'الختم والتوقيع', commercialDocument: 'وثيقة تجارية', invoiceTitle: 'فاتورة', deliveryTitle: 'سند تسليم', receiptTitle: 'سند استلام', quoteTitle: 'عرض سعر', orderTitle: 'طلبية', amountInWords: 'المبلغ بالحروف', taxSummary: 'ملخص الضريبة', netToPay: 'الصافي للأداء', thankYou: 'شكراً لتعاملكم معنا', generatedBy: 'تم إنشاء الوثيقة بواسطة', customerInvoice: 'فاتورة زبون', supplierInvoice: 'فاتورة مورد', customerQuote: 'عرض سعر للزبون', customerOrder: 'طلبية زبون', customerDelivery: 'سند تسليم للزبون', supplierOrder: 'طلبية مورد', supplierReceipt: 'سند استلام من المورد', profitCenter: 'مركز الربحية', profitability: 'الربحية', profitAlerts: 'تنبيهات الربحية', priceSuggestion: 'اقتراح الثمن', minimumSalePrice: 'أدنى ثمن بيع مقترح', targetMargin: 'الهامش المستهدف', marginRate: 'نسبة الهامش', reorderProposal: 'اقتراح إعادة التزويد', reorderQty: 'الكمية المقترحة للطلب', deadStock: 'مخزون راكد', fastMoving: 'دوران سريع', slowMoving: 'دوران بطيء', valuation: 'التقييم المالي', commercialTerms: 'الشروط التجارية', preparedFor: 'موجه إلى', documentValidity: 'صلاحية الوثيقة', deliveryAddress: 'عنوان التسليم', tools: 'الأدوات', calculator: 'آلة حاسبة', marginCalculator: 'حاسبة الهامش', salePriceFromMargin: 'ثمن البيع حسب الهامش', purchaseCost: 'تكلفة الشراء', wantedMargin: 'الهامش المطلوب', result: 'النتيجة', clear: 'مسح', simplePrint: 'طباعة مبسطة', kpiRevenue: 'رقم المعاملات', kpiPurchases: 'حجم المشتريات', kpiCashIn: 'مجموع المقبوضات', kpiCashOut: 'مجموع المدفوعات', kpiStockQty: 'كمية المخزون', kpiOpenDocs: 'وثائق مفتوحة', kpiPaidRate: 'نسبة الفواتير المؤداة', kpiLowMargin: 'منتجات بهامش ضعيف', paymentList: 'لائحة المدفوعات', superAdmin: 'المدير العام للنظام', saasCenter: 'مركز SaaS', modulesCenter: 'إدارة الوحدات', databaseCenter: 'قاعدة البيانات', subscription: 'الاشتراك', plan: 'الباقة', enabled: 'مفعّل', disabled: 'غير مفعّل', moduleCode: 'رمز الوحدة', moduleName: 'اسم الوحدة', modulePrice: 'ثمن الوحدة', commercialPack: 'الباقة التجارية', tenant: 'الزبون / المستأجر', tenants: 'الزبناء / المستأجرون', databaseStats: 'إحصائيات قاعدة البيانات', tableName: 'الجدول', recordsCount: 'عدد السجلات', fixStockTransfer: 'تصحيح تحويل المخزون', moduleBilling: 'فوترة الوحدات', monthlyPrice: 'الثمن الشهري', yearlyPrice: 'الثمن السنوي', branchFilter: 'تصفية حسب الفرع', allBranches: 'كل الفروع', applyFilter: 'تطبيق التصفية', filteredByBranch: 'مصفي حسب الفرع', reporting: 'التقارير', customerDebts: 'ديون الزبناء', supplierDebts: 'ديون الموردين', totalDebt: 'إجمالي الدين', businessModules: 'وحدات العمل', platformModules: 'وحدات المنصة', protectedProfile: 'حساب محمي'
   }
 };
 
@@ -181,7 +181,9 @@ async function loadBranchStockSummary() {
     .from('products')
     .select('id, quantity, min_stock, purchase_price, branch_id, branches(name)');
 
-  if (!isAdmin(session) && branchId(session)) {
+  if (isAdmin(session) || isSuperAdmin(session)) {
+    q = applyBranchFilterToQuery(q, session);
+  } else if (branchId(session)) {
     q = q.eq('branch_id', branchId(session));
   }
 
@@ -352,8 +354,8 @@ async function loadProDashboardData() {
     applyProductScope(supabase.from('products').select('*, branches(name)'), session),
     applyDocScope(supabase.from('sales').select('*'), 'sales', session),
     applyDocScope(supabase.from('purchases').select('*'), 'purchases', session),
-    supabase.from('clients').select('*'),
-    supabase.from('suppliers').select('*'),
+    applyBranchFilterToQuery(supabase.from('clients').select('*'), session),
+    applyBranchFilterToQuery(supabase.from('suppliers').select('*'), session),
     loadStockMovements().catch(() => [])
   ]);
 
@@ -623,6 +625,58 @@ function isSaasPermission(code) {
 }
 
 
+
+function getSelectedBranchFilter() {
+  return localStorage.getItem('droguerie_branch_filter') || 'all';
+}
+
+function setSelectedBranchFilter(value) {
+  localStorage.setItem('droguerie_branch_filter', value || 'all');
+  window.dispatchEvent(new CustomEvent('droguerie_branch_filter_changed', { detail: value || 'all' }));
+}
+
+function shouldApplyBranchFilter(session = getStoredSession()) {
+  return isAdmin(session) || isSuperAdmin(session);
+}
+
+function selectedBranchId(session = getStoredSession()) {
+  if (!shouldApplyBranchFilter(session)) return branchId(session);
+  const v = getSelectedBranchFilter();
+  if (!v || v === 'all') return null;
+  return Number(v);
+}
+
+function applyBranchFilterToQuery(query, session = getStoredSession()) {
+  const bid = selectedBranchId(session);
+  return bid ? query.eq('branch_id', bid) : query;
+}
+
+function filterRowsBySelectedBranch(rows, field = 'branch_id', session = getStoredSession()) {
+  const bid = selectedBranchId(session);
+  if (!bid) return rows || [];
+  return (rows || []).filter(x => Number(x?.[field] || x?.branchId || 0) === Number(bid));
+}
+
+function BranchFilter({ L, value, onChange }) {
+  const [branches, setBranches] = useState([]);
+
+  useEffect(() => {
+    loadBranches().then(setBranches).catch(() => setBranches([]));
+  }, []);
+
+  if (!shouldApplyBranchFilter(getStoredSession())) return null;
+
+  return (
+    <div className="branch-filter-card no-print">
+      <span>{L('branchFilter')}</span>
+      <select className="input" value={value} onChange={e => onChange(e.target.value)}>
+        <option value="all">{L('allBranches')}</option>
+        {branches.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+      </select>
+    </div>
+  );
+}
+
 function moduleCodeForPage(page) {
   return {
     dashboard: 'dashboard',
@@ -748,7 +802,9 @@ function branchId(session) {
 }
 
 function applyDocScope(query, type, session) {
-  if (isAdmin(session)) return query;
+  if (isAdmin(session) || isSuperAdmin(session)) {
+    return applyBranchFilterToQuery(query, session);
+  }
 
   if (isManager(session)) {
     return branchId(session) ? query.eq('branch_id', branchId(session)) : query.eq('branch_id', -1);
@@ -765,11 +821,15 @@ function applyDocScope(query, type, session) {
   return query.eq('created_by', session.user.id);
 }
 
+
 function applyProductScope(query, session) {
-  if (isAdmin(session)) return query;
+  if (isAdmin(session) || isSuperAdmin(session)) {
+    return applyBranchFilterToQuery(query, session);
+  }
   if (branchId(session)) return query.eq('branch_id', branchId(session));
   return query.eq('branch_id', -1);
 }
+
 
 async function loadBranches() {
   const { data, error } = await supabase.from('branches').select('*').order('name');
@@ -898,7 +958,9 @@ async function loadStockMovements() {
     .select('id, product_id, quantity, reason, created_at, user_label, doc_type, doc_number, branch_id, products(ref, name, branch_id), branches(name)')
     .order('created_at', { ascending: false });
 
-  if (!isAdmin(session) && branchId(session)) {
+  if (isAdmin(session) || isSuperAdmin(session)) {
+    q = applyBranchFilterToQuery(q, session);
+  } else if (branchId(session)) {
     q = q.eq('branch_id', branchId(session));
   }
 
@@ -1733,7 +1795,9 @@ async function loadParties(type) {
   const session = getStoredSession();
   let q = supabase.from(type).select('*').order('name');
 
-  if (!isAdmin(session) && branchId(session)) {
+  if (isAdmin(session) || isSuperAdmin(session)) {
+    q = applyBranchFilterToQuery(q, session);
+  } else if (branchId(session)) {
     q = q.eq('branch_id', branchId(session));
   }
 
@@ -1743,6 +1807,7 @@ async function loadParties(type) {
   const labels = await loadUserLabels();
   return enrichParties((data || []).filter(x => canSeePartyRecord(x, type, session)), labels);
 }
+
 async function saveParty(type, body) {
   const writePerm = type === 'clients' ? 'clients.write' : 'suppliers.write';
   requirePerm(writePerm, type === 'clients' ? 'Gestion clients' : 'Gestion fournisseurs');
@@ -1792,9 +1857,13 @@ async function loadUsers() {
 
   if (error) throw new Error(error.message);
 
-  const rows = data || [];
-  if (isSuperAdmin(session)) return rows;
-  return rows.filter(u => !isSuperAdminUserRow(u));
+  let rows = data || [];
+  if (!isSuperAdmin(session)) rows = rows.filter(u => !isSuperAdminUserRow(u));
+
+  const bid = selectedBranchId(session);
+  if (bid) rows = rows.filter(u => Number(u.branch_id || 0) === Number(bid) || !u.branch_id);
+
+  return rows;
 }
 
 async function saveUser(body) {
@@ -1869,6 +1938,7 @@ function LoginPage({ L, lang, onLogin }) {
 function Layout({ L, lang, toggleLang, session, setSession }) {
   const [page, setPage] = useState(isSuperAdmin(session) ? 'saas' : 'dashboard');
   const [disabledModules, setDisabledModules] = useState(getDisabledModulesCache());
+  const [globalBranchFilter, setGlobalBranchFilter] = useState(getSelectedBranchFilter());
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const items = [
@@ -1896,6 +1966,12 @@ function Layout({ L, lang, toggleLang, session, setSession }) {
     const handler = e => setDisabledModules(e.detail || getDisabledModulesCache());
     window.addEventListener('droguerie_modules_changed', handler);
     return () => window.removeEventListener('droguerie_modules_changed', handler);
+  }, []);
+
+  useEffect(() => {
+    const handler = e => setGlobalBranchFilter(e.detail || getSelectedBranchFilter());
+    window.addEventListener('droguerie_branch_filter_changed', handler);
+    return () => window.removeEventListener('droguerie_branch_filter_changed', handler);
   }, []);
 
   useEffect(() => {
@@ -1939,6 +2015,8 @@ function Layout({ L, lang, toggleLang, session, setSession }) {
           </div>
         </aside>
         <main className="flex-1 p-6 max-w-[1500px] mx-auto w-full app-main pro-main">
+          <BranchFilter L={L} value={globalBranchFilter} onChange={v => { setSelectedBranchFilter(v); setGlobalBranchFilter(v); }} />
+          <div key={page + '-' + globalBranchFilter}>
 
           {page === 'dashboard' ? <Dashboard L={L} /> : null}
           {page === 'saas' ? <SuperAdminCenter L={L} /> : null}
@@ -1958,6 +2036,7 @@ function Layout({ L, lang, toggleLang, session, setSession }) {
           {page === 'suppliers' ? <Parties L={L} type="suppliers" /> : null}
           {page === 'users' ? <Users L={L} /> : null}
         
+          </div>
         </main>
       </div>
     </div>
