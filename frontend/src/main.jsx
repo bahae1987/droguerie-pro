@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-console.log('DROGUERIEPRO V42 BUILD FIX OK');
+console.log('DROGUERIEPRO V42 BUILD FIX 2 OK');
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -625,34 +625,7 @@ function isSaasPermission(code) {
 function visibleMenuItem(item, session, disabledModules = getDisabledModulesCache()) {
   const page = item[0];
   const perm = item[2];
-  if (!hasPerm(session, perm)) return false;
 
-  const moduleCode = moduleCodeForPage(page);
-
-  if (isSuperAdmin(session)) {
-    // SuperAdmin = plateforme uniquement, mais Centre SaaS doit toujours rester disponible.
-    return ['saas', 'settings', 'permissions', 'users', 'branches', 'mobileApp'].includes(page);
-  }
-
-  if (page === 'saas') return false;
-  return !disabledModules.includes(moduleCode);
-}
-
-
-  if (!hasPerm(session, perm)) return false;
-
-  // SuperAdmin = plateforme SaaS seulement par défaut.
-  // Il ne doit pas être mélangé avec l'exploitation métier.
-  if (isSuperAdmin(session)) {
-    return ['saas', 'settings', 'permissions', 'users', 'branches', 'mobileApp'].includes(page);
-  }
-
-  // Profils métier : pas d'accès aux modules plateforme SuperAdmin.
-  if (page === 'saas') return false;
-
-  const moduleCode = moduleCodeForPage(page);
-  return !disabledModules.includes(moduleCode);
-}
 
 function isSuperAdminUserRow(userRow) {
   const roleName = userRow?.roles?.name || userRow?.role || '';
