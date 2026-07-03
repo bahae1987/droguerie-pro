@@ -1031,3 +1031,18 @@ body {
     min-width: 100%;
   }
 }
+
+/* V45 commercial reporting */
+.report-suggestion-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: #f8fafc;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 600;
+}
+.report-suggestion-card:hover {
+  background: #fffbeb;
+  border-color: #f59e0b;
+}
