@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-console.log('DROGUERIEPRO V37 PROFIT_DOCS_MOROCCO OK');
+console.log('DROGUERIEPRO V38 SIMPLE_PRINT_PAYMENTS_TOOLS OK');
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -29,7 +29,7 @@ const TXT = {
     deliveries: 'Livraisons', receipts: 'Réceptions', invoices: 'Factures', remaining: 'Reste',
     paid: 'Réglée', unpaid: 'Non réglée', partial: 'Partielle', cashIn: 'Encaissements',
     cashOut: 'Décaissements', vat: 'TVA', theme: 'Thème', company: 'Société', address: 'Adresse', phone: 'Téléphone', ice: 'ICE', cashRegister: 'Caisse', receiptNo: 'N° reçu', chequeNo: 'N° chèque', bank: 'Banque', dueDate: 'Échéance', paymentStatus: 'Statut', transferRef: 'Réf. virement', valueDate: 'Date valeur', terminal: 'TPE', transactionNo: 'N° transaction', billNo: 'N° effet', note: 'Observation', quantity: 'Quantité', date: 'Date', customer: 'Client',
-    supplier: 'Fournisseur', product: 'Produit', base: 'Base', remainingQty: 'Qté restante', orderedQty: 'Qté commandée', deliveredQty: 'Qté livrée', receivedQty: 'Qté reçue', qtyToProcess: 'Qté à traiter', alreadyProcessed: 'Déjà traité', includeLine: 'Inclure', removeLine: 'Retirer ligne', restoreLine: 'Restaurer ligne', open: 'Ouvert', closed: 'Clôturé', preview: 'Aperçu', print: 'Imprimer', unitPrice: 'PU', totalHT: 'Total HT', totalVAT: 'TVA', totalTTC: 'Total TTC', cancelPayment: 'Annuler règlement', canceled: 'Annulé', subtotal: 'Sous-total', signature: 'Signature', preparedBy: 'Préparé par', printDate: 'Date impression', legalNote: 'Document généré par DrogueriePro', arabicName: 'Nom arabe', docType: 'Type document', purchasePrice: 'Prix achat', salePrice: 'Prix vente', margin: 'Marge', movement: 'Mouvement', object: 'Objet', detail: 'Détail', actor: 'Utilisateur', createdBy: 'Créé par', baseDocNo: 'N° doc. base', location: 'Emplacement', assignedTo: 'Affecté à', clientOwner: 'Compte', stockTransfer: 'Transfert stock', fromBranch: 'Droguerie source', toBranch: 'Droguerie destination', stockValue: 'Valeur stock', lowStock: 'Stock critique', stockByBranch: 'Stock par droguerie', adjustment: 'Ajustement', stockIn: 'Entrée stock', stockOut: 'Sortie stock', reason: 'Motif', category: 'Catégorie', ref: 'Référence', name: 'Nom', role: 'Profil', payment: 'Paiement', document: 'Document', form: 'Formulaire', select: 'Sélectionner', productRef: 'Réf. produit', unit: 'Unité', minStock: 'Stock min', threshold: 'Seuil', stockAdjustIn: 'Entrée stock', stockAdjustOut: 'Sortie stock', operationType: 'Type opération', unitPurchasePrice: 'Prix achat unitaire', unitSalePrice: 'Prix vente unitaire', customerForm: 'Fiche client', supplierForm: 'Fiche fournisseur', productForm: 'Fiche produit', documentLines: 'Lignes document', completed: 'Terminé', notAvailable: 'Non applicable', mobileApp: 'Application mobile', androidApp: 'Application Android', iosApp: 'Application iOS', downloadAndroid: 'Télécharger APK Android', downloadIos: 'Télécharger iOS', installGuide: 'Guide installation', mobileAdminPortal: 'Portail mobile administrateur', appStoreNote: 'iOS nécessite App Store / TestFlight avec compte Apple Developer', androidNote: 'Android peut être installé via APK interne ou publié sur Play Store', quickActions: 'Actions rapides', businessHealth: 'Santé activité', alerts: 'Alertes', recentActivity: 'Activité récente', topProducts: 'Top produits', todaySales: 'Ventes du jour', unpaidInvoices: 'Factures non réglées', stockAlerts: 'Alertes stock', customersCount: 'Nombre clients', suppliersCount: 'Nombre fournisseurs', adminCenter: 'Centre administrateur', proMode: 'Mode Pro', search: 'Rechercher', exportCsv: 'Exporter CSV', printList: 'Imprimer liste', risk: 'Risque', healthy: 'Sain', warning: 'Attention', critical: 'Critique', noData: 'Aucune donnée', performance: 'Performance', customerInvoice: 'Facture client', supplierInvoice: 'Facture fournisseur', customerQuote: 'Devis client', customerOrder: 'Commande client', customerDelivery: 'Bon de livraison client', supplierOrder: 'Commande fournisseur', supplierReceipt: 'Bon de réception fournisseur', profitCenter: 'Centre rentabilité', profitability: 'Rentabilité', profitAlerts: 'Alertes rentabilité', priceSuggestion: 'Suggestion prix', minimumSalePrice: 'Prix minimum conseillé', targetMargin: 'Marge cible', marginRate: 'Taux marge', reorderProposal: 'Proposition réapprovisionnement', reorderQty: 'Qté à commander', deadStock: 'Stock dormant', fastMoving: 'Rotation rapide', slowMoving: 'Rotation lente', valuation: 'Valorisation', commercialTerms: 'Conditions commerciales', preparedFor: 'Établi pour', documentValidity: 'Validité document', deliveryAddress: 'Adresse livraison'
+    supplier: 'Fournisseur', product: 'Produit', base: 'Base', remainingQty: 'Qté restante', orderedQty: 'Qté commandée', deliveredQty: 'Qté livrée', receivedQty: 'Qté reçue', qtyToProcess: 'Qté à traiter', alreadyProcessed: 'Déjà traité', includeLine: 'Inclure', removeLine: 'Retirer ligne', restoreLine: 'Restaurer ligne', open: 'Ouvert', closed: 'Clôturé', preview: 'Aperçu', print: 'Imprimer', unitPrice: 'PU', totalHT: 'Total HT', totalVAT: 'TVA', totalTTC: 'Total TTC', cancelPayment: 'Annuler règlement', canceled: 'Annulé', subtotal: 'Sous-total', signature: 'Signature', preparedBy: 'Préparé par', printDate: 'Date impression', legalNote: 'Document généré par DrogueriePro', arabicName: 'Nom arabe', docType: 'Type document', purchasePrice: 'Prix achat', salePrice: 'Prix vente', margin: 'Marge', movement: 'Mouvement', object: 'Objet', detail: 'Détail', actor: 'Utilisateur', createdBy: 'Créé par', baseDocNo: 'N° doc. base', location: 'Emplacement', assignedTo: 'Affecté à', clientOwner: 'Compte', stockTransfer: 'Transfert stock', fromBranch: 'Droguerie source', toBranch: 'Droguerie destination', stockValue: 'Valeur stock', lowStock: 'Stock critique', stockByBranch: 'Stock par droguerie', adjustment: 'Ajustement', stockIn: 'Entrée stock', stockOut: 'Sortie stock', reason: 'Motif', category: 'Catégorie', ref: 'Référence', name: 'Nom', role: 'Profil', payment: 'Paiement', document: 'Document', form: 'Formulaire', select: 'Sélectionner', productRef: 'Réf. produit', unit: 'Unité', minStock: 'Stock min', threshold: 'Seuil', stockAdjustIn: 'Entrée stock', stockAdjustOut: 'Sortie stock', operationType: 'Type opération', unitPurchasePrice: 'Prix achat unitaire', unitSalePrice: 'Prix vente unitaire', customerForm: 'Fiche client', supplierForm: 'Fiche fournisseur', productForm: 'Fiche produit', documentLines: 'Lignes document', completed: 'Terminé', notAvailable: 'Non applicable', mobileApp: 'Application mobile', androidApp: 'Application Android', iosApp: 'Application iOS', downloadAndroid: 'Télécharger APK Android', downloadIos: 'Télécharger iOS', installGuide: 'Guide installation', mobileAdminPortal: 'Portail mobile administrateur', appStoreNote: 'iOS nécessite App Store / TestFlight avec compte Apple Developer', androidNote: 'Android peut être installé via APK interne ou publié sur Play Store', quickActions: 'Actions rapides', businessHealth: 'Santé activité', alerts: 'Alertes', recentActivity: 'Activité récente', topProducts: 'Top produits', todaySales: 'Ventes du jour', unpaidInvoices: 'Factures non réglées', stockAlerts: 'Alertes stock', customersCount: 'Nombre clients', suppliersCount: 'Nombre fournisseurs', adminCenter: 'Centre administrateur', proMode: 'Mode Pro', search: 'Rechercher', exportCsv: 'Exporter CSV', printList: 'Imprimer liste', risk: 'Risque', healthy: 'Sain', warning: 'Attention', critical: 'Critique', noData: 'Aucune donnée', performance: 'Performance', customerInvoice: 'Facture client', supplierInvoice: 'Facture fournisseur', customerQuote: 'Devis client', customerOrder: 'Commande client', customerDelivery: 'Bon de livraison client', supplierOrder: 'Commande fournisseur', supplierReceipt: 'Bon de réception fournisseur', profitCenter: 'Centre rentabilité', profitability: 'Rentabilité', profitAlerts: 'Alertes rentabilité', priceSuggestion: 'Suggestion prix', minimumSalePrice: 'Prix minimum conseillé', targetMargin: 'Marge cible', marginRate: 'Taux marge', reorderProposal: 'Proposition réapprovisionnement', reorderQty: 'Qté à commander', deadStock: 'Stock dormant', fastMoving: 'Rotation rapide', slowMoving: 'Rotation lente', valuation: 'Valorisation', commercialTerms: 'Conditions commerciales', preparedFor: 'Établi pour', documentValidity: 'Validité document', deliveryAddress: 'Adresse livraison', tools: 'Outils', calculator: 'Calculatrice', marginCalculator: 'Calcul marge', salePriceFromMargin: 'Prix selon marge', purchaseCost: 'Coût achat', wantedMargin: 'Marge souhaitée', result: 'Résultat', clear: 'Effacer', simplePrint: 'Impression simple', kpiRevenue: 'Chiffre d’affaires', kpiPurchases: 'Volume achats', kpiCashIn: 'Total encaissé', kpiCashOut: 'Total décaissé', kpiStockQty: 'Quantité stock', kpiOpenDocs: 'Documents ouverts', kpiPaidRate: 'Taux factures réglées', kpiLowMargin: 'Produits faible marge', paymentList: 'Liste paiements'
   },
   ar: {
     login: 'تسجيل الدخول', username: 'اسم المستخدم', password: 'كلمة المرور', connect: 'الدخول إلى النظام',
@@ -43,7 +43,7 @@ const TXT = {
     paid: 'مدفوعة بالكامل', unpaid: 'غير مدفوعة', partial: 'مدفوعة جزئياً', cashIn: 'المقبوضات',
     cashOut: 'المدفوعات', vat: 'الضريبة على القيمة المضافة', theme: 'المظهر', company: 'الشركة', address: 'العنوان', phone: 'الهاتف', ice: 'المعرّف الموحد للمقاولة ICE', cashRegister: 'الصندوق', receiptNo: 'رقم الوصل', chequeNo: 'رقم الشيك', bank: 'البنك', dueDate: 'تاريخ الاستحقاق', paymentStatus: 'حالة الأداء', transferRef: 'مرجع التحويل البنكي', valueDate: 'تاريخ القيمة', terminal: 'جهاز الأداء الإلكتروني', transactionNo: 'رقم العملية', billNo: 'رقم الكمبيالة', note: 'ملاحظة', quantity: 'الكمية', date: 'التاريخ', customer: 'الزبون',
     supplier: 'المورد', product: 'المنتج', base: 'الوثيقة الأصلية', remainingQty: 'الكمية المتبقية', orderedQty: 'الكمية المطلوبة', deliveredQty: 'الكمية المسلمة', receivedQty: 'الكمية المستلمة', qtyToProcess: 'الكمية المراد معالجتها', alreadyProcessed: 'تمت معالجته سابقاً', includeLine: 'إدراج السطر', removeLine: 'استبعاد السطر', restoreLine: 'إرجاع السطر', open: 'مفتوح', closed: 'مغلق', preview: 'معاينة الوثيقة', print: 'طباعة', unitPrice: 'ثمن الوحدة', totalHT: 'المبلغ دون الضريبة', totalVAT: 'قيمة الضريبة', totalTTC: 'المبلغ الإجمالي مع الضريبة', cancelPayment: 'إلغاء الدفعة', canceled: 'ملغى', subtotal: 'المجموع الفرعي', signature: 'التوقيع والختم', preparedBy: 'أُعدت بواسطة', printDate: 'تاريخ الطباعة', legalNote: 'وثيقة صادرة عن نظام DrogueriePro', arabicName: 'الاسم بالعربية', docType: 'نوع الوثيقة', purchasePrice: 'ثمن الشراء', salePrice: 'ثمن البيع', margin: 'الهامش', movement: 'الحركة', object: 'الكيان', detail: 'التفاصيل', actor: 'الموظف', createdBy: 'تم الإنشاء بواسطة', baseDocNo: 'رقم الوثيقة الأصلية', location: 'الموقع / الفرع', assignedTo: 'مكلف به', clientOwner: 'الحساب التجاري', stockTransfer: 'تحويل المخزون', fromBranch: 'الفرع المصدر', toBranch: 'الفرع الوجهة', stockValue: 'القيمة المالية للمخزون', lowStock: 'مخزون منخفض', stockByBranch: 'المخزون حسب الفرع', adjustment: 'تعديل المخزون', stockIn: 'إضافة كمية للمخزون', stockOut: 'خصم كمية من المخزون', reason: 'السبب', category: 'الصنف', ref: 'المرجع', name: 'الاسم', role: 'الدور', payment: 'الأداء', document: 'الوثيقة', form: 'النموذج', select: 'اختيار', productRef: 'مرجع المنتج', unit: 'الوحدة', minStock: 'الحد الأدنى للمخزون', threshold: 'عتبة التنبيه', stockAdjustIn: 'إضافة للمخزون', stockAdjustOut: 'سحب من المخزون', operationType: 'نوع العملية', unitPurchasePrice: 'ثمن الشراء للوحدة', unitSalePrice: 'ثمن البيع للوحدة', customerForm: 'بطاقة الزبون', supplierForm: 'بطاقة المورد', productForm: 'بطاقة المنتج', documentLines: 'سطور الوثيقة', completed: 'منتهية', notAvailable: 'غير مطبق', mobileApp: 'تطبيق الهاتف', androidApp: 'تطبيق أندرويد', iosApp: 'تطبيق iOS', downloadAndroid: 'تحميل تطبيق أندرويد APK', downloadIos: 'تحميل تطبيق iOS', installGuide: 'دليل التثبيت', mobileAdminPortal: 'بوابة إدارة التطبيق المحمول', appStoreNote: 'يتطلب iOS النشر عبر App Store أو TestFlight وحساب Apple Developer', androidNote: 'يمكن تثبيت أندرويد عبر APK داخلي أو نشره على Play Store', quickActions: 'إجراءات سريعة', businessHealth: 'حالة النشاط التجاري', alerts: 'التنبيهات', recentActivity: 'آخر العمليات', topProducts: 'أفضل المنتجات', todaySales: 'إجمالي مبيعات اليوم', unpaidInvoices: 'الفواتير غير المحصلة', stockAlerts: 'تنبيهات نقص المخزون', customersCount: 'عدد الزبناء', suppliersCount: 'عدد الموردين', adminCenter: 'مركز الإدارة', proMode: 'الوضع الإداري', search: 'البحث', exportCsv: 'تصدير CSV', printList: 'طباعة اللائحة', risk: 'مخاطر', healthy: 'وضعية سليمة', warning: 'تحتاج للمتابعة', critical: 'حالة حرجة', noData: 'لا توجد بيانات', performance: 'الأداء', grossMargin: 'الهامش الخام', salesPipeline: 'مسار المبيعات', purchasePipeline: 'مسار المشتريات', cashPosition: 'وضعية السيولة', inventoryCoverage: 'تغطية المخزون', operationalRisks: 'المخاطر التشغيلية', branchRanking: 'ترتيب الفروع', monthlyTrend: 'التطور الشهري', conversionRate: 'نسبة التحويل', avgTicket: 'متوسط الفاتورة', documentsCount: 'عدد الوثائق', proReport: 'تقرير إداري', refresh: 'تحديث', executiveSummary: 'ملخص تنفيذي', salesToCollect: 'مبالغ في انتظار التحصيل', purchasesToPay: 'مبالغ في انتظار الأداء', netCash: 'الصافي المتوقع', bestBranch: 'أفضل فرع', quickCreateSale: 'إنشاء عملية بيع', quickCreatePurchase: 'إنشاء عملية شراء', quickCreateProduct: 'إضافة منتج', quickCreateClient: 'إضافة زبون',
-    fiscalId: 'المعرّف الجبائي', rc: 'السجل التجاري', patente: 'رسم المهني', cnss: 'رقم CNSS', ifNumber: 'المعرّف الضريبي IF', companyInfo: 'معلومات الشركة', clientInfo: 'معلومات الزبون', supplierInfo: 'معلومات المورد', paymentTerms: 'شروط الأداء', legalMoroccoNote: 'وثيقة تجارية صادرة وفق المعطيات المصرح بها من طرف الشركة. يرجى مراجعة المبالغ والضريبة على القيمة المضافة قبل الاعتماد النهائي.', stampAndSignature: 'الختم والتوقيع', commercialDocument: 'وثيقة تجارية', invoiceTitle: 'فاتورة', deliveryTitle: 'سند تسليم', receiptTitle: 'سند استلام', quoteTitle: 'عرض سعر', orderTitle: 'طلبية', amountInWords: 'المبلغ بالحروف', taxSummary: 'ملخص الضريبة', netToPay: 'الصافي للأداء', thankYou: 'شكراً لتعاملكم معنا', generatedBy: 'تم إنشاء الوثيقة بواسطة', customerInvoice: 'فاتورة زبون', supplierInvoice: 'فاتورة مورد', customerQuote: 'عرض سعر للزبون', customerOrder: 'طلبية زبون', customerDelivery: 'سند تسليم للزبون', supplierOrder: 'طلبية مورد', supplierReceipt: 'سند استلام من المورد', profitCenter: 'مركز الربحية', profitability: 'الربحية', profitAlerts: 'تنبيهات الربحية', priceSuggestion: 'اقتراح الثمن', minimumSalePrice: 'أدنى ثمن بيع مقترح', targetMargin: 'الهامش المستهدف', marginRate: 'نسبة الهامش', reorderProposal: 'اقتراح إعادة التزويد', reorderQty: 'الكمية المقترحة للطلب', deadStock: 'مخزون راكد', fastMoving: 'دوران سريع', slowMoving: 'دوران بطيء', valuation: 'التقييم المالي', commercialTerms: 'الشروط التجارية', preparedFor: 'موجه إلى', documentValidity: 'صلاحية الوثيقة', deliveryAddress: 'عنوان التسليم'
+    fiscalId: 'المعرّف الجبائي', rc: 'السجل التجاري', patente: 'رسم المهني', cnss: 'رقم CNSS', ifNumber: 'المعرّف الضريبي IF', companyInfo: 'معلومات الشركة', clientInfo: 'معلومات الزبون', supplierInfo: 'معلومات المورد', paymentTerms: 'شروط الأداء', legalMoroccoNote: 'وثيقة تجارية صادرة وفق المعطيات المصرح بها من طرف الشركة. يرجى مراجعة المبالغ والضريبة على القيمة المضافة قبل الاعتماد النهائي.', stampAndSignature: 'الختم والتوقيع', commercialDocument: 'وثيقة تجارية', invoiceTitle: 'فاتورة', deliveryTitle: 'سند تسليم', receiptTitle: 'سند استلام', quoteTitle: 'عرض سعر', orderTitle: 'طلبية', amountInWords: 'المبلغ بالحروف', taxSummary: 'ملخص الضريبة', netToPay: 'الصافي للأداء', thankYou: 'شكراً لتعاملكم معنا', generatedBy: 'تم إنشاء الوثيقة بواسطة', customerInvoice: 'فاتورة زبون', supplierInvoice: 'فاتورة مورد', customerQuote: 'عرض سعر للزبون', customerOrder: 'طلبية زبون', customerDelivery: 'سند تسليم للزبون', supplierOrder: 'طلبية مورد', supplierReceipt: 'سند استلام من المورد', profitCenter: 'مركز الربحية', profitability: 'الربحية', profitAlerts: 'تنبيهات الربحية', priceSuggestion: 'اقتراح الثمن', minimumSalePrice: 'أدنى ثمن بيع مقترح', targetMargin: 'الهامش المستهدف', marginRate: 'نسبة الهامش', reorderProposal: 'اقتراح إعادة التزويد', reorderQty: 'الكمية المقترحة للطلب', deadStock: 'مخزون راكد', fastMoving: 'دوران سريع', slowMoving: 'دوران بطيء', valuation: 'التقييم المالي', commercialTerms: 'الشروط التجارية', preparedFor: 'موجه إلى', documentValidity: 'صلاحية الوثيقة', deliveryAddress: 'عنوان التسليم', tools: 'الأدوات', calculator: 'آلة حاسبة', marginCalculator: 'حاسبة الهامش', salePriceFromMargin: 'ثمن البيع حسب الهامش', purchaseCost: 'تكلفة الشراء', wantedMargin: 'الهامش المطلوب', result: 'النتيجة', clear: 'مسح', simplePrint: 'طباعة مبسطة', kpiRevenue: 'رقم المعاملات', kpiPurchases: 'حجم المشتريات', kpiCashIn: 'مجموع المقبوضات', kpiCashOut: 'مجموع المدفوعات', kpiStockQty: 'كمية المخزون', kpiOpenDocs: 'وثائق مفتوحة', kpiPaidRate: 'نسبة الفواتير المؤداة', kpiLowMargin: 'منتجات بهامش ضعيف', paymentList: 'لائحة المدفوعات'
   }
 };
 
@@ -354,6 +354,14 @@ async function loadProDashboardData() {
       unpaidInvoices,
       stockAlerts,
       stockValue,
+      purchasesTotal: docsPurchases.reduce((s, d) => s + Number(d.totalTTC || 0), 0),
+      salesTotal: docsSales.reduce((s, d) => s + Number(d.totalTTC || 0), 0),
+      cashInTotal: paymentSum(docsSales),
+      cashOutTotal: paymentSum(docsPurchases),
+      stockQty: prod.reduce((s, p) => s + Number(p.quantite || 0), 0),
+      openDocs: [...docsSales, ...docsPurchases].filter(d => d.stage !== 'facture' && docStatus(d) !== 'closed').length,
+      paidRate: paidRate([...docsSales, ...docsPurchases]),
+      lowMargin: prod.filter(p => productProfitStatus(p) !== 'healthy').length,
       clientsCount: (clients || []).length,
       suppliersCount: (suppliers || []).length
     }
@@ -855,6 +863,23 @@ async function loadCompanySettings() {
   };
 }
 
+
+
+function activePaymentsFromDocs(docs) {
+  return (docs || []).flatMap(d => (d.paiements || jsonValue(d.payments_json, []) || [])
+    .filter(p => !p.canceled)
+    .map(p => ({ ...p, doc: d })));
+}
+
+function paymentSum(docs) {
+  return activePaymentsFromDocs(docs).reduce((s, p) => s + Number(p.montant || 0), 0);
+}
+
+function paidRate(docs) {
+  const inv = (docs || []).filter(d => d.stage === 'facture');
+  if (!inv.length) return 0;
+  return inv.filter(d => d.statutPaiement === 'paid').length / inv.length * 100;
+}
 
 function preciseDocTitle(doc, type, L) {
   const stage = doc?.stage || '';
@@ -1635,6 +1660,7 @@ function Layout({ L, lang, toggleLang, session, setSession }) {
   const menu = [
     ['dashboard', L('dashboard'), 'dashboard.read'],
     ['profit', L('profitCenter'), 'dashboard.read'],
+    ['tools', L('tools'), 'dashboard.read'],
     ['products', L('products'), 'products.read'],
     ['sales', L('sales'), 'sales.read'],
     ['purchases', L('purchases'), 'purchases.read'],
@@ -1686,6 +1712,7 @@ function Layout({ L, lang, toggleLang, session, setSession }) {
         <main className="flex-1 p-6 max-w-[1500px] mx-auto w-full app-main pro-main">
           {page === 'dashboard' ? <Dashboard L={L} /> : null}
           {page === 'profit' ? <ProfitCenter L={L} /> : null}
+          {page === 'tools' ? <ToolsCenter L={L} /> : null}
           {page === 'products' ? <Products L={L} /> : null}
           {page === 'sales' ? <Docs L={L} type="sales" /> : null}
           {page === 'purchases' ? <Docs L={L} type="purchases" /> : null}
@@ -1744,6 +1771,58 @@ function Badge({ children, tone }) {
 
 function ErrorBox({ msg }) {
   return <div className="bg-red-50 text-red-700 border border-red-200 p-4 rounded-xl"><b>Erreur :</b> {msg}</div>;
+}
+
+
+
+function ToolsCenter({ L }) {
+  const [calc, setCalc] = useState('');
+  const [cost, setCost] = useState(100);
+  const [margin, setMargin] = useState(25);
+
+  function safeCalc() {
+    try {
+      if (!/^[0-9+\-*/().,\s]+$/.test(calc)) return 'Erreur';
+      // eslint-disable-next-line no-new-func
+      const val = Function('"use strict";return (' + calc.replace(',', '.') + ')')();
+      return Number.isFinite(val) ? fmt(val) : 'Erreur';
+    } catch {
+      return 'Erreur';
+    }
+  }
+
+  const suggested = suggestSalePrice(Number(cost || 0), Number(margin || 0));
+
+  return (
+    <>
+      <Header title={L('tools')} />
+      <div className="grid md:grid-cols-2 gap-5">
+        <div className="card p-5">
+          <h2 className="font-black text-lg mb-3">{L('calculator')}</h2>
+          <input className="input mb-3 text-xl font-mono" value={calc} onChange={e => setCalc(e.target.value)} placeholder="1200 + 250 * 2" />
+          <div className="tool-result mb-3">{L('result')} : <b>{calc ? safeCalc() : '-'}</b></div>
+          <div className="flex gap-2 flex-wrap">
+            {['7','8','9','/','4','5','6','*','1','2','3','-','0','.','+','(',')'].map(x => <button key={x} className="btn bg-white border" onClick={() => setCalc(calc + x)}>{x}</button>)}
+            <button className="btn bg-red-600 text-white" onClick={() => setCalc('')}>{L('clear')}</button>
+          </div>
+        </div>
+
+        <div className="card p-5">
+          <h2 className="font-black text-lg mb-3">{L('marginCalculator')}</h2>
+          <label className="text-xs text-slate-500">{L('purchaseCost')}
+            <input className="input mt-1 mb-3" type="number" value={cost} onChange={e => setCost(e.target.value)} />
+          </label>
+          <label className="text-xs text-slate-500">{L('wantedMargin')} %
+            <input className="input mt-1 mb-3" type="number" value={margin} onChange={e => setMargin(e.target.value)} />
+          </label>
+          <div className="tool-price">
+            <span>{L('salePriceFromMargin')}</span>
+            <b>{dh(suggested)}</b>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
 
 
@@ -1881,13 +1960,19 @@ function Dashboard({ L }) {
         </div>
       </div>
 
-      <div className="pro-kpi-grid mb-6">
+      <div className="pro-kpi-grid pro-kpi-grid-v38 mb-6">
         <div className="pro-kpi-card"><span>{L('todaySales')}</span><b>{dh(k.todaySales)}</b><small>{L('sales')}</small></div>
-        <div className="pro-kpi-card"><span>{L('stockValue')}</span><b>{dh(k.stockValue)}</b><small>{L('products')}</small></div>
+        <div className="pro-kpi-card"><span>{L('kpiRevenue')}</span><b>{dh(k.salesTotal || 0)}</b><small>{L('sales')}</small></div>
+        <div className="pro-kpi-card"><span>{L('kpiPurchases')}</span><b>{dh(k.purchasesTotal || 0)}</b><small>{L('purchases')}</small></div>
+        <div className="pro-kpi-card"><span>{L('kpiCashIn')}</span><b>{dh(k.cashInTotal || 0)}</b><small>{L('cashIn')}</small></div>
+        <div className="pro-kpi-card"><span>{L('kpiCashOut')}</span><b>{dh(k.cashOutTotal || 0)}</b><small>{L('cashOut')}</small></div>
+        <div className="pro-kpi-card"><span>{L('stockValue')}</span><b>{dh(k.stockValue)}</b><small>{L('valuation')}</small></div>
+        <div className="pro-kpi-card"><span>{L('kpiStockQty')}</span><b>{fmt(k.stockQty || 0)}</b><small>{L('stock')}</small></div>
+        <div className="pro-kpi-card"><span>{L('kpiOpenDocs')}</span><b>{k.openDocs || 0}</b><small>{L('document')}</small></div>
+        <div className="pro-kpi-card"><span>{L('kpiPaidRate')}</span><b>{fmt(k.paidRate || 0)}%</b><small>{L('payments')}</small></div>
+        <div className="pro-kpi-card"><span>{L('kpiLowMargin')}</span><b>{k.lowMargin || 0}</b><small>{L('profitability')}</small></div>
         <div className="pro-kpi-card"><span>{L('unpaidInvoices')}</span><b>{k.unpaidInvoices}</b><small>{L('risk')}</small></div>
         <div className="pro-kpi-card"><span>{L('stockAlerts')}</span><b>{k.stockAlerts}</b><small>{L('critical')}</small></div>
-        <div className="pro-kpi-card"><span>{L('customersCount')}</span><b>{k.clientsCount}</b><small>{L('clients')}</small></div>
-        <div className="pro-kpi-card"><span>{L('suppliersCount')}</span><b>{k.suppliersCount}</b><small>{L('suppliers')}</small></div>
       </div>
 
       <div className="grid md:grid-cols-3 gap-5">
@@ -2484,137 +2569,93 @@ function DocumentPreview({ L, type, doc, close }) {
   const [company, setCompany] = useState(null);
   useEffect(() => { loadCompanySettings().then(setCompany).catch(() => setCompany({ name: 'DrogueriePro' })); }, []);
 
+  const c = company || { name: 'DrogueriePro' };
   const third = isSales ? (doc.client_name || doc.clientName || '-') : (doc.supplier_name || doc.supplierName || '-');
   const docTitle = preciseDocTitle(doc, type, L);
-  const profit = documentProfit(doc);
-
   const vatRate = Number(doc.vat_rate || 20);
-  const c = company || { name: 'DrogueriePro' };
 
   return (
     <Modal title={L('preview')} onClose={close} wide>
-      <div className="print-area pro-document morocco-document">
-        <div className="doc-topline"></div>
-
-        <div className="doc-header morocco-doc-header">
+      <div className="print-area simple-document">
+        <div className="simple-doc-header">
           <div>
-            <div className="doc-brand">{c.name}</div>
-            <div className="doc-muted">{c.address || '-'}</div>
-            <div className="doc-muted">{L('phone')} : {c.phone || '-'}</div>
-            <div className="doc-legal-line">
-              <span>ICE : {c.ice || '-'}</span>
-              <span>RC : {c.rc || '-'}</span>
-              <span>IF : {c.ifNumber || '-'}</span>
-              <span>Patente : {c.patente || '-'}</span>
-              <span>CNSS : {c.cnss || '-'}</span>
-            </div>
+            <div className="simple-brand">{c.name}</div>
+            <div className="simple-muted">{c.address || '-'}</div>
+            <div className="simple-muted">{L('phone')} : {c.phone || '-'}</div>
+            <div className="simple-legal">ICE: {c.ice || '-'} · RC: {c.rc || '-'} · IF: {c.ifNumber || '-'} · Patente: {c.patente || '-'}</div>
           </div>
 
-          <div className="doc-title-box morocco-title-box">
-            <div className="doc-label">{L('commercialDocument')}</div>
-            <div className="doc-title">{docTitle}</div>
-            <div className="doc-number">{docNo(doc)}</div>
-            <div className="doc-muted">{L('date')} : {doc.date || today()}</div>
+          <div className="simple-title-box">
+            <div className="simple-title">{docTitle}</div>
+            <div className="simple-number">{docNo(doc)}</div>
+            <div className="simple-muted">{L('date')} : {doc.date || today()}</div>
           </div>
         </div>
 
-        <div className="doc-info-grid morocco-info-grid">
-          <div className="doc-info-card">
-            <div className="doc-label">{isSales ? L('clientInfo') : L('supplierInfo')}</div>
-            <div className="doc-value">{third}</div>
-            <div className="doc-muted">ICE : {doc.third_ice || '-'}</div>
+        <div className="simple-doc-meta">
+          <div>
+            <span>{isSales ? L('customer') : L('supplier')}</span>
+            <b>{third}</b>
           </div>
-
-          <div className="doc-info-card">
-            <div className="doc-label">{L('paymentTerms')}</div>
-            <div className="doc-value">{paymentLabel(doc, L)}</div>
-            <div className="doc-muted">{L('remaining')} : {dh(doc.reste || 0)}</div>
+          <div>
+            <span>{L('payment')}</span>
+            <b>{paymentLabel(doc, L)}</b>
           </div>
-
-          {isSales ? <div className="doc-info-card">
-            <div className="doc-label">{L('profitability')}</div>
-            <div className="doc-value">{dh(profit.margin || 0)}</div>
-            <div className="doc-muted">{L('marginRate')} : {profit.sales ? fmt((profit.margin / profit.sales) * 100) : '0,00'}%</div>
-          </div> : null}
-
-          <div className="doc-info-card">
-            <div className="doc-label">{L('createdBy')}</div>
-            <div className="doc-value">{doc.createdByLabel || currentUserLabel() || '-'}</div>
+          <div>
+            <span>{L('createdBy')}</span>
+            <b>{doc.createdByLabel || currentUserLabel() || '-'}</b>
           </div>
-
-          <div className="doc-info-card">
-            <div className="doc-label">{L('baseDocNo')}</div>
-            <div className="doc-value">{doc.baseDocId ? (doc.baseDocNumber || ('#' + doc.baseDocId)) : '-'}</div>
+          <div>
+            <span>{L('baseDocNo')}</span>
+            <b>{doc.baseDocId ? (doc.baseDocNumber || ('#' + doc.baseDocId)) : '-'}</b>
           </div>
         </div>
 
-        <table className="doc-lines morocco-lines">
+        <table className="simple-lines">
           <thead>
             <tr>
-              <th style={{ width: '40px' }}>#</th>
+              <th>#</th>
               <th>{L('ref')}</th>
               <th>{L('product')}</th>
               <th>{L('quantity')}</th>
               <th>{L('unitPrice')}</th>
-              <th>{L('totalHT')}</th>
-              {isSales ? <th>{L('margin')}</th> : null}
               <th>{L('totalTTC')}</th>
             </tr>
           </thead>
           <tbody>
             {(doc.lignes || []).map((l, i) => {
               const total = Number(l.prixUnit || 0) * Number(l.qte || 0);
-              const ht = total / (1 + vatRate / 100);
               return (
                 <tr key={i}>
                   <td>{i + 1}</td>
                   <td className="font-mono">{l.ref || l.produitId || '-'}</td>
-                  <td>
-                    <div className="doc-strong">{l.nom || '-'}</div>
-                    {l.nomAr ? <div className="doc-muted">{l.nomAr}</div> : null}
-                  </td>
+                  <td>{l.nom || '-'}</td>
                   <td>{fmt(l.qte)}</td>
                   <td>{dh(l.prixUnit)}</td>
-                  <td>{dh(ht)}</td>
-                  {isSales ? <td>{dh(lineProfit(l).margin)}</td> : null}
-                  <td className="doc-strong">{dh(total)}</td>
+                  <td className="simple-bold">{dh(total)}</td>
                 </tr>
               );
             })}
           </tbody>
         </table>
 
-        <div className="doc-bottom morocco-bottom">
-          <div className="doc-note">
-            <div className="doc-label">{L('legalNote')}</div>
-            <p>{L('legalMoroccoNote')}</p>
-            <p><b>{L('amountInWords')} :</b> {amountToWordsFr(doc.totalTTC || 0)}</p>
-            <p><b>{L('commercialTerms')} :</b> {doc.stage === 'devis' ? L('documentValidity') + ' 30 jours' : L('paymentTerms') + ' selon accord commercial'}</p>
-            <p>{L('thankYou')}</p>
+        <div className="simple-bottom">
+          <div className="simple-note">
+            <b>{L('note')}</b>
+            <p>{L('legalMoroccoNote') || L('legalNote')}</p>
+            <p>{L('thankYou') || ''}</p>
           </div>
 
-          <div className="doc-totals morocco-totals">
+          <div className="simple-totals">
             <div><span>{L('totalHT')}</span><b>{dh(doc.totalHT || 0)}</b></div>
             <div><span>{L('totalVAT')} ({fmt(vatRate)}%)</span><b>{dh(doc.tva || 0)}</b></div>
-            <div className="grand-total"><span>{L('netToPay')}</span><b>{dh(doc.totalTTC || 0)}</b></div>
+            <div className="simple-grand"><span>{L('netToPay')}</span><b>{dh(doc.totalTTC || 0)}</b></div>
           </div>
         </div>
 
-        <div className="doc-footer morocco-footer">
-          <div>
-            <div className="doc-label">{L('preparedBy')}</div>
-            <div>{doc.createdByLabel || currentUserLabel() || '-'}</div>
-            <div className="doc-muted">{L('printDate')} : {new Date().toLocaleString()}</div>
-          </div>
-
-          <div>
-            <div className="doc-label">{L('generatedBy')}</div>
-            <div>DrogueriePro</div>
-          </div>
-
-          <div className="signature-box">
-            <div className="doc-label">{L('stampAndSignature')}</div>
-          </div>
+        <div className="simple-footer">
+          <div>{L('printDate')} : {new Date().toLocaleString()}</div>
+          <div className="simple-signature">{L('signature')}</div>
         </div>
       </div>
 
@@ -2625,6 +2666,104 @@ function DocumentPreview({ L, type, doc, close }) {
     </Modal>
   );
 }
+
+function Payments({ L }) {
+  const [rows, setRows] = useState([]);
+  const [err, setErr] = useState('');
+  const [filter, setFilter] = useState('all');
+
+  async function load() {
+    try {
+      setErr('');
+      const data = await loadPayments();
+      setRows(data || []);
+    } catch (e) {
+      console.warn('Payments load error:', e.message);
+      setRows([]);
+      setErr('');
+    }
+  }
+
+  useEffect(() => { load(); }, []);
+
+  const filtered = rows.filter(p => {
+    if (filter === 'all') return true;
+    if (filter === 'active') return !p.canceled;
+    if (filter === 'canceled') return !!p.canceled;
+    return p.type === filter;
+  });
+
+  async function cancel(p) {
+    if (!can('payments.cancel')) return alert('Autorisation insuffisante : payments.cancel');
+    const reason = prompt('Motif annulation ?', 'Annulation règlement');
+    if (reason === null) return;
+    try {
+      await cancelPayment(p.sourceTable, p.docId, p.id, reason);
+      await load();
+    } catch (e) { alert(e.message); }
+  }
+
+  const activeTotal = filtered.filter(p => !p.canceled).reduce((s, p) => s + Number(p.montant || 0), 0);
+  const canceledTotal = filtered.filter(p => p.canceled).reduce((s, p) => s + Number(p.montant || 0), 0);
+
+  return (
+    <>
+      <Header title={L('payments')}>
+        <select className="input max-w-xs" value={filter} onChange={e => setFilter(e.target.value)}>
+          <option value="all">{L('all')}</option>
+          <option value="active">Actifs</option>
+          <option value="canceled">{L('canceled')}</option>
+          <option value="encaissement">{L('cashIn')}</option>
+          <option value="decaissement">{L('cashOut')}</option>
+        </select>
+        <button onClick={load} className="btn bg-white border">↻</button>
+      </Header>
+
+      <div className="pro-kpi-grid mb-4">
+        <div className="pro-kpi-card"><span>{L('kpiCashIn')}</span><b>{dh(rows.filter(p => p.type === 'encaissement' && !p.canceled).reduce((s,p)=>s+Number(p.montant||0),0))}</b><small>{L('cashIn')}</small></div>
+        <div className="pro-kpi-card"><span>{L('kpiCashOut')}</span><b>{dh(rows.filter(p => p.type === 'decaissement' && !p.canceled).reduce((s,p)=>s+Number(p.montant||0),0))}</b><small>{L('cashOut')}</small></div>
+        <div className="pro-kpi-card"><span>{L('paymentList')}</span><b>{filtered.length}</b><small>{L('document')}</small></div>
+        <div className="pro-kpi-card"><span>{L('canceled')}</span><b>{dh(canceledTotal)}</b><small>{L('cancelPayment')}</small></div>
+      </div>
+
+      {err ? <ErrorBox msg={err} /> : null}
+
+      <Table>
+        <thead>
+          <tr>
+            <th>{L('date')}</th>
+            <th>Type</th>
+            <th>{L('docType')}</th>
+            <th>{L('document')}</th>
+            <th>{L('customer')} / {L('supplier')}</th>
+            <th>Mode</th>
+            <th>{L('detail')}</th>
+            <th>{L('totalTTC')}</th>
+            <th>{L('paymentStatus')}</th>
+            <th>{L('actions')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filtered.map((p, i) => (
+            <tr key={(p.docId || '') + '-' + (p.id || i)} className={p.canceled ? 'payment-canceled' : ''}>
+              <td>{p.date || '-'}</td>
+              <td><Badge tone={p.type === 'encaissement' ? 'green' : 'amber'}>{p.type === 'encaissement' ? L('cashIn') : L('cashOut')}</Badge></td>
+              <td>{p.docType || '-'}</td>
+              <td className="font-mono text-xs">{p.docNumber || '-'}</td>
+              <td>{p.tiers || '-'}</td>
+              <td>{p.mode || '-'}</td>
+              <td className="text-xs text-slate-500">{[p.chequeNo, p.bank, p.transferRef, p.transactionNo, p.note].filter(Boolean).join(' · ') || '-'}</td>
+              <td className="font-bold">{dh(p.montant || 0)}</td>
+              <td>{p.canceled ? <Badge tone="red">{L('canceled')}</Badge> : <Badge tone="green">Actif</Badge>}</td>
+              <td>{!p.canceled ? <button onClick={() => cancel(p)} className="btn bg-red-600 text-white">{L('cancelPayment')}</button> : '-'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </>
+  );
+}
+
 
 function PaymentModal({ L, isSales, pay, setPay, save, close }) {
   const mode = pay.mode || 'Espèces';
