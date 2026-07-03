@@ -972,16 +972,17 @@ body {
 .saas-badge-on { background:#dcfce7; color:#166534; }
 .saas-badge-off { background:#fee2e2; color:#991b1b; }
 
-/* V40 Reporting + SaaS permission cleanup */
-.reporting-aging-red {
-  color: #dc2626;
-  font-weight: 800;
-}
-.reporting-aging-amber {
-  color: #d97706;
-  font-weight: 800;
-}
-.permissions-pro .saas-hidden-note {
-  color: #64748b;
+/* V41 SuperAdmin separation */
+.protected-profile-badge {
+  background: #f1f5f9;
+  color: #475569;
+  border-radius: 999px;
+  padding: 4px 9px;
   font-size: 12px;
+  font-weight: 800;
+}
+.sidebar-platform-note {
+  color: #94a3b8;
+  font-size: 11px;
+  margin: 10px 16px;
 }
