@@ -619,3 +619,154 @@ body {
   .pro-hero { flex-direction: column; align-items: stretch; }
   .pro-kpi-grid { grid-template-columns: 1fr; }
 }
+
+/* V36 Arabic Premium + Morocco Commerce Document */
+.rtl {
+  font-family: "Cairo", "Tajawal", "Segoe UI", Arial, sans-serif;
+  letter-spacing: 0;
+}
+.rtl h1,
+.rtl h2,
+.rtl h3,
+.rtl .font-bold,
+.rtl .font-black {
+  font-weight: 800;
+}
+.rtl .btn {
+  font-weight: 700;
+}
+.rtl .table th,
+.rtl .table td {
+  text-align: right;
+}
+.rtl .pro-hero,
+.rtl .pro-kpi-card,
+.rtl .pro-panel,
+.rtl .card {
+  direction: rtl;
+}
+.rtl .pro-progress-row b {
+  text-align: left;
+}
+.rtl .doc-number,
+.rtl .font-mono {
+  direction: ltr;
+  unicode-bidi: embed;
+}
+.morocco-document {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+}
+.morocco-doc-header {
+  align-items: flex-start;
+}
+.doc-legal-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  color: #475569;
+  font-size: 11px;
+}
+.doc-legal-line span {
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  padding: 4px 8px;
+  background: #f8fafc;
+}
+.morocco-title-box {
+  background: linear-gradient(180deg, #f8fafc, #fff);
+  border-top: 4px solid #f59e0b;
+}
+.morocco-info-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+.morocco-lines th {
+  background: #0f172a !important;
+  color: #fff !important;
+  border-color: #0f172a;
+}
+.morocco-lines td {
+  vertical-align: top;
+}
+.morocco-bottom {
+  grid-template-columns: 1fr 360px;
+}
+.morocco-totals .grand-total {
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+}
+.morocco-footer {
+  grid-template-columns: 1fr 1fr 260px;
+}
+.rtl .morocco-document {
+  direction: rtl;
+  text-align: right;
+}
+.rtl .morocco-doc-header {
+  flex-direction: row-reverse;
+}
+.rtl .doc-title-box {
+  text-align: right;
+}
+.rtl .doc-lines th,
+.rtl .doc-lines td {
+  text-align: right;
+}
+.rtl .doc-totals div {
+  flex-direction: row-reverse;
+}
+@media print {
+  .morocco-document {
+    border: none;
+  }
+  .doc-legal-line span,
+  .morocco-title-box,
+  .morocco-lines th,
+  .morocco-totals .grand-total {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
+@media (max-width: 900px) {
+  .morocco-info-grid,
+  .morocco-bottom,
+  .morocco-footer {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* V37 Morocco docs + profitability */
+.morocco-document .doc-title {
+  font-size: 26px;
+  letter-spacing: -.03em;
+}
+.morocco-document .doc-label {
+  color: #334155;
+  font-weight: 800;
+}
+.morocco-document .doc-info-card {
+  border-left: 4px solid #f59e0b;
+}
+.rtl .morocco-document .doc-info-card {
+  border-left: 1px solid #e2e8f0;
+  border-right: 4px solid #f59e0b;
+}
+.morocco-lines th {
+  font-size: 10px;
+}
+.morocco-lines td {
+  font-size: 11.5px;
+}
+.profit-warning {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  color: #9a3412;
+}
+@media print {
+  .morocco-document .doc-title {
+    font-size: 24px;
+  }
+  .morocco-document .doc-info-card {
+    break-inside: avoid;
+  }
+}
