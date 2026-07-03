@@ -986,3 +986,9 @@ body {
   font-size: 11px;
   margin: 10px 16px;
 }
+
+/* V42 SuperAdmin fixes */
+.permissions-pro td,
+.permissions-pro th {
+  white-space: nowrap;
+}

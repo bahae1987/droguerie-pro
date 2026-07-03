@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import './index.css';
 
-console.log('DROGUERIEPRO V41 SUPERADMIN_MENU_FIX OK');
+console.log('DROGUERIEPRO V42 SUPERADMIN_FIXES OK');
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -564,7 +564,7 @@ function App() {
   }
 
   if (!session) {
-    return <LoginPage L={L} lang={lang} onLogin={s => { setStoredSession(s); setSession(s); }} />;
+    return <LoginPage L={L} lang={lang} onLogin={async s => { setStoredSession(s); await refreshSaasModulesCache(); setSession(s); }} />;
   }
 
   return <><InstallPrompt /><Layout L={L} lang={lang} toggleLang={toggleLang} session={session} setSession={setSession} /></>;
@@ -606,6 +606,19 @@ function isBusinessPage(page) {
 function visibleMenuItem(item, session, disabledModules = getDisabledModulesCache()) {
   const page = item[0];
   const perm = item[2];
+  if (!hasPerm(session, perm)) return false;
+
+  const moduleCode = moduleCodeForPage(page);
+
+  if (isSuperAdmin(session)) {
+    // SuperAdmin = plateforme uniquement, mais Centre SaaS doit toujours rester disponible.
+    return ['saas', 'settings', 'permissions', 'users', 'branches', 'mobileApp'].includes(page);
+  }
+
+  if (page === 'saas') return false;
+  return !disabledModules.includes(moduleCode);
+}
+
 
   if (!hasPerm(session, perm)) return false;
 
@@ -629,9 +642,13 @@ function isSuperAdminUserRow(userRow) {
 
 
 function hasModuleAccess(code) {
+  const session = getStoredSession();
+  const page = moduleCodeForPage(code);
+  if (isSuperAdmin(session) && isPlatformPage(page)) return true;
   const disabled = getDisabledModulesCache();
-  return !disabled.includes(moduleCodeForPage(code));
+  return !disabled.includes(page);
 }
+
 
 async function loadSaasModules() {
   const { data, error } = await supabase.from('saas_modules').select('*').order('sort_order').order('code');
@@ -935,19 +952,56 @@ async function saveSettings(settings) {
   if (error) throw new Error(error.message);
 }
 
+
+async function loadRoles() {
+  const session = getStoredSession();
+  let q = supabase.from('roles').select('*').order('id');
+  const { data, error } = await q;
+  if (error) throw new Error(error.message);
+
+  const rows = data || [];
+  if (isSuperAdmin(session)) return rows;
+  return rows.filter(r => !['SuperAdmin', 'Super Administrateur'].includes(r.name));
+}
+
 async function loadPermissionsMatrix() {
+  const session = getStoredSession();
   const [{ data: roles, error: rErr }, { data: permissions, error: pErr }, { data: rolePerms, error: rpErr }] = await Promise.all([
     supabase.from('roles').select('*').order('id'),
     supabase.from('permissions').select('*').order('module').order('code'),
     supabase.from('role_permissions').select('*')
   ]);
+
   if (rErr) throw new Error(rErr.message);
   if (pErr) throw new Error(pErr.message);
   if (rpErr) throw new Error(rpErr.message);
-  return { roles: roles || [], permissions: permissions || [], rolePerms: rolePerms || [] };
+
+  const visibleRoles = (roles || []).filter(r => canSeeRoleColumn(r, session));
+  const visiblePermissions = (permissions || []).filter(p => canSeePermissionRow(p, session));
+  const roleIds = new Set(visibleRoles.map(r => Number(r.id)));
+  const permIds = new Set(visiblePermissions.map(p => Number(p.id)));
+
+  return {
+    roles: visibleRoles,
+    permissions: visiblePermissions,
+    rolePerms: (rolePerms || []).filter(x => roleIds.has(Number(x.role_id)) && permIds.has(Number(x.permission_id)))
+  };
 }
 
 async function setRolePermission(roleId, permissionId, enabled) {
+  const session = getStoredSession();
+
+  const [{ data: role }, { data: permission }] = await Promise.all([
+    supabase.from('roles').select('*').eq('id', roleId).maybeSingle(),
+    supabase.from('permissions').select('*').eq('id', permissionId).maybeSingle()
+  ]);
+
+  if (!isSuperAdmin(session)) {
+    if (!canSeeRoleColumn(role, session) || !canSeePermissionRow(permission, session)) {
+      throw new Error('Action non autorisée sur les droits SuperAdmin');
+    }
+  }
+
   if (enabled) {
     const { error } = await supabase.from('role_permissions').upsert({ role_id: roleId, permission_id: permissionId }, { onConflict: 'role_id,permission_id' });
     if (error) throw new Error(error.message);
@@ -956,6 +1010,7 @@ async function setRolePermission(roleId, permissionId, enabled) {
     if (error) throw new Error(error.message);
   }
 }
+
 
 
 
@@ -1691,18 +1746,15 @@ async function deleteParty(type, id) {
 }
 async function loadUsers() {
   const session = getStoredSession();
-  let q = supabase
+  const { data, error } = await supabase
     .from('users')
     .select('id, username, full_name, password_hash, active, branch_id, branches(name), role_id, roles(id, name)')
     .order('username');
 
-  const { data, error } = await q;
   if (error) throw new Error(error.message);
 
   const rows = data || [];
   if (isSuperAdmin(session)) return rows;
-
-  // Admin métier ne doit pas voir/éditer les comptes SuperAdmin.
   return rows.filter(u => !isSuperAdminUserRow(u));
 }
 
@@ -2063,6 +2115,8 @@ function SuperAdminCenter({ L }) {
   async function toggleModule(mod) {
     try {
       await saveSaasModule({ ...mod, enabled: !mod.enabled });
+      const disabled = await refreshSaasModulesCache();
+      window.dispatchEvent(new CustomEvent('droguerie_modules_changed', { detail: disabled }));
       await load();
     } catch (e) { alert(e.message); }
   }
@@ -3768,11 +3822,13 @@ function Permissions({ L }) {
 
   async function load() {
     try {
+      setErr('');
       const data = await loadPermissionsMatrix();
-      setRoles(data.roles);
-      setPermissions(data.permissions);
-      setRolePerms(data.rolePerms);
+      setRoles(data.roles || []);
+      setPermissions(data.permissions || []);
+      setRolePerms(data.rolePerms || []);
     } catch (e) {
+      console.error('Permissions load error:', e);
       setErr(e.message);
     }
   }
@@ -3787,7 +3843,6 @@ function Permissions({ L }) {
     try {
       await setRolePermission(roleId, permissionId, value);
       await load();
-      alert('Droit mis à jour. L’utilisateur concerné doit cliquer sur Rafraîchir droits ou se reconnecter.');
     } catch (e) {
       alert(e.message);
     }
@@ -3797,13 +3852,14 @@ function Permissions({ L }) {
     const seller = roles.find(r => String(r.name).toLowerCase().includes('vendeur'));
     if (!seller) return alert('Profil vendeur introuvable');
 
-    const allowed = new Set(['dashboard.read', 'products.read', 'stock.read', 'clients.read', 'sales.read', 'sales.write', 'sales.pay', 'payments.read']);
+    const allowed = new Set(['dashboard.read', 'products.read', 'stock.read', 'clients.read', 'sales.read', 'sales.write', 'sales.pay', 'payments.read', 'reporting.read']);
+
     try {
       for (const p of permissions) {
         await setRolePermission(seller.id, p.id, allowed.has(p.code));
       }
       await load();
-      alert('Profil vendeur corrigé : consultation clients uniquement.');
+      alert('Profil vendeur corrigé.');
     } catch (e) {
       alert(e.message);
     }
@@ -3811,30 +3867,33 @@ function Permissions({ L }) {
 
   if (err) return <ErrorBox msg={err} />;
 
-  const session = getStoredSession();
-  const visibleRoles = roles.filter(r => canSeeRoleColumn(r, session));
-  const visiblePermissions = permissions.filter(p => canSeePermissionRow(p, session));
-
-  const order = ['Tableau de bord', 'Produits', 'Stock', 'Clients', 'Fournisseurs', 'Ventes', 'Achats', 'Paiements', 'Utilisateurs', 'Paramètres', 'Autorisations', 'Drogueries', 'Traçabilité', 'Divers'];
-  const grouped = visiblePermissions.reduce((acc, p) => {
+  const grouped = permissions.reduce((acc, p) => {
     const mod = p.module || 'Divers';
     if (!acc[mod]) acc[mod] = [];
     acc[mod].push(p);
     return acc;
   }, {});
 
-  const modules = Object.keys(grouped).sort((a, b) => order.indexOf(a) - order.indexOf(b));
+  const order = ['Tableau de bord', 'Reporting', 'Produits', 'Stock', 'Clients', 'Fournisseurs', 'Ventes', 'Achats', 'Paiements', 'Utilisateurs', 'Paramètres', 'Autorisations', 'Drogueries', 'SaaS', 'Divers'];
+  const modules = Object.keys(grouped).sort((a, b) => {
+    const ia = order.indexOf(a);
+    const ib = order.indexOf(b);
+    return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+  });
 
   return (
     <>
-      <Header title={L('permissions') || 'Autorisations'}>
-        <button onClick={applySellerTemplate} className="btn bg-amber-500">Corriger profil vendeur</button>
+      <Header title={L('permissions')}>
+        <button onClick={applySellerTemplate} className="btn bg-amber-500">Corriger vendeur</button>
         <button onClick={load} className="btn bg-white border">↻</button>
       </Header>
 
       <div className="card p-4 mb-4 text-sm text-slate-600">
-        Les droits sont séparés par action : <b>consultation</b>, <b>création/modification</b>, <b>suppression</b>, <b>règlement</b>. 
-        Exemple : pour un vendeur qui consulte les clients seulement, cocher <b>clients.read</b> et décocher <b>clients.write</b> / <b>clients.delete</b>.
+        {!isSuperAdmin(getStoredSession()) ? (
+          <span>Les droits SuperAdmin sont masqués pour les profils métier.</span>
+        ) : (
+          <span>Mode SuperAdmin : droits plateforme et droits métier visibles.</span>
+        )}
       </div>
 
       <div className="card overflow-auto permissions-pro">
@@ -3842,25 +3901,22 @@ function Permissions({ L }) {
           <thead>
             <tr>
               <th>Module / Permission</th>
-              {visibleRoles.map(r => <th key={r.id}>{r.name}</th>)}
+              {roles.map(r => <th key={r.id}>{r.name}</th>)}
             </tr>
           </thead>
-
           <tbody>
             {modules.map(mod => (
               <React.Fragment key={mod}>
                 <tr>
-                  <td colSpan={visibleRoles.length + 1} className="bg-slate-100 font-bold">{mod}</td>
+                  <td colSpan={roles.length + 1} className="bg-slate-100 font-bold">{mod}</td>
                 </tr>
-
                 {grouped[mod].map(p => (
                   <tr key={p.id}>
                     <td>
                       <div className="font-semibold">{p.label || p.code}</div>
                       <div className="text-xs text-slate-400 font-mono">{p.code}</div>
                     </td>
-
-                    {visibleRoles.map(r => (
+                    {roles.map(r => (
                       <td key={r.id}>
                         <input type="checkbox" checked={isChecked(r.id, p.id)} onChange={e => toggle(r.id, p.id, e.target.checked)} />
                       </td>
@@ -3869,6 +3925,7 @@ function Permissions({ L }) {
                 ))}
               </React.Fragment>
             ))}
+            {!permissions.length ? <tr><td colSpan={roles.length + 1}>{L('noData')}</td></tr> : null}
           </tbody>
         </table>
       </div>
