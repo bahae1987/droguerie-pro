@@ -51,7 +51,11 @@ app.use(cors({ origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split("
 app.use(express.json());
 // NORMALISEUR : garantit que toutes les routes sont vues avec le préfixe /api
 app.use((req, res, next) => { if (!req.url.startsWith("/api")) req.url = "/api" + req.url; next(); });
-app.get("/api/health", (req, res) => res.json({ ok: true, service: "DrogueriePro API", build: "v2-index-rewrite", db: !!process.env.DATABASE_URL, time: now() }));
+app.get("/api/health", async (req, res) => {
+  let db = false, dberr = null, t0 = Date.now();
+  try { await pool.query("SELECT 1"); db = true; } catch (e) { dberr = e.message; }
+  res.json({ ok: true, service: "DrogueriePro API", build: "v3-health-dbtest", db, dberr, ms: Date.now() - t0, time: now() });
+});
 app.get("/", (req, res) => res.json({ ok: true, api: "/api" }));
 
 /* ---------- Auth & permissions ---------- */
