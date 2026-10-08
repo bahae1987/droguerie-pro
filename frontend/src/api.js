@@ -1,13 +1,19 @@
 /* Client API + session (frontend web) — v3 */
-const API = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
+const API = import.meta.env.VITE_API_URL || "/api";
 let token = localStorage.getItem("dp_token") || null;
 export const setToken = (t) => { token = t; t ? localStorage.setItem("dp_token", t) : localStorage.removeItem("dp_token"); };
 export const API_URL = API;
 export const authHeader = () => (token ? { Authorization: "Bearer " + token } : {});
 
 async function req(path, opts = {}) {
-  const res = await fetch(API + path, { ...opts, headers: { "Content-Type": "application/json", ...authHeader(), ...(opts.headers || {}) } });
-  if (res.status === 401) { setToken(null); location.reload(); }
+  let res;
+  try {
+    res = await fetch(API + path, { ...opts, headers: { "Content-Type": "application/json", ...authHeader(), ...(opts.headers || {}) } });
+  } catch (e) {
+    // fetch n'a pas pu joindre le serveur (API non démarrée, mauvaise URL, mixed-content, CORS)
+    throw new Error(`Serveur injoignable à ${API}. Vérifiez que le backend est démarré (npm start) et que VITE_API_URL est correct.`);
+  }
+  if (res.status === 401 && path !== "/auth/login") { setToken(null); location.reload(); }
   if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || "Erreur " + res.status);
   return res.json();
 }
