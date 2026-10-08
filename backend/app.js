@@ -49,7 +49,9 @@ async function paiementsReste(table, invId, ttc) { const r = await get(`SELECT C
 const app = express();
 app.use(cors({ origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(",") : true }));
 app.use(express.json());
-app.get("/api/health", (req, res) => res.json({ ok: true, service: "DrogueriePro API", db: !!process.env.DATABASE_URL, time: now() }));
+// NORMALISEUR : garantit que toutes les routes sont vues avec le préfixe /api
+app.use((req, res, next) => { if (!req.url.startsWith("/api")) req.url = "/api" + req.url; next(); });
+app.get("/api/health", (req, res) => res.json({ ok: true, service: "DrogueriePro API", build: "v2-index-rewrite", db: !!process.env.DATABASE_URL, time: now() }));
 app.get("/", (req, res) => res.json({ ok: true, api: "/api" }));
 
 /* ---------- Auth & permissions ---------- */
@@ -349,5 +351,8 @@ export async function ready() {
   return _ready;
 }
 ready();                 // lance la vérif/migration au chargement (non bloquant)
+
+// ROUTE_404 : renvoie un JSON clair si aucune route ne correspond
+app.use((req, res) => res.status(404).json({ error: `Route API introuvable : ${req.method} ${req.originalUrl}` }));
 
 export default app;      // Express app réutilisable (Render OU fonction serverless Vercel)
