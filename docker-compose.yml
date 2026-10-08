@@ -1,0 +1,12 @@
+services:
+  api:
+    build: ./backend
+    ports: ["4000:4000"]
+    environment:
+      - JWT_SECRET=change-me-please
+      - DB_FILE=/data/droguerie.db
+    volumes:
+      - dbdata:/data
+    restart: unless-stopped
+volumes:
+  dbdata:
