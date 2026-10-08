@@ -1,7 +1,8 @@
-FROM node:20-alpine
+FROM node:20-bookworm-slim
 WORKDIR /app
+RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
 COPY package*.json ./
-RUN apk add --no-cache python3 make g++ && npm install --omit=dev
+RUN npm install --omit=dev
 COPY . .
 EXPOSE 4000
-CMD ["npm","start"]
+CMD ["node","server.js"]
