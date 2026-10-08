@@ -29,7 +29,7 @@ const TXT = {
     deliveries: 'Livraisons', receipts: 'Réceptions', invoices: 'Factures', remaining: 'Reste',
     paid: 'Réglée', unpaid: 'Non réglée', partial: 'Partielle', cashIn: 'Encaissements',
     cashOut: 'Décaissements', vat: 'TVA', theme: 'Thème', company: 'Société', address: 'Adresse', phone: 'Téléphone', ice: 'ICE', cashRegister: 'Caisse', receiptNo: 'N° reçu', chequeNo: 'N° chèque', bank: 'Banque', dueDate: 'Échéance', paymentStatus: 'Statut', transferRef: 'Réf. virement', valueDate: 'Date valeur', terminal: 'TPE', transactionNo: 'N° transaction', billNo: 'N° effet', note: 'Observation', quantity: 'Quantité', date: 'Date', customer: 'Client',
-    supplier: 'Fournisseur', product: 'Produit', base: 'Base', remainingQty: 'Qté restante', orderedQty: 'Qté commandée', deliveredQty: 'Qté livrée', receivedQty: 'Qté reçue', qtyToProcess: 'Qté à traiter', alreadyProcessed: 'Déjà traité', includeLine: 'Inclure', removeLine: 'Retirer ligne', restoreLine: 'Restaurer ligne', open: 'Ouvert', closed: 'Clôturé', preview: 'Aperçu', print: 'Imprimer', unitPrice: 'PU', totalHT: 'Total HT', totalVAT: 'TVA', totalTTC: 'Total TTC', cancelPayment: 'Annuler règlement', canceled: 'Annulé', subtotal: 'Sous-total', signature: 'Signature', preparedBy: 'Préparé par', printDate: 'Date impression', legalNote: 'Document généré par DrogueriePro', arabicName: 'Nom arabe', docType: 'Type document', purchasePrice: 'Prix achat', salePrice: 'Prix vente', margin: 'Marge', movement: 'Mouvement', object: 'Objet', detail: 'Détail', actor: 'Utilisateur', createdBy: 'Créé par', baseDocNo: 'N° doc. base', location: 'Emplacement', assignedTo: 'Affecté à', clientOwner: 'Compte', stockTransfer: 'Transfert stock', fromBranch: 'Droguerie source', toBranch: 'Droguerie destination', stockValue: 'Valeur stock', lowStock: 'Stock critique', stockByBranch: 'Stock par droguerie', adjustment: 'Ajustement', stockIn: 'Entrée stock', stockOut: 'Sortie stock', reason: 'Motif', category: 'Catégorie', ref: 'Référence', name: 'Nom', role: 'Profil', payment: 'Paiement', document: 'Document', form: 'Formulaire', select: 'Sélectionner', productRef: 'Réf. produit', unit: 'Unité', minStock: 'Stock min', threshold: 'Seuil', stockAdjustIn: 'Entrée stock', stockAdjustOut: 'Sortie stock', operationType: 'Type opération', unitPurchasePrice: 'Prix achat unitaire', unitSalePrice: 'Prix vente unitaire', customerForm: 'Fiche client', supplierForm: 'Fiche fournisseur', productForm: 'Fiche produit', documentLines: 'Lignes document', completed: 'Terminé', notAvailable: 'Non applicable', mobileApp: 'Application mobile', androidApp: 'Application Android', iosApp: 'Application iOS', downloadAndroid: 'Télécharger APK Android', downloadIos: 'Télécharger iOS', installGuide: 'Guide installation', mobileAdminPortal: 'Portail mobile administrateur', appStoreNote: 'iOS nécessite App Store / TestFlight avec compte Apple Developer', androidNote: 'Android peut être installé via APK interne ou publié sur Play Store', quickActions: 'Actions rapides', businessHealth: 'Santé activité', alerts: 'Alertes', recentActivity: 'Activité récente', topProducts: 'Top produits', todaySales: 'Ventes du jour', unpaidInvoices: 'Factures non réglées', stockAlerts: 'Alertes stock', customersCount: 'Nombre clients', suppliersCount: 'Nombre fournisseurs', adminCenter: 'Centre administrateur', proMode: 'Mode Pro', search: 'Rechercher', exportCsv: 'Exporter CSV', printList: 'Imprimer liste', risk: 'Risque', healthy: 'Sain', warning: 'Attention', critical: 'Critique', noData: 'Aucune donnée', performance: 'Performance', customerInvoice: 'Facture client', supplierInvoice: 'Facture fournisseur', customerQuote: 'Devis client', customerOrder: 'Commande client', customerDelivery: 'Bon de livraison client', supplierOrder: 'Commande fournisseur', supplierReceipt: 'Bon de réception fournisseur', profitCenter: 'Centre rentabilité', profitability: 'Rentabilité', profitAlerts: 'Alertes rentabilité', priceSuggestion: 'Suggestion prix', minimumSalePrice: 'Prix minimum conseillé', targetMargin: 'Marge cible', marginRate: 'Taux marge', reorderProposal: 'Proposition réapprovisionnement', reorderQty: 'Qté à commander', deadStock: 'Stock dormant', fastMoving: 'Rotation rapide', slowMoving: 'Rotation lente', valuation: 'Valorisation', commercialTerms: 'Conditions commerciales', preparedFor: 'Établi pour', documentValidity: 'Validité document', deliveryAddress: 'Adresse livraison', tools: 'Outils', calculator: 'Calculatrice', marginCalculator: 'Calcul marge', salePriceFromMargin: 'Prix selon marge', purchaseCost: 'Coût achat', wantedMargin: 'Marge souhaitée', result: 'Résultat', clear: 'Effacer', simplePrint: 'Impression simple', kpiRevenue: 'Chiffre d’affaires', kpiPurchases: 'Volume achats', kpiCashIn: 'Total encaissé', kpiCashOut: 'Total décaissé', kpiStockQty: 'Quantité stock', kpiOpenDocs: 'Documents ouverts', kpiPaidRate: 'Taux factures réglées', kpiLowMargin: 'Produits faible marge', paymentList: 'Liste paiements', superAdmin: 'SuperAdmin', saasCenter: 'Centre SaaS', modulesCenter: 'Gestion modules', databaseCenter: 'Base de données', subscription: 'Abonnement', plan: 'Plan', enabled: 'Activé', disabled: 'Désactivé', moduleCode: 'Code module', moduleName: 'Nom module', modulePrice: 'Prix module', commercialPack: 'Pack commercial', tenant: 'Client / Tenant', tenants: 'Clients / Tenants', databaseStats: 'Statistiques base', tableName: 'Table', recordsCount: 'Enregistrements', fixStockTransfer: 'Correction transfert stock', moduleBilling: 'Facturation modules', monthlyPrice: 'Prix mensuel', yearlyPrice: 'Prix annuel', branchFilter: 'Filtre droguerie', allBranches: 'Toutes drogueries', applyFilter: 'Appliquer filtre', filteredByBranch: 'Filtré par droguerie', userFilter: 'Filtre utilisateur', allUsers: 'Tous utilisateurs', salesBySeller: 'CA par vendeur', debtBySeller: 'Dette par vendeur', salesPerformance: 'Performance commerciale', collectionReport: 'Suivi recouvrement', marginBySeller: 'Marge par vendeur', unpaidBySeller: 'Impayés par vendeur', docsByUser: 'Documents par utilisateur', creator: 'Créateur', seller: 'Vendeur', turnover: 'Chiffre d’affaires', collected: 'Encaissé', outstanding: 'Encours', avgDelay: 'Délai moyen', reportSuggestions: 'Reportings proposés', backupCenter: 'Sauvegarde base', backupJson: 'Sauvegarde JSON', backupCsv: 'Sauvegarde CSV', backupSql: 'Script SQL', downloadBackup: 'Télécharger sauvegarde', exportAll: 'Exporter tout', localBackup: 'Backup local', backupDate: 'Date sauvegarde', backupTables: 'Tables sauvegardées', restoreNote: 'Restauration', databaseExport: 'Export base de données', fullBackup: 'Sauvegarde complète', reporting: 'Reporting', customerDebts: 'Dettes clients', supplierDebts: 'Dettes fournisseurs', totalDebt: 'Total dette', businessModules: 'Modules métier', platformModules: 'Modules plateforme', protectedProfile: 'Profil protégé', expiry: 'Péremption', expiryAlert: 'Péremption proche', expensesMod: 'Charges & Déplacements', trips: 'Déplacements', trip: 'Déplacement', expense: 'Charge', netMargin: 'Marge nette', grossMarginLbl: 'Marge brute', totalCharges: 'Total charges', chargeCat: 'Catégorie', beneficiary: 'Bénéficiaire', vehicle: 'Véhicule', destination: 'Destination', manager2: 'Responsable', tripLabel: 'Libellé', addExpense: 'Ajouter charge', addTrip: 'Nouveau déplacement', tripMargin: 'Marge du déplacement', statement: 'Relevé', balanceDue: 'Solde dû', totalInvoiced: 'Total facturé', totalPaid: 'Total réglé', amount: 'Montant', statusLbl: 'Statut', linkTo: 'Rattacher une vente', linkedSales: 'Ventes rattachées', tripDetail: 'Détail du déplacement', noTrip: 'Hors déplacement', charges: 'Charges', unlink: 'Détacher', chargeNum: 'N° charge', tripNum: 'N° déplacement', attach: 'Pièces jointes', addAttachment: 'Ajouter un fichier', noAttachment: 'Aucune pièce jointe'
+    supplier: 'Fournisseur', product: 'Produit', base: 'Base', remainingQty: 'Qté restante', orderedQty: 'Qté commandée', deliveredQty: 'Qté livrée', receivedQty: 'Qté reçue', qtyToProcess: 'Qté à traiter', alreadyProcessed: 'Déjà traité', includeLine: 'Inclure', removeLine: 'Retirer ligne', restoreLine: 'Restaurer ligne', open: 'Ouvert', closed: 'Clôturé', preview: 'Aperçu', print: 'Imprimer', unitPrice: 'PU', totalHT: 'Total HT', totalVAT: 'TVA', totalTTC: 'Total TTC', cancelPayment: 'Annuler règlement', canceled: 'Annulé', subtotal: 'Sous-total', signature: 'Signature', preparedBy: 'Préparé par', printDate: 'Date impression', legalNote: 'Document généré par DrogueriePro', arabicName: 'Nom arabe', docType: 'Type document', purchasePrice: 'Prix achat', salePrice: 'Prix vente', margin: 'Marge', movement: 'Mouvement', object: 'Objet', detail: 'Détail', actor: 'Utilisateur', createdBy: 'Créé par', baseDocNo: 'N° doc. base', location: 'Emplacement', assignedTo: 'Affecté à', clientOwner: 'Compte', stockTransfer: 'Transfert stock', fromBranch: 'Droguerie source', toBranch: 'Droguerie destination', stockValue: 'Valeur stock', lowStock: 'Stock critique', stockByBranch: 'Stock par droguerie', adjustment: 'Ajustement', stockIn: 'Entrée stock', stockOut: 'Sortie stock', reason: 'Motif', category: 'Catégorie', ref: 'Référence', name: 'Nom', role: 'Profil', payment: 'Paiement', document: 'Document', form: 'Formulaire', select: 'Sélectionner', productRef: 'Réf. produit', unit: 'Unité', minStock: 'Stock min', threshold: 'Seuil', stockAdjustIn: 'Entrée stock', stockAdjustOut: 'Sortie stock', operationType: 'Type opération', unitPurchasePrice: 'Prix achat unitaire', unitSalePrice: 'Prix vente unitaire', customerForm: 'Fiche client', supplierForm: 'Fiche fournisseur', productForm: 'Fiche produit', documentLines: 'Lignes document', completed: 'Terminé', notAvailable: 'Non applicable', mobileApp: 'Application mobile', androidApp: 'Application Android', iosApp: 'Application iOS', downloadAndroid: 'Télécharger APK Android', downloadIos: 'Télécharger iOS', installGuide: 'Guide installation', mobileAdminPortal: 'Portail mobile administrateur', appStoreNote: 'iOS nécessite App Store / TestFlight avec compte Apple Developer', androidNote: 'Android peut être installé via APK interne ou publié sur Play Store', quickActions: 'Actions rapides', businessHealth: 'Santé activité', alerts: 'Alertes', recentActivity: 'Activité récente', topProducts: 'Top produits', todaySales: 'Ventes du jour', unpaidInvoices: 'Factures non réglées', stockAlerts: 'Alertes stock', customersCount: 'Nombre clients', suppliersCount: 'Nombre fournisseurs', adminCenter: 'Centre administrateur', proMode: 'Mode Pro', search: 'Rechercher', exportCsv: 'Exporter CSV', printList: 'Imprimer liste', risk: 'Risque', healthy: 'Sain', warning: 'Attention', critical: 'Critique', noData: 'Aucune donnée', performance: 'Performance', customerInvoice: 'Facture client', supplierInvoice: 'Facture fournisseur', customerQuote: 'Devis client', customerOrder: 'Commande client', customerDelivery: 'Bon de livraison client', supplierOrder: 'Commande fournisseur', supplierReceipt: 'Bon de réception fournisseur', profitCenter: 'Centre rentabilité', profitability: 'Rentabilité', profitAlerts: 'Alertes rentabilité', priceSuggestion: 'Suggestion prix', minimumSalePrice: 'Prix minimum conseillé', targetMargin: 'Marge cible', marginRate: 'Taux marge', reorderProposal: 'Proposition réapprovisionnement', reorderQty: 'Qté à commander', deadStock: 'Stock dormant', fastMoving: 'Rotation rapide', slowMoving: 'Rotation lente', valuation: 'Valorisation', commercialTerms: 'Conditions commerciales', preparedFor: 'Établi pour', documentValidity: 'Validité document', deliveryAddress: 'Adresse livraison', tools: 'Outils', calculator: 'Calculatrice', marginCalculator: 'Calcul marge', salePriceFromMargin: 'Prix selon marge', purchaseCost: 'Coût achat', wantedMargin: 'Marge souhaitée', result: 'Résultat', clear: 'Effacer', simplePrint: 'Impression simple', kpiRevenue: 'Chiffre d’affaires', kpiPurchases: 'Volume achats', kpiCashIn: 'Total encaissé', kpiCashOut: 'Total décaissé', kpiStockQty: 'Quantité stock', kpiOpenDocs: 'Documents ouverts', kpiPaidRate: 'Taux factures réglées', kpiLowMargin: 'Produits faible marge', paymentList: 'Liste paiements', superAdmin: 'SuperAdmin', saasCenter: 'Centre SaaS', modulesCenter: 'Gestion modules', databaseCenter: 'Base de données', subscription: 'Abonnement', plan: 'Plan', enabled: 'Activé', disabled: 'Désactivé', moduleCode: 'Code module', moduleName: 'Nom module', modulePrice: 'Prix module', commercialPack: 'Pack commercial', tenant: 'Client / Tenant', tenants: 'Clients / Tenants', databaseStats: 'Statistiques base', tableName: 'Table', recordsCount: 'Enregistrements', fixStockTransfer: 'Correction transfert stock', moduleBilling: 'Facturation modules', monthlyPrice: 'Prix mensuel', yearlyPrice: 'Prix annuel', branchFilter: 'Filtre droguerie', allBranches: 'Toutes drogueries', applyFilter: 'Appliquer filtre', filteredByBranch: 'Filtré par droguerie', userFilter: 'Filtre utilisateur', allUsers: 'Tous utilisateurs', salesBySeller: 'CA par vendeur', debtBySeller: 'Dette par vendeur', salesPerformance: 'Performance commerciale', collectionReport: 'Suivi recouvrement', marginBySeller: 'Marge par vendeur', unpaidBySeller: 'Impayés par vendeur', docsByUser: 'Documents par utilisateur', creator: 'Créateur', seller: 'Vendeur', turnover: 'Chiffre d’affaires', collected: 'Encaissé', outstanding: 'Encours', avgDelay: 'Délai moyen', reportSuggestions: 'Reportings proposés', backupCenter: 'Sauvegarde base', backupJson: 'Sauvegarde JSON', backupCsv: 'Sauvegarde CSV', backupSql: 'Script SQL', downloadBackup: 'Télécharger sauvegarde', exportAll: 'Exporter tout', localBackup: 'Backup local', backupDate: 'Date sauvegarde', backupTables: 'Tables sauvegardées', restoreNote: 'Restauration', databaseExport: 'Export base de données', fullBackup: 'Sauvegarde complète', reporting: 'Reporting', customerDebts: 'Dettes clients', supplierDebts: 'Dettes fournisseurs', totalDebt: 'Total dette', businessModules: 'Modules métier', platformModules: 'Modules plateforme', protectedProfile: 'Profil protégé', expiry: 'Péremption', expiryAlert: 'Péremption proche', expensesMod: 'Charges & Déplacements', trips: 'Déplacements', trip: 'Déplacement', expense: 'Charge', netMargin: 'Marge nette', grossMarginLbl: 'Marge brute', totalCharges: 'Total charges', chargeCat: 'Catégorie', beneficiary: 'Bénéficiaire', vehicle: 'Véhicule', destination: 'Destination', manager2: 'Responsable', tripLabel: 'Libellé', addExpense: 'Ajouter charge', addTrip: 'Nouveau déplacement', tripMargin: 'Marge du déplacement', statement: 'Relevé', balanceDue: 'Solde dû', totalInvoiced: 'Total facturé', totalPaid: 'Total réglé', amount: 'Montant', statusLbl: 'Statut', linkTo: 'Rattacher une vente', linkedSales: 'Ventes rattachées', tripDetail: 'Détail du déplacement', noTrip: 'Hors déplacement', charges: 'Charges', unlink: 'Détacher', chargeNum: 'N° charge', tripNum: 'N° déplacement', attach: 'Pièces jointes', addAttachment: 'Ajouter un fichier', noAttachment: 'Aucune pièce jointe', myActivity: 'Mon activité', myActivityAll: 'Activité (toutes drogueries)'
   },
   ar: {
     login: 'تسجيل الدخول', username: 'اسم المستخدم', password: 'كلمة المرور', connect: 'الدخول إلى النظام',
@@ -42,7 +42,7 @@ const TXT = {
     deliveries: 'سندات التسليم', receipts: 'سندات الاستلام', invoices: 'الفواتير', remaining: 'المتبقي',
     paid: 'مدفوعة بالكامل', unpaid: 'غير مدفوعة', partial: 'مدفوعة جزئياً', cashIn: 'المقبوضات',
     cashOut: 'المدفوعات', vat: 'الضريبة على القيمة المضافة', theme: 'المظهر', company: 'الشركة', address: 'العنوان', phone: 'الهاتف', ice: 'المعرّف الموحد للمقاولة ICE', cashRegister: 'الصندوق', receiptNo: 'رقم الوصل', chequeNo: 'رقم الشيك', bank: 'البنك', dueDate: 'تاريخ الاستحقاق', paymentStatus: 'حالة الأداء', transferRef: 'مرجع التحويل البنكي', valueDate: 'تاريخ القيمة', terminal: 'جهاز الأداء الإلكتروني', transactionNo: 'رقم العملية', billNo: 'رقم الكمبيالة', note: 'ملاحظة', quantity: 'الكمية', date: 'التاريخ', customer: 'الزبون',
-    supplier: 'المورد', product: 'المنتج', base: 'الوثيقة الأصلية', remainingQty: 'الكمية المتبقية', orderedQty: 'الكمية المطلوبة', deliveredQty: 'الكمية المسلمة', receivedQty: 'الكمية المستلمة', qtyToProcess: 'الكمية المراد معالجتها', alreadyProcessed: 'تمت معالجته سابقاً', includeLine: 'إدراج السطر', removeLine: 'استبعاد السطر', restoreLine: 'إرجاع السطر', open: 'مفتوح', closed: 'مغلق', preview: 'معاينة الوثيقة', print: 'طباعة', unitPrice: 'ثمن الوحدة', totalHT: 'المبلغ دون الضريبة', totalVAT: 'قيمة الضريبة', totalTTC: 'المبلغ الإجمالي مع الضريبة', cancelPayment: 'إلغاء الدفعة', canceled: 'ملغى', subtotal: 'المجموع الفرعي', signature: 'التوقيع والختم', preparedBy: 'أُعدت بواسطة', printDate: 'تاريخ الطباعة', legalNote: 'وثيقة صادرة عن نظام DrogueriePro', arabicName: 'الاسم بالعربية', docType: 'نوع الوثيقة', purchasePrice: 'ثمن الشراء', salePrice: 'ثمن البيع', margin: 'الهامش', movement: 'الحركة', object: 'الكيان', detail: 'التفاصيل', actor: 'الموظف', createdBy: 'تم الإنشاء بواسطة', baseDocNo: 'رقم الوثيقة الأصلية', location: 'الموقع / الفرع', assignedTo: 'مكلف به', clientOwner: 'الحساب التجاري', stockTransfer: 'تحويل المخزون', fromBranch: 'الفرع المصدر', toBranch: 'الفرع الوجهة', stockValue: 'القيمة المالية للمخزون', lowStock: 'مخزون منخفض', stockByBranch: 'المخزون حسب الفرع', adjustment: 'تعديل المخزون', stockIn: 'إضافة كمية للمخزون', stockOut: 'خصم كمية من المخزون', reason: 'السبب', category: 'الصنف', ref: 'المرجع', name: 'الاسم', role: 'الدور', payment: 'الأداء', document: 'الوثيقة', form: 'النموذج', select: 'اختيار', productRef: 'مرجع المنتج', unit: 'الوحدة', minStock: 'الحد الأدنى للمخزون', threshold: 'عتبة التنبيه', stockAdjustIn: 'إضافة للمخزون', stockAdjustOut: 'سحب من المخزون', operationType: 'نوع العملية', unitPurchasePrice: 'ثمن الشراء للوحدة', unitSalePrice: 'ثمن البيع للوحدة', customerForm: 'بطاقة الزبون', supplierForm: 'بطاقة المورد', productForm: 'بطاقة المنتج', documentLines: 'سطور الوثيقة', completed: 'منتهية', notAvailable: 'غير مطبق', mobileApp: 'تطبيق الهاتف', androidApp: 'تطبيق أندرويد', iosApp: 'تطبيق iOS', downloadAndroid: 'تحميل تطبيق أندرويد APK', downloadIos: 'تحميل تطبيق iOS', installGuide: 'دليل التثبيت', mobileAdminPortal: 'بوابة إدارة التطبيق المحمول', appStoreNote: 'يتطلب iOS النشر عبر App Store أو TestFlight وحساب Apple Developer', androidNote: 'يمكن تثبيت أندرويد عبر APK داخلي أو نشره على Play Store', quickActions: 'إجراءات سريعة', businessHealth: 'حالة النشاط التجاري', alerts: 'التنبيهات', recentActivity: 'آخر العمليات', topProducts: 'أفضل المنتجات', todaySales: 'إجمالي مبيعات اليوم', unpaidInvoices: 'الفواتير غير المحصلة', stockAlerts: 'تنبيهات نقص المخزون', customersCount: 'عدد الزبناء', suppliersCount: 'عدد الموردين', adminCenter: 'مركز الإدارة', proMode: 'الوضع الإداري', search: 'البحث', exportCsv: 'تصدير CSV', printList: 'طباعة اللائحة', risk: 'مخاطر', healthy: 'وضعية سليمة', warning: 'تحتاج للمتابعة', critical: 'حالة حرجة', noData: 'لا توجد بيانات', performance: 'الأداء', grossMargin: 'الهامش الخام', salesPipeline: 'مسار المبيعات', purchasePipeline: 'مسار المشتريات', cashPosition: 'وضعية السيولة', inventoryCoverage: 'تغطية المخزون', operationalRisks: 'المخاطر التشغيلية', branchRanking: 'ترتيب الفروع', monthlyTrend: 'التطور الشهري', conversionRate: 'نسبة التحويل', avgTicket: 'متوسط الفاتورة', documentsCount: 'عدد الوثائق', proReport: 'تقرير إداري', refresh: 'تحديث', executiveSummary: 'ملخص تنفيذي', salesToCollect: 'مبالغ في انتظار التحصيل', purchasesToPay: 'مبالغ في انتظار الأداء', netCash: 'الصافي المتوقع', bestBranch: 'أفضل فرع', quickCreateSale: 'إنشاء عملية بيع', quickCreatePurchase: 'إنشاء عملية شراء', quickCreateProduct: 'إضافة منتج', quickCreateClient: 'إضافة زبون', expiry: 'تاريخ الصلاحية', expiryAlert: 'قرب انتهاء الصلاحية', expensesMod: 'المصاريف والتنقلات', trips: 'التنقلات', trip: 'تنقل', expense: 'مصروف', netMargin: 'الهامش الصافي', grossMarginLbl: 'الهامش الخام', totalCharges: 'مجموع المصاريف', chargeCat: 'النوع', beneficiary: 'المستفيد', vehicle: 'المركبة', destination: 'الوجهة', manager2: 'المسؤول', tripLabel: 'التسمية', addExpense: 'إضافة مصروف', addTrip: 'تنقل جديد', tripMargin: 'هامش التنقل', statement: 'كشف الحساب', balanceDue: 'الرصيد المستحق', totalInvoiced: 'إجمالي الفوترة', totalPaid: 'إجمالي المؤدى', amount: 'المبلغ', statusLbl: 'الحالة', linkTo: 'ربط عملية بيع', linkedSales: 'المبيعات المرتبطة', tripDetail: 'تفاصيل التنقل', noTrip: 'بدون تنقل', charges: 'المصاريف', unlink: 'فصل', chargeNum: 'رقم المصروف', tripNum: 'رقم التنقل', attach: 'المرفقات', addAttachment: 'إضافة ملف', noAttachment: 'لا توجد مرفقات',
+    supplier: 'المورد', product: 'المنتج', base: 'الوثيقة الأصلية', remainingQty: 'الكمية المتبقية', orderedQty: 'الكمية المطلوبة', deliveredQty: 'الكمية المسلمة', receivedQty: 'الكمية المستلمة', qtyToProcess: 'الكمية المراد معالجتها', alreadyProcessed: 'تمت معالجته سابقاً', includeLine: 'إدراج السطر', removeLine: 'استبعاد السطر', restoreLine: 'إرجاع السطر', open: 'مفتوح', closed: 'مغلق', preview: 'معاينة الوثيقة', print: 'طباعة', unitPrice: 'ثمن الوحدة', totalHT: 'المبلغ دون الضريبة', totalVAT: 'قيمة الضريبة', totalTTC: 'المبلغ الإجمالي مع الضريبة', cancelPayment: 'إلغاء الدفعة', canceled: 'ملغى', subtotal: 'المجموع الفرعي', signature: 'التوقيع والختم', preparedBy: 'أُعدت بواسطة', printDate: 'تاريخ الطباعة', legalNote: 'وثيقة صادرة عن نظام DrogueriePro', arabicName: 'الاسم بالعربية', docType: 'نوع الوثيقة', purchasePrice: 'ثمن الشراء', salePrice: 'ثمن البيع', margin: 'الهامش', movement: 'الحركة', object: 'الكيان', detail: 'التفاصيل', actor: 'الموظف', createdBy: 'تم الإنشاء بواسطة', baseDocNo: 'رقم الوثيقة الأصلية', location: 'الموقع / الفرع', assignedTo: 'مكلف به', clientOwner: 'الحساب التجاري', stockTransfer: 'تحويل المخزون', fromBranch: 'الفرع المصدر', toBranch: 'الفرع الوجهة', stockValue: 'القيمة المالية للمخزون', lowStock: 'مخزون منخفض', stockByBranch: 'المخزون حسب الفرع', adjustment: 'تعديل المخزون', stockIn: 'إضافة كمية للمخزون', stockOut: 'خصم كمية من المخزون', reason: 'السبب', category: 'الصنف', ref: 'المرجع', name: 'الاسم', role: 'الدور', payment: 'الأداء', document: 'الوثيقة', form: 'النموذج', select: 'اختيار', productRef: 'مرجع المنتج', unit: 'الوحدة', minStock: 'الحد الأدنى للمخزون', threshold: 'عتبة التنبيه', stockAdjustIn: 'إضافة للمخزون', stockAdjustOut: 'سحب من المخزون', operationType: 'نوع العملية', unitPurchasePrice: 'ثمن الشراء للوحدة', unitSalePrice: 'ثمن البيع للوحدة', customerForm: 'بطاقة الزبون', supplierForm: 'بطاقة المورد', productForm: 'بطاقة المنتج', documentLines: 'سطور الوثيقة', completed: 'منتهية', notAvailable: 'غير مطبق', mobileApp: 'تطبيق الهاتف', androidApp: 'تطبيق أندرويد', iosApp: 'تطبيق iOS', downloadAndroid: 'تحميل تطبيق أندرويد APK', downloadIos: 'تحميل تطبيق iOS', installGuide: 'دليل التثبيت', mobileAdminPortal: 'بوابة إدارة التطبيق المحمول', appStoreNote: 'يتطلب iOS النشر عبر App Store أو TestFlight وحساب Apple Developer', androidNote: 'يمكن تثبيت أندرويد عبر APK داخلي أو نشره على Play Store', quickActions: 'إجراءات سريعة', businessHealth: 'حالة النشاط التجاري', alerts: 'التنبيهات', recentActivity: 'آخر العمليات', topProducts: 'أفضل المنتجات', todaySales: 'إجمالي مبيعات اليوم', unpaidInvoices: 'الفواتير غير المحصلة', stockAlerts: 'تنبيهات نقص المخزون', customersCount: 'عدد الزبناء', suppliersCount: 'عدد الموردين', adminCenter: 'مركز الإدارة', proMode: 'الوضع الإداري', search: 'البحث', exportCsv: 'تصدير CSV', printList: 'طباعة اللائحة', risk: 'مخاطر', healthy: 'وضعية سليمة', warning: 'تحتاج للمتابعة', critical: 'حالة حرجة', noData: 'لا توجد بيانات', performance: 'الأداء', grossMargin: 'الهامش الخام', salesPipeline: 'مسار المبيعات', purchasePipeline: 'مسار المشتريات', cashPosition: 'وضعية السيولة', inventoryCoverage: 'تغطية المخزون', operationalRisks: 'المخاطر التشغيلية', branchRanking: 'ترتيب الفروع', monthlyTrend: 'التطور الشهري', conversionRate: 'نسبة التحويل', avgTicket: 'متوسط الفاتورة', documentsCount: 'عدد الوثائق', proReport: 'تقرير إداري', refresh: 'تحديث', executiveSummary: 'ملخص تنفيذي', salesToCollect: 'مبالغ في انتظار التحصيل', purchasesToPay: 'مبالغ في انتظار الأداء', netCash: 'الصافي المتوقع', bestBranch: 'أفضل فرع', quickCreateSale: 'إنشاء عملية بيع', quickCreatePurchase: 'إنشاء عملية شراء', quickCreateProduct: 'إضافة منتج', quickCreateClient: 'إضافة زبون', expiry: 'تاريخ الصلاحية', expiryAlert: 'قرب انتهاء الصلاحية', expensesMod: 'المصاريف والتنقلات', trips: 'التنقلات', trip: 'تنقل', expense: 'مصروف', netMargin: 'الهامش الصافي', grossMarginLbl: 'الهامش الخام', totalCharges: 'مجموع المصاريف', chargeCat: 'النوع', beneficiary: 'المستفيد', vehicle: 'المركبة', destination: 'الوجهة', manager2: 'المسؤول', tripLabel: 'التسمية', addExpense: 'إضافة مصروف', addTrip: 'تنقل جديد', tripMargin: 'هامش التنقل', statement: 'كشف الحساب', balanceDue: 'الرصيد المستحق', totalInvoiced: 'إجمالي الفوترة', totalPaid: 'إجمالي المؤدى', amount: 'المبلغ', statusLbl: 'الحالة', linkTo: 'ربط عملية بيع', linkedSales: 'المبيعات المرتبطة', tripDetail: 'تفاصيل التنقل', noTrip: 'بدون تنقل', charges: 'المصاريف', unlink: 'فصل', chargeNum: 'رقم المصروف', tripNum: 'رقم التنقل', attach: 'المرفقات', addAttachment: 'إضافة ملف', noAttachment: 'لا توجد مرفقات', myActivity: 'نشاطي', myActivityAll: 'النشاط (كل المحلات)',
     fiscalId: 'المعرّف الجبائي', rc: 'السجل التجاري', patente: 'رسم المهني', cnss: 'رقم CNSS', ifNumber: 'المعرّف الضريبي IF', companyInfo: 'معلومات الشركة', clientInfo: 'معلومات الزبون', supplierInfo: 'معلومات المورد', paymentTerms: 'شروط الأداء', legalMoroccoNote: 'وثيقة تجارية صادرة وفق المعطيات المصرح بها من طرف الشركة. يرجى مراجعة المبالغ والضريبة على القيمة المضافة قبل الاعتماد النهائي.', stampAndSignature: 'الختم والتوقيع', commercialDocument: 'وثيقة تجارية', invoiceTitle: 'فاتورة', deliveryTitle: 'سند تسليم', receiptTitle: 'سند استلام', quoteTitle: 'عرض سعر', orderTitle: 'طلبية', amountInWords: 'المبلغ بالحروف', taxSummary: 'ملخص الضريبة', netToPay: 'الصافي للأداء', thankYou: 'شكراً لتعاملكم معنا', generatedBy: 'تم إنشاء الوثيقة بواسطة', customerInvoice: 'فاتورة زبون', supplierInvoice: 'فاتورة مورد', customerQuote: 'عرض سعر للزبون', customerOrder: 'طلبية زبون', customerDelivery: 'سند تسليم للزبون', supplierOrder: 'طلبية مورد', supplierReceipt: 'سند استلام من المورد', profitCenter: 'مركز الربحية', profitability: 'الربحية', profitAlerts: 'تنبيهات الربحية', priceSuggestion: 'اقتراح الثمن', minimumSalePrice: 'أدنى ثمن بيع مقترح', targetMargin: 'الهامش المستهدف', marginRate: 'نسبة الهامش', reorderProposal: 'اقتراح إعادة التزويد', reorderQty: 'الكمية المقترحة للطلب', deadStock: 'مخزون راكد', fastMoving: 'دوران سريع', slowMoving: 'دوران بطيء', valuation: 'التقييم المالي', commercialTerms: 'الشروط التجارية', preparedFor: 'موجه إلى', documentValidity: 'صلاحية الوثيقة', deliveryAddress: 'عنوان التسليم', tools: 'الأدوات', calculator: 'آلة حاسبة', marginCalculator: 'حاسبة الهامش', salePriceFromMargin: 'ثمن البيع حسب الهامش', purchaseCost: 'تكلفة الشراء', wantedMargin: 'الهامش المطلوب', result: 'النتيجة', clear: 'مسح', simplePrint: 'طباعة مبسطة', kpiRevenue: 'رقم المعاملات', kpiPurchases: 'حجم المشتريات', kpiCashIn: 'مجموع المقبوضات', kpiCashOut: 'مجموع المدفوعات', kpiStockQty: 'كمية المخزون', kpiOpenDocs: 'وثائق مفتوحة', kpiPaidRate: 'نسبة الفواتير المؤداة', kpiLowMargin: 'منتجات بهامش ضعيف', paymentList: 'لائحة المدفوعات', superAdmin: 'المدير العام للنظام', saasCenter: 'مركز SaaS', modulesCenter: 'إدارة الوحدات', databaseCenter: 'قاعدة البيانات', subscription: 'الاشتراك', plan: 'الباقة', enabled: 'مفعّل', disabled: 'غير مفعّل', moduleCode: 'رمز الوحدة', moduleName: 'اسم الوحدة', modulePrice: 'ثمن الوحدة', commercialPack: 'الباقة التجارية', tenant: 'الزبون / المستأجر', tenants: 'الزبناء / المستأجرون', databaseStats: 'إحصائيات قاعدة البيانات', tableName: 'الجدول', recordsCount: 'عدد السجلات', fixStockTransfer: 'تصحيح تحويل المخزون', moduleBilling: 'فوترة الوحدات', monthlyPrice: 'الثمن الشهري', yearlyPrice: 'الثمن السنوي', branchFilter: 'تصفية حسب الفرع', allBranches: 'كل الفروع', applyFilter: 'تطبيق التصفية', filteredByBranch: 'مصفي حسب الفرع', userFilter: 'تصفية حسب المستخدم', allUsers: 'كل المستخدمين', salesBySeller: 'رقم المعاملات حسب البائع', debtBySeller: 'الديون حسب البائع', salesPerformance: 'الأداء التجاري', collectionReport: 'تتبع التحصيل', marginBySeller: 'الهامش حسب البائع', unpaidBySeller: 'غير المحصل حسب البائع', docsByUser: 'الوثائق حسب المستخدم', creator: 'أنشأ بواسطة', seller: 'البائع', turnover: 'رقم المعاملات', collected: 'المحصل', outstanding: 'المتبقي', avgDelay: 'متوسط الأجل', reportSuggestions: 'تقارير مقترحة', backupCenter: 'نسخ احتياطي لقاعدة البيانات', backupJson: 'نسخة JSON', backupCsv: 'نسخة CSV', backupSql: 'سكريبت SQL', downloadBackup: 'تحميل النسخة', exportAll: 'تصدير الكل', localBackup: 'نسخ محلي', backupDate: 'تاريخ النسخ', backupTables: 'الجداول المحفوظة', restoreNote: 'الاسترجاع', databaseExport: 'تصدير قاعدة البيانات', fullBackup: 'نسخة كاملة', reporting: 'التقارير', customerDebts: 'ديون الزبناء', supplierDebts: 'ديون الموردين', totalDebt: 'إجمالي الدين', businessModules: 'وحدات العمل', platformModules: 'وحدات المنصة', protectedProfile: 'حساب محمي'
   }
 };
@@ -411,20 +411,38 @@ async function loadProDashboardData() {
     { data: purchases },
     { data: clients },
     { data: suppliers },
-    movements
+    movements,
+    tripsData,
+    expensesData
   ] = await Promise.all([
     applyProductScope(supabase.from('products').select('*, branches(name)'), session),
     applyDocScope(supabase.from('sales').select('*'), 'sales', session),
     applyDocScope(supabase.from('purchases').select('*'), 'purchases', session),
     applyBranchFilterToQuery(supabase.from('clients').select('*'), session),
     applyBranchFilterToQuery(supabase.from('suppliers').select('*'), session),
-    loadStockMovements().catch(() => [])
+    loadStockMovements().catch(() => []),
+    loadTrips().catch(() => []),
+    loadExpenses().catch(() => [])
   ]);
 
   const prod = (products || []).map(mapProduct);
   const docsSales = (sales || []).map(mapDoc);
   const docsPurchases = (purchases || []).map(mapDoc);
   const todayKey = today();
+
+  // Activité déplacements/charges (déjà filtrée par utilisateur via loadTrips/loadExpenses)
+  const myTrips = tripsData || [];
+  const myExpenses = expensesData || [];
+  const myChargesTotal = myExpenses.reduce((s, e) => s + Number(e.amount || 0), 0);
+  const myTripNetMargin = myTrips.reduce((acc, t) => {
+    const gm = docsSales
+      .filter(d => String(d.trip_id || '') === String(t.id) && d.stage === 'facture')
+      .reduce((s, d) => s + documentProfit(d).margin, 0);
+    const ch = myExpenses
+      .filter(e => String(e.trip_id || '') === String(t.id))
+      .reduce((s, e) => s + Number(e.amount || 0), 0);
+    return acc + (gm - ch);
+  }, 0);
 
   const todaySales = docsSales.filter(d => d.date === todayKey).reduce((s, d) => s + Number(d.totalTTC || 0), 0);
   const unpaidInvoices = [...docsSales, ...docsPurchases].filter(d => d.stage === 'facture' && d.statutPaiement !== 'paid').length;
@@ -452,7 +470,10 @@ async function loadProDashboardData() {
       paidRate: paidRate([...docsSales, ...docsPurchases]),
       lowMargin: prod.filter(p => productProfitStatus(p) !== 'healthy').length,
       clientsCount: (clients || []).length,
-      suppliersCount: (suppliers || []).length
+      suppliersCount: (suppliers || []).length,
+      myTripsCount: myTrips.length,
+      myChargesTotal,
+      myTripNetMargin
     }
   };
 }
@@ -2309,22 +2330,28 @@ function ReportingCenter({ L }) {
   const [sales, setSales] = useState([]);
   const [purchases, setPurchases] = useState([]);
   const [usersMap, setUsersMap] = useState({});
+  const [trips, setTrips] = useState([]);
+  const [expenses, setExpenses] = useState([]);
   const [err, setErr] = useState('');
 
   async function load() {
     try {
       setErr('');
       const session = getStoredSession();
-      const [{ data: s, error: sErr }, { data: p, error: pErr }, labels] = await Promise.all([
+      const [{ data: s, error: sErr }, { data: p, error: pErr }, labels, tripsData, expensesData] = await Promise.all([
         applyDocScope(supabase.from('sales').select('*'), 'sales', session).order('date', { ascending: false }),
         applyDocScope(supabase.from('purchases').select('*'), 'purchases', session).order('date', { ascending: false }),
-        loadUserLabels()
+        loadUserLabels(),
+        loadTrips().catch(() => []),
+        loadExpenses().catch(() => [])
       ]);
       if (sErr) throw sErr;
       if (pErr) throw pErr;
       setUsersMap(labels || {});
       setSales(enrichDocs(s || [], labels));
       setPurchases(enrichDocs(p || [], labels));
+      setTrips(tripsData || []);
+      setExpenses(expensesData || []);
     } catch (e) { setErr(e.message); }
   }
 
@@ -2338,6 +2365,18 @@ function ReportingCenter({ L }) {
   const debtBySeller = groupDebtBySeller(sales, usersMap);
   const totalCA = salesBySeller.reduce((s, x) => s + x.total, 0);
   const totalDebtSeller = debtBySeller.reduce((s, x) => s + x.debt, 0);
+
+  const tripRows = trips.map(t => {
+    const grossMargin = sales
+      .filter(d => String(d.trip_id || '') === String(t.id) && d.stage === 'facture')
+      .reduce((s, d) => s + documentProfit(d).margin, 0);
+    const charges = expenses
+      .filter(e => String(e.trip_id || '') === String(t.id))
+      .reduce((s, e) => s + Number(e.amount || 0), 0);
+    return { ...t, grossMargin, charges, net: grossMargin - charges };
+  });
+  const totalCharges = expenses.reduce((s, e) => s + Number(e.amount || 0), 0);
+  const totalNet = tripRows.reduce((s, t) => s + t.net, 0);
 
   return (
     <>
@@ -2361,6 +2400,37 @@ function ReportingCenter({ L }) {
       <div className="grid lg:grid-cols-2 gap-5 mb-5">
         <DebtTable L={L} title={L('customerDebts')} rows={clientDebts} docs={sales} type="clients" />
         <DebtTable L={L} title={L('supplierDebts')} rows={supplierDebts} docs={purchases} type="suppliers" />
+      </div>
+
+      <div className="card p-5 overflow-auto mb-5">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-black">{L('expensesMod')}</h2>
+          <div className="flex gap-4 text-sm">
+            <span>{L('totalCharges')} : <b className="text-red-600">{dh(totalCharges)}</b></span>
+            <span>{L('netMargin')} : <b className={totalNet >= 0 ? 'text-emerald-700' : 'text-red-700'}>{dh(totalNet)}</b></span>
+          </div>
+        </div>
+        <table className="table w-full">
+          <thead>
+            <tr>
+              <th>{L('tripNum')}</th><th>{L('tripLabel')}</th><th>{L('manager2')}</th>
+              <th>{L('grossMarginLbl')}</th><th>{L('totalCharges')}</th><th>{L('netMargin')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tripRows.map(t => (
+              <tr key={t.id}>
+                <td className="font-mono text-xs">{t.num_dep}</td>
+                <td className="font-semibold">{t.label || '-'}</td>
+                <td>{t.manager || '-'}</td>
+                <td>{dh(t.grossMargin)}</td>
+                <td className="text-red-600">{dh(t.charges)}</td>
+                <td className={t.net >= 0 ? 'text-emerald-700 font-bold' : 'text-red-700 font-bold'}>{dh(t.net)}</td>
+              </tr>
+            ))}
+            {!tripRows.length ? <tr><td colSpan="6">{L('noData')}</td></tr> : null}
+          </tbody>
+        </table>
       </div>
 
       <div className="card p-5">
@@ -2843,6 +2913,15 @@ function Dashboard({ L }) {
         <div className="pro-kpi-card"><span>{L('kpiLowMargin')}</span><b>{k.lowMargin || 0}</b><small>{L('profitability')}</small></div>
         <div className="pro-kpi-card"><span>{L('unpaidInvoices')}</span><b>{k.unpaidInvoices}</b><small>{L('risk')}</small></div>
         <div className="pro-kpi-card"><span>{L('stockAlerts')}</span><b>{k.stockAlerts}</b><small>{L('critical')}</small></div>
+      </div>
+
+      <div className="mb-6">
+        <h2 className="text-sm font-bold text-slate-500 mb-2">{isSystemAdmin(getStoredSession()) ? L('myActivityAll') : L('myActivity')}</h2>
+        <div className="pro-kpi-grid pro-kpi-grid-v38">
+          <div className="pro-kpi-card"><span>{L('trips')}</span><b>{k.myTripsCount || 0}</b><small>{L('expensesMod')}</small></div>
+          <div className="pro-kpi-card"><span>{L('totalCharges')}</span><b>{dh(k.myChargesTotal || 0)}</b><small>{L('charges')}</small></div>
+          <div className="pro-kpi-card"><span>{L('netMargin')}</span><b>{dh(k.myTripNetMargin || 0)}</b><small>{L('tripMargin')}</small></div>
+        </div>
       </div>
 
       <div className="grid md:grid-cols-3 gap-5">
@@ -3373,9 +3452,24 @@ function DocModal({ L, isSales, form, setForm, products, parties, save, close })
   }
 
   const total = (form.lignes || []).reduce((s, l) => s + lineTotal(l), 0);
+  const [tab, setTab] = useState('doc');
+  const attachEnabled = hasModuleAccess('attachments');
 
   return (
     <Modal title={isSales ? L('sales') : L('purchases')} onClose={close} wide>
+      {attachEnabled ? (
+        <div className="flex gap-2 mb-4">
+          <button onClick={() => setTab('doc')} className={'btn ' + (tab === 'doc' ? 'bg-slate-900 text-white' : 'bg-white border')}>{L('document')}</button>
+          <button onClick={() => setTab('attach')} className={'btn ' + (tab === 'attach' ? 'bg-slate-900 text-white' : 'bg-white border')}>{L('attach')}</button>
+        </div>
+      ) : null}
+
+      {tab === 'attach' && attachEnabled ? (
+        form.id
+          ? <AttachmentsPanel L={L} entityType={isSales ? 'sale' : 'purchase'} entityId={form.id} branchId={form.branch_id} />
+          : <div className="text-sm text-slate-500 p-4 text-center">{L('addAttachment')} — {L('save')} ✓</div>
+      ) : (
+      <>
       <div className="grid md:grid-cols-2 gap-3 mb-4">
         <label className="text-xs text-slate-500">{L('date')}
           <input type="date" className="input mt-1" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} />
@@ -3438,6 +3532,8 @@ function DocModal({ L, isSales, form, setForm, products, parties, save, close })
       </div>
 
       <button onClick={save} className="btn bg-amber-500 mt-4">{L('save')}</button>
+      </>
+      )}
     </Modal>
   );
 }
@@ -3535,10 +3631,6 @@ function DocumentPreview({ L, type, doc, close }) {
           <div>{L('printDate')} : {new Date().toLocaleString()}</div>
           <div className="simple-signature">{L('signature')}</div>
         </div>
-      </div>
-
-      <div className="no-print">
-        {doc.id ? <AttachmentsPanel L={L} entityType={isSales ? 'sale' : 'purchase'} entityId={doc.id} branchId={doc.branch_id} /> : null}
       </div>
 
       <div className="flex justify-end gap-2 mt-4 no-print">
@@ -3797,16 +3889,27 @@ function expenseBranchId() {
   return selectedBranchId() || currentBranchId() || null;
 }
 
+// Admin/Gérant gèrent tout ; chaque autre utilisateur gère uniquement ses propres déplacements/charges.
+function expensesSeeAll(session = getStoredSession()) {
+  return isAdmin(session) || isSuperAdmin(session) || isManager(session);
+}
 function canExpenses() {
-  const s = getStoredSession();
-  return can('expenses.write') || isAdmin(s) || isManager(s);
+  // Tout utilisateur connecté peut créer/gérer SES déplacements et charges.
+  return !!getStoredSession();
+}
+function ownsRow(row, session = getStoredSession()) {
+  return String(row?.created_by || '') === String(session?.user?.id || '');
+}
+function canEditExpenseRow(row, session = getStoredSession()) {
+  return expensesSeeAll(session) || ownsRow(row, session);
 }
 
 async function loadTrips() {
   const session = getStoredSession();
   let q = supabase.from('trips').select('*').order('date', { ascending: false }).order('id', { ascending: false });
   if (isAdmin(session) || isSuperAdmin(session)) q = applyBranchFilterToQuery(q, session);
-  else if (branchId(session)) q = q.eq('branch_id', branchId(session));
+  else if (isManager(session)) { if (branchId(session)) q = q.eq('branch_id', branchId(session)); }
+  else q = q.eq('created_by', String(session?.user?.id || ''));
   const { data, error } = await q;
   if (error) throw new Error(error.message);
   return data || [];
@@ -3816,7 +3919,8 @@ async function loadExpenses() {
   const session = getStoredSession();
   let q = supabase.from('expenses').select('*').order('date', { ascending: false }).order('id', { ascending: false });
   if (isAdmin(session) || isSuperAdmin(session)) q = applyBranchFilterToQuery(q, session);
-  else if (branchId(session)) q = q.eq('branch_id', branchId(session));
+  else if (isManager(session)) { if (branchId(session)) q = q.eq('branch_id', branchId(session)); }
+  else q = q.eq('created_by', String(session?.user?.id || ''));
   const { data, error } = await q;
   if (error) throw new Error(error.message);
   return data || [];
@@ -4075,8 +4179,8 @@ function ExpensesCenter({ L }) {
                   <td className={st.net >= 0 ? 'text-emerald-700 font-bold' : 'text-red-700 font-bold'}>{dh(st.net)}</td>
                   <td className="flex gap-1 flex-wrap">
                     <button onClick={() => setDetail(t)} className="btn bg-white border">{L('tripDetail')}</button>
-                    {writable ? <button onClick={() => setTripForm(t)} className="btn bg-white border">{L('edit')}</button> : null}
-                    {writable ? <button onClick={() => removeTrip(t.id)} className="btn bg-red-600 text-white">{L('del')}</button> : null}
+                    {canEditExpenseRow(t) ? <button onClick={() => setTripForm(t)} className="btn bg-white border">{L('edit')}</button> : null}
+                    {canEditExpenseRow(t) ? <button onClick={() => removeTrip(t.id)} className="btn bg-red-600 text-white">{L('del')}</button> : null}
                   </td>
                 </tr>
               );
@@ -4103,8 +4207,8 @@ function ExpensesCenter({ L }) {
                 <td className="text-xs">{trips.find(t => String(t.id) === String(e.trip_id))?.num_dep || L('noTrip')}</td>
                 <td className="font-semibold">{dh(e.amount)}</td>
                 <td className="flex gap-1 flex-wrap">
-                  {writable ? <button onClick={() => setExpForm(e)} className="btn bg-white border">{L('edit')}</button> : null}
-                  {writable ? <button onClick={() => removeExpense(e.id)} className="btn bg-red-600 text-white">{L('del')}</button> : null}
+                  {canEditExpenseRow(e) ? <button onClick={() => setExpForm(e)} className="btn bg-white border">{L('edit')}</button> : null}
+                  {canEditExpenseRow(e) ? <button onClick={() => removeExpense(e.id)} className="btn bg-red-600 text-white">{L('del')}</button> : null}
                 </td>
               </tr>
             ))}
@@ -4161,14 +4265,14 @@ function ExpensesCenter({ L }) {
                   <tr key={d.id}>
                     <td>{d.date}</td><td className="font-mono text-xs">{d.ref || d.id}</td>
                     <td>{dh(d.totalTTC)}</td><td>{dh(documentProfit(d).margin)}</td>
-                    <td>{writable ? <button onClick={() => toggleSaleTrip(d.id, null)} className="btn bg-white border">{L('unlink')}</button> : null}</td>
+                    <td>{canEditExpenseRow(detail) ? <button onClick={() => toggleSaleTrip(d.id, null)} className="btn bg-white border">{L('unlink')}</button> : null}</td>
                   </tr>
                 ))}
                 {!linked.length ? <tr><td colSpan="5">{L('noData')}</td></tr> : null}
               </tbody>
             </Table>
 
-            {writable ? (
+            {canEditExpenseRow(detail) ? (
               <div className="mt-3">
                 <label className="text-xs text-slate-500">{L('linkTo')}
                   <select className="input mt-1" value="" onChange={e => { if (e.target.value) toggleSaleTrip(Number(e.target.value), detail.id); }}>
