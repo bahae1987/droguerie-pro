@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: droguerie-pro-api
+    runtime: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        sync: false          # à saisir dans Render (chaîne Supabase)
+      - key: JWT_SECRET
+        generateValue: true  # Render génère un secret aléatoire
+      - key: CORS_ORIGIN
+        sync: false          # (optionnel) URL de votre frontend Vercel
