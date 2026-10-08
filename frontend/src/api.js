@@ -1,5 +1,5 @@
 /* Client API + session (frontend web) — v3 */
-const API = import.meta.env.VITE_API_URL || "/api";
+const API = (import.meta.env.VITE_API_URL || "/api").replace(/\/+$/, "");
 let token = localStorage.getItem("dp_token") || null;
 export const setToken = (t) => { token = t; t ? localStorage.setItem("dp_token", t) : localStorage.removeItem("dp_token"); };
 export const API_URL = API;
@@ -14,7 +14,7 @@ async function req(path, opts = {}) {
     throw new Error(`Serveur injoignable à ${API}. Vérifiez que le backend est démarré (npm start) et que VITE_API_URL est correct.`);
   }
   if (res.status === 401 && path !== "/auth/login") { setToken(null); location.reload(); }
-  if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || "Erreur " + res.status);
+  if (!res.ok) { const j = await res.json().catch(() => ({})); throw new Error(j.error || `Erreur ${res.status} · ${opts.method || "GET"} ${API}${path}`); }
   return res.json();
 }
 
